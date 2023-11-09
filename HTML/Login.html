@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/CSS/Login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="Login">
+            <form action="" name="f" method="">
+                <div class="image-header">
+                    <img src="/IMAGE/icons8-chess-80_white.png" alt="" id="img-chess">
+                    <label id="lbl-chess" for="img-chess">Chess.com</label>
+                </div>
+                    <div class="input-group">
+                        <input type="text" id="txt_mail" name="txt_mail" placeholder="Email">
+                        <div class="error-message" id="error_mail"></div>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="txt_password" name="txt_password" placeholder="Password">
+                        <div class="error-message" id="error_password"></div>
+                    </div>
+                    <div class="check-group">
+                        <input type="checkbox" name="check_remember" id="check_remember">
+                        <label for="check_remember">Remember me</label>
+                        <a id="forgotpass" href="/HTML/ForgotPassword.html">Forgot Password</a>
+                    </div>
+                    <div class="button-group">
+                        <input type="button" value="Log in" name="btn_login" id="btn_login">
+                    </div>
+                    <div class="signup-link">
+                        <a id="signup" href="/HTML/Signup.html">Create your Account</a>
+                        <img id="img-signup" src="/IMAGE/icons8-arrow-50_white.png" alt="">
+                    </div>
+            </form>  
+        </div>
+        <div class="content">
+           <img id="img-content" src="/IMAGE/images.jpg" alt="">
+           <h3>Chess is the pinnacle of intelligence <br>Welcome you to chess</h3>
+        </div>
+    </div>
+</body>
+</html>

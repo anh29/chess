@@ -1,0 +1,66 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url("/IMAGE/glass.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.Confirm_Signup{
+    width: 467px;
+    height: 400px;
+    text-align: center;
+    border: 3px solid #95a5a6;
+    border-radius: 15px;
+}
+.image-header {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+}
+.image-header #img-chess{
+    margin: 35px 0px 35px;
+    width: 80px;
+    height: 80px;
+}
+.image-header #lbl-chess{
+    margin-top: 20px;
+    width: 155px;
+    margin-left: -25px;
+    height: 35px;
+    font-size: 30px;
+    font-weight: 400;
+    font-family: Tiro Devanagari Marathi;
+    color: whitesmoke;
+}
+.error-message{
+    height: 20px;
+    width: 466px;
+}
+.input-group #txt_otp{
+    margin: 30px 0px 4px;
+    width: 240px;
+    height: 38px;
+    padding-left: 60px;
+    border-radius: 20px;
+    background-image: url(/IMAGE/icons8-password-32.png);
+    background-repeat: no-repeat;
+    background-size: 29px 30px;
+    background-position: 15px;
+}
+
+
+.button-group #btn_confirm{
+    margin-top: 40px;
+    width: 295px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: larger;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    background-color: whitesmoke;
+    color: black;
+}
