@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/CSS/Signup.css">
+    <script>
+        function OTP(){
+            window.location.href = "/HTML/ConfirmSignup.html";
+        }
+    </script>
+</head>
+<body>
+        <div class="Signup">
+            <form action="" name="f" method="">
+                <div class="image-header">
+                    <img src="/IMAGE/icons8-chess-80_white.png" alt="" id="img-chess">
+                    <label id="lbl-chess" for="img-chess">Chess.com</label>
+                </div>
+                    <div class="input-group">
+                        <input type="text" id="txt_mail" name="txt_mail" placeholder="Email">
+                        <div class="error-message" id="error_mail"></div>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="txt_password" name="txt_password" placeholder="Password">
+                        <div class="error-message" id="error_password"></div>
+                    </div>
+                    <div class="button-group">
+                        <input type="button" value="Sign up" name="btn_signup" id="btn_signup" onclick="OTP()">
+                    </div>
+            </form>  
+        </div>
+</body>
+</html>

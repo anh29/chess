@@ -1,0 +1,55 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url("/IMAGE/glass.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.Success_Message{
+    width: 400px;
+    height: 350px;
+    text-align: center;
+    border: 3px solid #95a5a6;
+    border-radius: 15px;
+}
+.image-header {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+}
+.image-header #img-chess{
+    margin: 35px 0px 35px;
+    width: 80px;
+    height: 80px;
+}
+.image-header #lbl-chess{
+    margin-top: 20px;
+    width: 155px;
+    margin-left: -25px;
+    height: 35px;
+    font-size: 30px;
+    font-weight: 400;
+    font-family: Tiro Devanagari Marathi;
+    color: whitesmoke;
+}
+.Message{
+    border: 2px solid #95a5a6;
+    border-radius: 15px;
+    width: 295px;
+    margin: 0 auto;
+    color: #7ed6df;
+}
+.button-group #btn_loginNow{
+    margin-top: 40px;
+    width: 295px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: larger;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    background-color: whitesmoke;
+    color: black;
+}

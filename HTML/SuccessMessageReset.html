@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/CSS/SuccessMessageReset.css">
+    <script>
+        function Success(){
+            window.location.href = "/HTML/Login.html"
+        }
+    </script>
+</head>
+<body>
+        <div class="Success_Message">
+            <form action="" name="f" method="">
+                <div class="image-header">
+                    <img src="/IMAGE/icons8-chess-80_white.png" alt="" id="img-chess">
+                    <label id="lbl-chess" for="img-chess">Chess.com</label>
+                </div>
+                    <div class="Message">
+                        <h4>Your password changed. Now you can login with new your password!</h4>
+                    </div>
+                    <div class="button-group">
+                        <input type="button" value="Login Now" name="btn_loginNow" id="btn_loginNow" onclick="Success()">
+                    </div>
+            </form>  
+        </div>
+</body>
+</html>

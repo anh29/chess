@@ -1,0 +1,124 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url("/IMAGE/glass.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.container{
+    width: 934px;
+    height: 470px;
+    border: 3px solid #95a5a6;
+    border-radius: 15px;
+    display: flex;
+    
+}
+.Login{
+    width: 467px;
+    height: 470px;
+    text-align: center;
+    border-right: 3px solid #95a5a6;
+}
+.image-header {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+}
+.image-header #img-chess{
+    margin: 15px 0px 30px;
+    width: 80px;
+    height: 80px;
+}
+.image-header #lbl-chess{
+    margin-top: 20px;
+    width: 155px;
+    margin-left: -25px;
+    height: 35px;
+    font-size: 30px;
+    font-weight: 400;
+    font-family: Tiro Devanagari Marathi;
+    color: whitesmoke;
+}
+.input-group #txt_mail, #txt_password{
+    margin: 15px 0px 4px;
+    width: 240px;
+    height: 38px;
+    padding-left: 60px;
+    border-radius: 20px;
+}
+.error-message{
+    height: 20px;
+    width: 466px;
+}
+.input-group #txt_mail{
+    background-image: url(/IMAGE/icons8-email-64.png);
+    background-repeat: no-repeat;
+    background-size: 29px 30px;
+    background-position: 15px;
+}
+.input-group #txt_password{
+    background-image: url(/IMAGE/icons8-lock-50.png);
+    background-repeat: no-repeat;
+    background-size: 28px;
+    background-position: 15px 5px;
+}
+
+.check-group{
+    margin-top: 10px;
+}
+.check-group label{
+    margin-right: 50px;
+    margin-left: 5px;
+    color: whitesmoke;
+}
+.check-group #forgotpass{
+    color: whitesmoke;
+}
+.button-group #btn_login{
+    margin-top: 40px;
+    width: 295px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: larger;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    background-color: whitesmoke;
+    color: black;
+}
+.signup-link{
+    margin-top: 25px;
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+   
+}
+.signup-link #signup{
+    text-decoration: none;
+    color: whitesmoke;
+}
+.signup-link #img-signup{
+    margin-top: 2px;
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+}
+.content{
+    width: 467px;
+    height: 470px;
+}
+.content #img-content{
+    width: 300px;
+    height: 200px;
+    margin: 100px 0px 10px 85px;
+    border-radius: 10px;
+}
+.content h3{
+    text-align: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: italic;
+    color: whitesmoke;
+}
