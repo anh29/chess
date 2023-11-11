@@ -1,0 +1,29 @@
+.square {
+  background-color: #d5d5d5a6;
+  width: 74px;
+  height: 74px;
+  border-style: groove;
+}
+
+.dad-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.main-container {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+}
+
+.files:nth-of-type(even) .square:nth-of-type(even) {
+  background-color: #7b7b7ba6;
+}
+.files:nth-of-type(odd) .square:nth-of-type(odd) {
+  background-color: #7b7b7ba6;
+}
+
+img {
+  width: 100%;
+}

@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  height: 740px;
+}
+
+.sidebar {
+  width: 175px;
+  border-style: none solid none none;
+  border-width: thin;
+}
+
+.contain {
+  width: calc(100% - 190px);
+  overflow-y: scroll;
+  display: flex;
+}
+
+.chessboard {
+  width: 55%;
+  height: 100%;
+}
+
+.nav {
+  width: 44%;
+}
