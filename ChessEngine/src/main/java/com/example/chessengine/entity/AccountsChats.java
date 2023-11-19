@@ -1,5 +1,6 @@
 package com.example.chessengine.entity;
 
+import com.example.chessengine.entity.embeddable.AccountsChatsId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,25 +10,20 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Entity
-@Table(name = "users")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Users {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Integer userId;
+@Table(name = "accounts_chats")
+public class AccountsChats {
+    @EmbeddedId
+    private AccountsChatsId id;
 
-    @Column(name = "username")
-    private String username;
+    @ManyToOne
+    @MapsId("accountId")
+    @JoinColumn(name = "account_id")
+    private Accounts account;
 
-    @Column(name = "date_of_birth")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dateOfBirth;
-
-    @Column(name = "gender")
-    private Boolean gender;
+    @ManyToOne
+    @MapsId("chatId")
+    @JoinColumn(name = "chat_id")
+    private Chats chat;
 
     @Column(name = "status")
     private Integer status;
@@ -49,11 +45,4 @@ public class Users {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedDate;
 
-    @ManyToOne
-    @MapsId("roleId")
-    @JoinColumn(name = "role_id")
-    private Roles role;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = false)
-    private Accounts account;
 }

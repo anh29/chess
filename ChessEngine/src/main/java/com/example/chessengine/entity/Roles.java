@@ -42,6 +42,7 @@ public class Roles {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedDate;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    private Set<Users> user;
+//    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+//    private Set<Users> user;
+
 }

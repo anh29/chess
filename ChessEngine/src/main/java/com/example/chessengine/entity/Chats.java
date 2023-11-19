@@ -18,7 +18,7 @@ public class Chats {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_id")
-    private Long chatId;
+    private Integer chatId;
 
     @Column(name = "status")
     private Integer status;
@@ -41,7 +41,7 @@ public class Chats {
     private Date updatedDate;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
-    private Set<Accounts> account;
+    private Set<AccountsChats> accountsChatsSet;
 
     @ManyToOne
     @MapsId("matchId")
