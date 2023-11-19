@@ -27,10 +27,11 @@ public class ApplicationController {
     private AuthenticationService authenticationService;
     private BcryptEncoder bcryptEncoder = new BcryptEncoder();
 
-    @GetMapping("/")
+    @GetMapping()
     public String showDefault()
     {
-        return "redirect:/login";
+//        return "index";
+        return "redirect:/public/login";
     }
 
     @GetMapping("/signup")
@@ -71,7 +72,7 @@ public class ApplicationController {
         cookie.setPath("/");
         response.addCookie(cookie);
 //        System.out.println("Token from controller: "+ token);
-        return "redirect:/learn";
+        return "redirect:/play";
     }
 
     @GetMapping("/learn")
@@ -80,4 +81,21 @@ public class ApplicationController {
         return "fragments/learn";
     }
 
+    @GetMapping("/fragments/a")
+    public String showFrag1()
+    {
+        return "fragments/sidebar";
+    }
+
+    @GetMapping("/fragments/b")
+    public String showFrag2()
+    {
+        return "fragments/navigate";
+    }
+
+    @GetMapping("/fragments/c")
+    public String showFrag3()
+    {
+        return "fragments/chessboard";
+    }
 }

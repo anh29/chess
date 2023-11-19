@@ -28,15 +28,15 @@ public class SecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
                 .authorizeHttpRequests()
-//                .requestMatchers("/css/**").permitAll()
-//                .requestMatchers("/img/**").permitAll()
+                .requestMatchers("/CSS/**").permitAll()
+                .requestMatchers("/IMAGE/**").permitAll()
 //                .requestMatchers("/javascript/**").permitAll()
 ////                .requestMatchers("/vendor/**").permitAll()
 //                .requestMatchers("/static/**").permitAll()
 //                .requestMatchers("/api/auth/**")
 //                .permitAll()
-                .requestMatchers("/**").permitAll()
-                .requestMatchers("/template/**").permitAll()
+//                .requestMatchers("/**").permitAll()
+                .requestMatchers("/templates/**").permitAll()
                 .requestMatchers("/public/**").permitAll()
                 .anyRequest()
                 .authenticated()
@@ -45,7 +45,10 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .headers()
+                .frameOptions()
+                .sameOrigin();
 
         http.formLogin(formLogin -> formLogin.loginPage("/login").permitAll());
 

@@ -1,0 +1,48 @@
+.header {
+  color: #000;
+  text-align: center;
+  font-family: Tiro Devanagari Marathi;
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 30% 10px 0px 50px;
+}
+
+.opt {
+  display: flex;
+  background-color: #d9d9d9;
+  margin: 30px 10px 0px 50px;
+  border-radius: 10px;
+  align-items: center;
+  text-align: center;
+}
+
+.opt:hover {
+  cursor: pointer;
+}
+
+h1 {
+  color: #000;
+  font-family: Tiro Devanagari Marathi;
+  font-size: 45px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 10px;
+}
+
+.text {
+  color: #000;
+  font-family: Tiro Devanagari Marathi;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 10px;
+}
+
+img {
+  width: 80px;
+  height: 90px;
+}
