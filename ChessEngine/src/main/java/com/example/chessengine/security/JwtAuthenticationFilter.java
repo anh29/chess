@@ -33,6 +33,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authorHeader = request.getHeader("Authorization");
         final String jwt;
         final String gmail;
+        response.setHeader("X-Frame-Options", "SAMEORIGIN");
+
         if (((authorHeader == null) || !authorHeader.startsWith("Bearer ")) && token.isEmpty())
         {
             filterChain.doFilter(request, response);
