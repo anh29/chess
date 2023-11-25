@@ -1,33 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" th:href="@{/CSS/nav.css}">
-</head>
-
-<body>
+<div>
     <p class="header">
         Play Chess Online on the #1 Site!
     </p>
     <div class="options">
         <div class="opt">
-            <img th:src="@{/IMAGE/icons8-chess-80_1.png}" alt="">
-            <div class="contain">
-                <h1>Play Online</h1>
-                <p class="text">Play with someone at your level</p>
+            <img class="img-lg-nav" th:src="@{/IMAGE/icons8-chess-80_1.png}" alt="">
+            <div id="playOnline" class="containPlay playOnline">
+                <h1 class="titlePlay" onclick="clickPlay()">Play Online</h1>
+                <p class="textPlay">Play with someone at your level</p>
             </div>
         </div>
         <div class="opt">
-            <img th:src="@{/IMAGE/icons8-robot-100_1.png}" alt="">
-            <div class="contain">
-                <h1>Play Computer</h1>
-                <p class="text">Play vs customizable train bots</p>
+            <img class="img-lg-nav" th:src="@{/IMAGE/icons8-robot-100_1.png}" alt="">
+            <div id="playComputer" class="containPlay">
+                <h1 class="titlePlay">Play Computer</h1>
+                <p class="textPlay">Play vs customizable train bots</p>
             </div>
         </div>
     </div>
-</body>
-
-</html>
+</div>

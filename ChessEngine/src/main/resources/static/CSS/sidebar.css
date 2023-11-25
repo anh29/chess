@@ -3,18 +3,20 @@
   align-items: center;
   margin-top: 20px;
   margin-left: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
-img {
-  width: 20%;
+.img-lg {
+  width: fit-content;
+  height: 40px;
 }
 
 .brand {
   width: 30%;
+  height: 30%;
 }
 
-p {
+.titleChess {
   color: #000;
   font-family: Tiro Devanagari Marathi;
   font-size: 40px;

@@ -7,16 +7,61 @@
     <title>Chess Tutorial</title>
     <link rel="stylesheet" href="/CSS/reset.css">
     <link rel="stylesheet" href="/CSS/main.css">
+    <link rel="stylesheet" href="/CSS/sidebar.css">
+    <link rel="stylesheet" href="/CSS/chessboard.css">
+    <link rel="stylesheet" href="/CSS/nav.css">
 </head>
 
 <body>
     <div class="container">
-        <iframe name="sidebar" class="sidebar" src="public/fragments/a" scrolling="no"></iframe>
+        <div class="sidebar">
+            <ul>
+                <div class="head">
+                    <img class="brand" th:src="@{/IMAGE/icons8-chess-80_1.png}">
+                    <p class="titleChess">Chess</p>
+                </div>
+                <li class="items"><img class="img-lg" th:src="@{/IMAGE/playwhite.cea685ba.svg}" alt="">
+                    <p class="text">Play</p>
+                </li>
+                <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-puzzle-50_1.png}" alt="">
+                    <p class="text">Puzzles</p>
+                </li>
+                <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-students-64_1.png}" alt="">
+                    <p class="text">Learn</p>
+                </li>
+                <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-news-64_1.png}" alt="">
+                    <p class="text">News</p>
+                </li>
+                <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-binoculars-64_1.png}" alt="">
+                    <p class="text">Watch</p>
+                </li>
+                <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-ellipsis-50_1.png}" alt="">
+                    <p class="text">More</p>
+                </li>
+                <li class="search">
+                    <input type="text" placeholder="Search">
+                </li>
+                <li class="btn">
+                    <button>Sign up</button>
+                </li>
+                <li class="btn">
+                    <button>Login</button>
+                </li>
+<!--                <li class="items">-->
+<!--                    <img class="img-lg" th:src="@{/IMAGE/icons8-language-skill-50_1.png}" alt="">-->
+<!--                    <p class="text">Language</p>-->
+<!--                </li>-->
+<!--                <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-help-50_1.png}" alt="">-->
+<!--                    <p class="text">Help</p>-->
+<!--                </li>-->
+            </ul>
+        </div>
+
         <div class="contain">
-            <iframe name="chessboard" class="chessboard" src="public/fragments/c"></iframe>
-            <iframe name="nav" class="nav" src="public/fragments/b"></iframe>
         </div>
     </div>
+
+    <script th:src="@{/JS/main.js}"></script>
 </body>
 
 </html>
