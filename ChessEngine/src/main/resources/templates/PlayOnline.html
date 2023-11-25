@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/CSS/sidebar.css">
     <link rel="stylesheet" href="/CSS/chessboard.css">
     <link rel="stylesheet" href="/CSS/nav.css">
+    <link rel="stylesheet" href="/CSS/ContainPlay.css">
 </head>
 <body>
 <div class="container">
@@ -18,7 +19,7 @@
                 <p class="titleChess">Chess</p>
             </div>
             <li class="items"><img class="img-lg" th:src="@{/IMAGE/playwhite.cea685ba.svg}" alt="">
-                <p class="text">Play</p>
+                <p class="text"><a href="/play">Play</a> </p>
             </li>
             <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-puzzle-50_1.png}" alt="">
                 <p class="text">Puzzles</p>
@@ -44,18 +45,53 @@
             <li class="btn">
                 <button>Login</button>
             </li>
-            <li class="items">
-                <img class="img-lg" th:src="@{/IMAGE/icons8-language-skill-50_1.png}" alt="">
-                <p class="text">Language</p>
-            </li>
-            <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-help-50_1.png}" alt="">
-                <p class="text">Help</p>
-            </li>
+<!--            <li class="items">-->
+<!--                <img class="img-lg" th:src="@{/IMAGE/icons8-language-skill-50_1.png}" alt="">-->
+<!--                <p class="text">Language</p>-->
+<!--            </li>-->
+<!--            <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-help-50_1.png}" alt="">-->
+<!--                <p class="text">Help</p>-->
+<!--            </li>-->
         </ul>
     </div>
 
     <div class="contain" >
-        <div th:include="/fragments/chessboard"></div>
+        <div class="contain-board">
+            <div class="user-top">
+                <img class="img-user"th:src="@{/IMAGE/br.png}" alt="">
+                <div class="contain-user">
+                    <p class="username">ANNNNNNA</p>
+                    <div class="count-clock">
+                        <div id="countdown"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="containPlayChess" th:include="/fragments/chessboard"></div>
+            <div class="user-top">
+                <img class="img-user"th:src="@{/IMAGE/br.png}" alt="">
+                <div class="contain-user">
+                    <p class="username">ANNNNNNA</p>
+                    <div class="count-clock">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="contain-move">
+            <div class="contain-count">
+                <select id="duration" class="selectMins" onchange="updateCountdown()">
+                    <option value="600">10 minutes</option>
+                    <option value="900">15 minutes</option>
+                    <option value="custom">Other</option>
+                </select>
+                <div class="btnCount">
+                    <input type="text" id="customInput" placeholder="mm:ss" style="display: none;">
+                    <button onclick="startCountdown()">Start Countdown</button>
+                </div>
+            </div>
+            <div class="shoe-move">
+
+            </div>
+        </div>
     </div>
 </div>
 <script th:src="@{/JS/playOnline.js}"></script>

@@ -5,11 +5,15 @@
   border-style: groove;
 }
 
+.square-sm {
+  width: 68px;
+  height: 68px;
+}
+
 .dad-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 3rem;
 }
 
 .main-container {
