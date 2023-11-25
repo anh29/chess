@@ -5,11 +5,15 @@
   border-style: groove;
 }
 
+.square-sm {
+  width: 68px;
+  height: 68px;
+}
+
 .dad-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 3rem;
 }
 
 .main-container {
@@ -24,6 +28,7 @@
   background-color: #7b7b7ba6;
 }
 
-img {
-  width: 100%;
+.img-cb {
+  width: 94%;
+  height: 94%;
 }
