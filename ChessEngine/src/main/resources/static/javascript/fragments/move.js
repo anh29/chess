@@ -1,6 +1,22 @@
 window.addEventListener('load', () => {
     let draggedImg = null; // This will store the dragged image
     let startSquare = null; // This will store the starting square
+
+    // Add event listeners for all squares
+    const squares = document.querySelectorAll('.square');
+    squares.forEach(square => {
+        square.addEventListener('dragover', onDragOver);
+        square.addEventListener('dragenter', onDragEnter);
+        square.addEventListener('dragleave', onDragLeave);
+        square.addEventListener('drop', onDrop);
+    });
+    // Add event listeners for all images inside squares
+    const images = document.querySelectorAll('.square img');
+    images.forEach(img => {
+        img.addEventListener('dragstart', onDragStart);
+        img.addEventListener('dragend', onDragEnd);
+    });
+
     function getSquareCoords(square) {
         const rankIndex = [...square.parentNode.children].indexOf(square);
         const fileIndex = [...square.parentNode.parentNode.children].indexOf(square.parentNode);
@@ -55,18 +71,4 @@ window.addEventListener('load', () => {
             startSquare = null;
         }
     }
-    // Add event listeners for all squares
-    const squares = document.querySelectorAll('.square');
-    squares.forEach(square => {
-        square.addEventListener('dragover', onDragOver);
-        square.addEventListener('dragenter', onDragEnter);
-        square.addEventListener('dragleave', onDragLeave);
-        square.addEventListener('drop', onDrop);
-    });
-    // Add event listeners for all images inside squares
-    const images = document.querySelectorAll('.square img');
-    images.forEach(img => {
-        img.addEventListener('dragstart', onDragStart);
-        img.addEventListener('dragend', onDragEnd);
-    });
 });

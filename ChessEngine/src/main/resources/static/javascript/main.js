@@ -1,12 +1,16 @@
 
 const contain = document.querySelector(".contain");
-
+let loadedScript  = new Set();
 async function init() {
-    contain.innerHTML=await AJAX('/play')
-}
+    contain.innerHTML = await AJAX('/play');
 
-function clickPlay() {
-    window.location='/online'
+    const path = '/javascript/fragments/timeSelector.js';
+    const script = document.createElement('script');
+    const text = document.createTextNode(await AJAX(path));
+    script.appendChild(text);
+    contain.append(script);
+
+    loadedScript.add(path);
 }
 
 init()

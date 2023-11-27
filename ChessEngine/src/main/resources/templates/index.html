@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/CSS/sidebar.css">
     <link rel="stylesheet" href="/CSS/chessboard.css">
     <link rel="stylesheet" href="/CSS/nav.css">
+    <link rel="stylesheet" href="/CSS/timeSelector.css">
 </head>
 
 <body>
@@ -60,8 +61,10 @@
         <div class="contain">
         </div>
     </div>
+    <div th:include="/fragments/timeSelector" class="containModal"></div>
 
-    <script th:src="@{/javascript/main.js}"></script>
+    <script defer th:src="@{/javascript/main.js}"></script>
+    <script defer th:src="@{/javascript/timeSelector.js}"></script>
 </body>
 
 </html>

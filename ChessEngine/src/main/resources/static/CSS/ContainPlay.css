@@ -40,3 +40,8 @@
     width: 40vh;
     padding-top: 16px;
 }
+
+.inputTime {
+    display: none;
+    margin-bottom: 10px;
+}
