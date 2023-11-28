@@ -1,0 +1,19 @@
+/* Position the promotion box in the center of the viewport */
+.promotion-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 1000; /* Make sure it's above all other elements */
+    display: flex;
+    justify-content: center;
+}
+.promotion-piece {
+    width: 50px; /* Or whatever size your images are */
+    margin: 0 10px;
+    cursor: pointer;
+}

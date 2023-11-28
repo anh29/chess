@@ -28,16 +28,18 @@ public class SecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/CSS/**").permitAll()
-                .requestMatchers("/IMAGE/**").permitAll()
+//                .requestMatchers("/CSS/**").permitAll()
+//                .requestMatchers("/IMAGE/**").permitAll()
 //                .requestMatchers("/javascript/**").permitAll()
 ////                .requestMatchers("/vendor/**").permitAll()
 //                .requestMatchers("/static/**").permitAll()
 //                .requestMatchers("/api/auth/**")
 //                .permitAll()
 //                .requestMatchers("/**").permitAll()
-                .requestMatchers("/templates/**").permitAll()
-                .requestMatchers("/public/**").permitAll()
+//                .requestMatchers("/templates/**").permitAll()
+//                .requestMatchers("/public/**").permitAll()
+//                .requestMatchers("/api/chess/**").permitAll()
+                .requestMatchers("/CSS/**", "/IMAGE/**", "/templates/**", "/public/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -50,7 +52,7 @@ public class SecurityConfig {
                 .frameOptions()
                 .sameOrigin();
 
-        http.formLogin(formLogin -> formLogin.loginPage("/login").permitAll());
+//        http.formLogin(formLogin -> formLogin.loginPage("/login").permitAll());
 
 //        http.logout(logout -> logout
 //                .logoutUrl("/logout") // URL to trigger logout (e.g. POST /logout)

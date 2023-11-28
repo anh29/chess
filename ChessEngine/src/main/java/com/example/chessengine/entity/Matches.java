@@ -20,6 +20,12 @@ public class Matches {
     @Column(name = "match_id")
     private Integer matchId;
 
+    @Column(name = "moves")
+    private String moves;
+
+    @Column(name = "score")
+    private String score;
+
     @Column(name = "status")
     private Integer status;
 

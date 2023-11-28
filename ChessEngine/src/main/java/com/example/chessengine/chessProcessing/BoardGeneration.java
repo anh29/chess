@@ -1,10 +1,12 @@
 package com.example.chessengine.chessProcessing;
 
+import com.example.chessengine.rest.ChessGameController;
+
 import java.util.Arrays;
 
 public class BoardGeneration {
     public static long WP = 0L, WN = 0L, WB = 0L, WR = 0L, WQ = 0L, WK = 0L, BP = 0L, BN = 0L, BB = 0L, BR = 0L, BQ = 0L, BK = 0L;
-
+    public static boolean CWK = true, CWQ = true, CBK = true, CBQ = true, WhiteToMove = true;
     public static void init() {
         String[][] chessBoard = {
                 {"r", " ", " ", "q", " ", "b", "n", "r"},
@@ -16,10 +18,10 @@ public class BoardGeneration {
                 {"P", "P", " ", " ", " ", "P", "P", "P"},
                 {"R", "N", " ", "b", "R", " ", "K", " "}};
 
-        ArrayToBitBoard(chessBoard, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
+//        ArrayToBitBoard(chessBoard, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
     }
 
-    public static void ArrayToBitBoard(String[][] chessBoard, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK) {
+    public static void ArrayToBitBoard(String[][] chessBoard, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, boolean CWK, boolean CWQ, boolean CBK, boolean CBQ, boolean whiteToMove) {
         for (int i = 0; i < 64; i++) {
             String Binary = "0000000000000000000000000000000000000000000000000000000000000000";
             Binary = Binary.substring(i + 1) + "1" + Binary.substring(0, i);
@@ -63,18 +65,23 @@ public class BoardGeneration {
             }
         }
         drawArray(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
-        UserInterface.WP = WP;
-        UserInterface.WN = WN;
-        UserInterface.WB = WB;
-        UserInterface.WR = WR;
-        UserInterface.WQ = WQ;
-        UserInterface.WK = WK;
-        UserInterface.BP = BP;
-        UserInterface.BN = BN;
-        UserInterface.BB = BB;
-        UserInterface.BR = BR;
-        UserInterface.BQ = BQ;
-        UserInterface.BK = BK;
+        ChessGameController.WP = WP;
+        ChessGameController.WN = WN;
+        ChessGameController.WB = WB;
+        ChessGameController.WR = WR;
+        ChessGameController.WQ = WQ;
+        ChessGameController.WK = WK;
+        ChessGameController.BP = BP;
+        ChessGameController.BN = BN;
+        ChessGameController.BB = BB;
+        ChessGameController.BR = BR;
+        ChessGameController.BQ = BQ;
+        ChessGameController.BK = BK;
+        ChessGameController.CWK = CWK;
+        ChessGameController.CWQ = CWQ;
+        ChessGameController.CBK = CBK;
+        ChessGameController.CBQ = CBQ;
+        ChessGameController.WhiteToMove = WhiteToMove;
     }
 
     public static long StringToBinary(String bit) {
@@ -134,6 +141,59 @@ public class BoardGeneration {
             System.out.println(Arrays.toString(chessBoard[i]));
         }
     }
+
+    public static void initFromFEN(String fen) {
+        String[] parts = fen.split(" ");
+        String boardLayout = parts[0];
+        String[][] chessBoard = new String[8][8];
+        String[] rows = boardLayout.split("/");
+        for (int i = 0; i < rows.length; i++) {
+            String row = rows[i];
+            for (int j = 0, column = 0; j < row.length(); j++) {
+                char symbol = row.charAt(j);
+                if (Character.isDigit(symbol)) {
+                    int emptySpaces = Character.getNumericValue(symbol);
+                    for (int k = 0; k < emptySpaces; k++, column++) {
+                        chessBoard[i][column] = " ";
+                    }
+                } else {
+                    chessBoard[i][column] = String.valueOf(symbol);
+                    column++;
+                }
+            }
+        }
+
+        String[] fenParts = fen.split(" ");
+        // Set the active color
+        WhiteToMove = fenParts[1].equals("w");
+
+        // Reset castling availability
+        CWK = false;
+        CWQ = false;
+        CBK = false;
+        CBQ = false;
+
+        // Set the castling availability
+        for (char c : fenParts[2].toCharArray()) {
+            switch (c) {
+                case 'K':
+                    CWK = true;
+                    break;
+                case 'Q':
+                    CWQ = true;
+                    break;
+                case 'k':
+                    CBK = true;
+                    break;
+                case 'q':
+                    CBQ = true;
+                    break;
+            }
+        }
+
+        ArrayToBitBoard(chessBoard, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK , CWK, CWQ, CBK, CBQ, WhiteToMove);
+    }
+
 }
 
 
