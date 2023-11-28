@@ -1,60 +1,41 @@
-const contain = document.querySelector(".contain");
+const container = document.querySelector(".container")
+const countStart = document.querySelector("#countStart");
+
+document.addEventListener("DOMContentLoaded", function () {
+    let seconds = 5;
+
+    function updateCountdown() {
+        countStart.innerHTML = "Start clock in " + seconds + " seconds";
+    }
+
+    function hideCountdown() {
+        countStart.style.display = "none";
+    }
+
+    function countdown() {
+        updateCountdown();
+        if (seconds === 0) {
+            hideCountdown();
+
+            init()
+        } else {
+            seconds--;
+            setTimeout(countdown, 1000);
+        }
+    }
+
+    // Start the countdown
+    setTimeout(countdown, 1000);
+});
 
 async function init() {
-    contain.innerHTML=await AJAX('/play')
-}
+    const path = '/javascript/fragments/handleClock.js';
+    const script = document.createElement('script');
+    const text = document.createTextNode(await AJAX(path));
+    script.appendChild(text);
+    container.append(script);
 
-var countdownValue = 0;
-var countdownInterval;
-
-function updateCountdown() {
-    var durationSelect = document.getElementById("duration");
-    var customInput = document.getElementById("customInput");
-
-    if (durationSelect.value === "custom") {
-        customInput.style.display = "inline-block";
-    } else {
-        customInput.style.display = "none";
-    }
-}
-
-function startCountdown() {
-    var durationSelect = document.getElementById("duration");
-    var customInput = document.getElementById("customInput");
-    var countdownDisplay = document.getElementById("countdown");
-
-    if (durationSelect.value === "custom") {
-        // Parse the custom input value (mm:ss) to seconds
-        var customTime = customInput.value.split(":");
-        countdownValue = parseInt(customTime[0]) * 60 + parseInt(customTime[1]);
-    } else {
-        countdownValue = parseInt(durationSelect.value);
-    }
-
-    // Display initial countdown value
-    displayCountdown();
-
-    // Update countdown every second
-    countdownInterval = setInterval(function () {
-        countdownValue--;
-
-        if (countdownValue >= 0) {
-            displayCountdown();
-        } else {
-            clearInterval(countdownInterval);
-            alert("Countdown completed!");
-        }
-    }, 1000);
-}
-
-function displayCountdown() {
-    var minutes = Math.floor(countdownValue / 60);
-    var seconds = countdownValue % 60;
-
-    document.getElementById("countdown").innerHTML =
-        minutes.toString().padStart(2, "0") +
-        ":" +
-        seconds.toString().padStart(2, "0");
+    loadedScript.add(path);
 }
 
 async function AJAX(fragment, json = false) {

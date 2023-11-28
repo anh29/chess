@@ -66,6 +66,14 @@ window.addEventListener('load', () => {
             }
 
             event.currentTarget.appendChild(draggedImg);
+
+            // Update time controls based on the color of the moved piece
+            if (draggedImg.classList.contains('black')) {
+                timeBlack += timeControls.increment; // Increase time for black
+            } else if (draggedImg.classList.contains('white')) {
+                timeWhite += timeControls.increment; // Increase time for white
+            }
+
             draggedImg.style.opacity = '';
             draggedImg = null;
             startSquare = null;
