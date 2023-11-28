@@ -40,3 +40,25 @@
     width: 40vh;
     padding-top: 16px;
 }
+
+.inputTime {
+    display: none;
+    margin-bottom: 10px;
+}
+
+.show-time {
+height: 25px;
+    text-align: center;
+    align-items: center;
+    margin: 30px;
+    display: flex;
+    font-size: 18px;
+}
+
+.txtClock {
+    padding: 10px;
+    border: 3px solid;
+    border-radius: 10px;
+    font-weight: 700;
+    margin-right: 20px;
+}

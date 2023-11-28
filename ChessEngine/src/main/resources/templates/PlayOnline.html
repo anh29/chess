@@ -75,35 +75,24 @@
                     </div>
                 </div>
             </div>
-            <div class="containPlayChess" th:include="/fragments/chessboard"></div>
-            <div class="user-top">
-                <img class="img-user"th:src="@{/IMAGE/br.png}" alt="">
-                <div class="contain-user">
-                    <p class="username">ANNNNNNA</p>
-                    <div class="count-clock">
+            <div class="contain-move">
+                <div th:if="${idTime}" class="show-time">
+                    <div class="txtClock">
+                        <p>Game clock: <span id="idTime" th:text="${idTime}"></span></p>
+                    </div>
+                    <div class="txtTime">
+                        <p id="countStart">Start clock in 5 seconds</p>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="contain-move">
-            <div class="contain-count">
-                <select id="duration" class="selectMins" onchange="updateCountdown()" title="a">
-                    <option value="600">10 minutes</option>
-                    <option value="900">15 minutes</option>
-                    <option value="custom">Other</option>
-                </select>
-                <div class="btnCount">
-                    <input type="text" id="customInput" placeholder="mm:ss" style="display: none;">
-                    <button onclick="startCountdown()">Start Countdown</button>
-                </div>
-            </div>
-            <div class="shoe-move">
 
+                <div class="shoe-move">
+
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script th:src="@{/javascript/playOnline.js}"></script>
-<script th:src="@{/javascript/move.js}"></script>
+
+    <script defer th:src="@{/javascript/fragments/playOnline.js}"></script>
+    <script defer th:src="@{/javascript/fragments/move.js}"></script>
 </body>
 </html>
