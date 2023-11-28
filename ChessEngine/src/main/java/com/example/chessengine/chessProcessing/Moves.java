@@ -1,5 +1,7 @@
 package com.example.chessengine.chessProcessing;
 
+import com.example.chessengine.rest.ChessGameController;
+
 public class Moves {
     static long WPmt = 0L, WNmt = 0L, WBmt = 0L, WRmt = 0L, WQmt = 0L, WKmt = 0L, BPmt = 0L, BNmt = 0L, BBmt = 0L, BRmt = 0L, BQmt = 0L, BKmt = 0L, EPmt = 0L;
     static boolean CWKm = true, CWQm = true, CBKm = true, CBQm = true, WhiteToMove = true;
@@ -699,7 +701,7 @@ public class Moves {
 
     public static long unsafeForBlack(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK) {
         long unsafe;
-        OCCUPIED = WP | WN | WB | WR | WQ | WK | BP | BN | BB | BR | BQ | BK;
+//        OCCUPIED = WP | WN | WB | WR | WQ | WK | BP | BN | BB | BR | BQ | BK;
 
         //pawn
         unsafe = ((WP >>> 7) & ~FILE_A);//pawn capture right
@@ -766,7 +768,7 @@ public class Moves {
 
     public static long unsafeForWhite(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK) {
         long unsafe;
-        OCCUPIED = WP | WN | WB | WR | WQ | WK | BP | BN | BB | BR | BQ | BK;
+//        OCCUPIED = WP | WN | WB | WR | WQ | WK | BP | BN | BB | BR | BQ | BK;
 
         //pawn
         unsafe = ((BP << 7) & ~FILE_H);//pawn capture right
@@ -830,186 +832,6 @@ public class Moves {
 
         return unsafe;
     }
-
-//    public static void makeMoveWrong(String move, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean CWK, boolean CWQ, boolean CBK, boolean CBQ) {
-//        //can not operate on a single board since moves are not backwards compatible
-//
-//        EP = 0;
-//        if (Character.isDigit(move.charAt(3))) {
-//            int start = (Character.getNumericValue(move.charAt(0)) * 8) + (Character.getNumericValue(move.charAt(1)));
-//            int end = (Character.getNumericValue(move.charAt(2)) * 8) + (Character.getNumericValue(move.charAt(3)));
-//            if ((WK & (1L << start)) != 0) {//white castle move
-//                WK ^= (1L << start);
-//                WK ^= (1L << end);
-//                if (end > start && end - start == 2) {//king side
-//                    WR ^= (1L << 63);
-//                    WR ^= (1L << 61);
-//                } else if (end < start && start - end == 3) {//queen side
-//                    WR ^= (1L << 56);
-//                    WR ^= (1L << 59);
-//                }
-//                CWK = false;
-//                CWQ = false;
-//            } else if ((BK & (1L << start)) != 0) {//black castle move
-//                BK ^= (1L << start);
-//                BK ^= (1L << end);
-//                if (end > start && end - start == 2) {//king side
-//                    BR ^= (1L << 7);
-//                    BR ^= (1L << 5);
-//                } else if (end < start && start - end == 3) {//queen side
-//                    BR ^= 1L;
-//                    BR ^= (1L << 3);
-//                }
-//                CBK = false;
-//                CBQ = false;
-//            } else {//'regular' move
-//                //clear destination:
-//                WP &= ~(1L << end);
-//                WN &= ~(1L << end);
-//                WB &= ~(1L << end);
-//                WR &= ~(1L << end);
-//                WQ &= ~(1L << end);
-//                WK &= ~(1L << end);
-//                BP &= ~(1L << end);
-//                BN &= ~(1L << end);
-//                BB &= ~(1L << end);
-//                BR &= ~(1L << end);
-//                BQ &= ~(1L << end);
-//                BK &= ~(1L << end);
-//
-//                //move piece:
-//                if ((WP & (1L << start)) != 0) {
-//                    WP ^= (1L << start);
-//                    WP ^= (1L << end);
-//                    if ((end - start) == 16) {//pawn double push
-//                        EP = FileMasks8['0' - move.charAt(1)];
-//                    }
-//                } else if ((BP & (1L << start)) != 0) {
-//                    BP ^= (1L << start);
-//                    BP ^= (1L << end);
-//                    if ((start - end) == 16) {//pawn double push
-//                        EP = FileMasks8['0' - move.charAt(1)];
-//                    }
-//                } else if ((WN & (1L << start)) != 0) {
-//                    WN ^= (1L << start);
-//                    WN ^= (1L << end);
-//                } else if ((BN & (1L << start)) != 0) {
-//                    BN ^= (1L << start);
-//                    BN ^= (1L << end);
-//                } else if ((WB & (1L << start)) != 0) {
-//                    WB ^= (1L << start);
-//                    WB ^= (1L << end);
-//                } else if ((BB & (1L << start)) != 0) {
-//                    BB ^= (1L << start);
-//                    BB ^= (1L << end);
-//                } else if ((WR & (1L << start)) != 0) {
-//                    WR ^= (1L << start);
-//                    WR ^= (1L << end);
-//                    if (start == CASTLE_ROOKS[0]) {
-//                        CWK = false;
-//                    }
-//                    if (start == CASTLE_ROOKS[1]) {
-//                        CWQ = false;
-//                    }
-//                } else if ((BR & (1L << start)) != 0) {
-//                    BR ^= (1L << start);
-//                    BR ^= (1L << end);
-//                    if (start == CASTLE_ROOKS[2]) {
-//                        CBK = false;
-//                    }
-//                    if (start == CASTLE_ROOKS[3]) {
-//                        CBQ = false;
-//                    }
-//                } else if ((WQ & (1L << start)) != 0) {
-//                    WQ ^= (1L << start);
-//                    WQ ^= (1L << end);
-//                } else if ((BQ & (1L << start)) != 0) {
-//                    BQ ^= (1L << start);
-//                    BQ ^= (1L << end);
-//                } else if ((WK & (1L << start)) != 0) {
-//                    WK ^= (1L << start);
-//                    WK ^= (1L << end);
-//                    CWK = false;
-//                    CWQ = false;
-//                } else if ((BK & (1L << start)) != 0) {
-//                    BK ^= (1L << start);
-//                    BK ^= (1L << end);
-//                    CBK = false;
-//                    CBQ = false;
-//                } else {
-//                    System.out.print("error: can not move empty piece");
-//                }
-//            }
-//        } else if (move.charAt(3) == 'P') {//pawn promotion
-//            //y1,y2,Promotion Type,"P"
-//            if (Character.isUpperCase(move.charAt(2)))//white piece promotion
-//            {
-//                WP ^= (RankMasks8[6] & FileMasks8[move.charAt(0) - '0']);
-//                switch (move.charAt(2)) {
-//                    case 'N':
-//                        WN ^= (RankMasks8[7] & FileMasks8[move.charAt(1) - '0']);
-//                        break;
-//                    case 'B':
-//                        WB ^= (RankMasks8[7] & FileMasks8[move.charAt(1) - '0']);
-//                        break;
-//                    case 'R':
-//                        WR ^= (RankMasks8[7] & FileMasks8[move.charAt(1) - '0']);
-//                        break;
-//                    case 'Q':
-//                        WQ ^= (RankMasks8[7] & FileMasks8[move.charAt(1) - '0']);
-//                        break;
-//                }
-//            } else {//black piece promotion
-//                BP ^= (RankMasks8[1] & FileMasks8[move.charAt(0) - '0']);
-//                switch (move.charAt(2)) {
-//                    case 'n':
-//                        BN ^= (RankMasks8[0] & FileMasks8[move.charAt(1) - '0']);
-//                        break;
-//                    case 'b':
-//                        BB ^= (RankMasks8[0] & FileMasks8[move.charAt(1) - '0']);
-//                        break;
-//                    case 'r':
-//                        BR ^= (RankMasks8[0] & FileMasks8[move.charAt(1) - '0']);
-//                        break;
-//                    case 'q':
-//                        BQ ^= (RankMasks8[0] & FileMasks8[move.charAt(1) - '0']);
-//                        break;
-//                }
-//            }
-//        } else if (move.charAt(3) == 'E') {//en passant move
-//            if (move.charAt(2) == 'w') {//white move
-//                //y1,y2,"BE"
-//                WP ^= (RankMasks8[4] & FileMasks8['0' - move.charAt(0)]);//remove white pawn
-//                WP ^= (RankMasks8[5] & FileMasks8['0' - move.charAt(1)]);//add white pawn
-//                BP ^= (RankMasks8[4] & FileMasks8['0' - move.charAt(1)]);//remove black pawn
-//            } else {//black move
-//                BP ^= (RankMasks8[3] & FileMasks8['0' - move.charAt(0)]);//remove black pawn
-//                BP ^= (RankMasks8[2] & FileMasks8['0' - move.charAt(1)]);//add black pawn
-//                WP ^= (RankMasks8[3] & FileMasks8['0' - move.charAt(1)]);//remove white pawn
-//            }
-//        } else {
-//            System.out.print("error: not a valid move type");
-//        }
-//
-//        UserInterface.WP = WP;
-//        UserInterface.WN = WN;
-//        UserInterface.WB = WB;
-//        UserInterface.WR = WR;
-//        UserInterface.WQ = WQ;
-//        UserInterface.WK = WK;
-//        UserInterface.BP = BP;
-//        UserInterface.BN = BN;
-//        UserInterface.BB = BB;
-//        UserInterface.BR = BR;
-//        UserInterface.BQ = BQ;
-//        UserInterface.BK = BK;
-//        UserInterface.EP = EP;
-//
-//        UserInterface.CWK = CWK;
-//        UserInterface.CWQ = CWQ;
-//        UserInterface.CBK = CBK;
-//        UserInterface.CBQ = CBQ;
-//    }
 
     public static long makeMove(long board, String move, char type) {
         if (Character.isDigit(move.charAt(3))) {//'regular' move
@@ -1140,27 +962,27 @@ public class Moves {
 //                HISTORIC_MOVES.add(move);
 //                keepOldBoard();
 //                getHistory(move, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WPt, WNt, WBt, WRt, WQt, WKt, BPt, BNt, BBt, BRt, BQt, BKt, EPt);
-//                UserInterface.HISTORIC_MOVES.add(move);
-                UserInterface.HISTORIC_BITBOARD.add(new HistoricInfo(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove));
-                UserInterface.WP = WPt;
-                UserInterface.WN = WNt;
-                UserInterface.WB = WBt;
-                UserInterface.WR = WRt;
-                UserInterface.WQ = WQt;
-                UserInterface.WK = WKt;
-                UserInterface.BP = BPt;
-                UserInterface.BN = BNt;
-                UserInterface.BB = BBt;
-                UserInterface.BR = BRt;
-                UserInterface.BQ = BQt;
-                UserInterface.BK = BKt;
-                UserInterface.EP = EPt;
+//                ChessGameController.HISTORIC_MOVES.add(move);
+                ChessGameController.HISTORIC_BITBOARD.add(new HistoricInfo(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove));
+                ChessGameController.WP = WPt;
+                ChessGameController.WN = WNt;
+                ChessGameController.WB = WBt;
+                ChessGameController.WR = WRt;
+                ChessGameController.WQ = WQt;
+                ChessGameController.WK = WKt;
+                ChessGameController.BP = BPt;
+                ChessGameController.BN = BNt;
+                ChessGameController.BB = BBt;
+                ChessGameController.BR = BRt;
+                ChessGameController.BQ = BQt;
+                ChessGameController.BK = BKt;
+                ChessGameController.EP = EPt;
 
-                UserInterface.CWK = CWKt;
-                UserInterface.CWQ = CWQt;
-                UserInterface.CBK = CBKt;
-                UserInterface.CBQ = CBQt;
-                UserInterface.WhiteToMove = !WhiteToMove;
+                ChessGameController.CWK = CWKt;
+                ChessGameController.CWQ = CWQt;
+                ChessGameController.CBK = CBKt;
+                ChessGameController.CBQ = CBQt;
+                ChessGameController.WhiteToMove = !WhiteToMove;
             } else {
                 System.out.println("Invalid move jawoiefjow");
             }
@@ -1174,556 +996,27 @@ public class Moves {
         }
     }
 
-//    public static void undoMove(ArrayList<String> MOVE, ArrayList<String> PIECE) {
-//        String move = MOVE.get(MOVE.size() - 1);
-//        String piece = PIECE.get(PIECE.size() - 1);
-//
-//        if (Character.isDigit(move.charAt(3))) {
-//            int start = (move.charAt(0) - '0') * 8 + (move.charAt(1) - '0');
-//            int end = (move.charAt(2) - '0') * 8 + (move.charAt(3) - '0');
-//            if (piece.length() == 1) {
-//                switch (piece) {
-//                    case "P":
-//                        UserInterface.WP |= (1L << start);
-//                        UserInterface.WP &= ~(1L << end);
-//                        break;
-//                    case "N":
-//                        UserInterface.WN |= (1L << start);
-//                        UserInterface.WN &= ~(1L << end);
-//                        break;
-//                    case "B":
-//                        UserInterface.WB |= (1L << start);
-//                        UserInterface.WB &= ~(1L << end);
-//                        break;
-//                    case "R":
-//                        UserInterface.WR |= (1L << start);
-//                        UserInterface.WR &= ~(1L << end);
-//                        break;
-//                    case "Q":
-//                        UserInterface.WQ |= (1L << start);
-//                        UserInterface.WQ &= ~(1L << end);
-//                        break;
-//                    case "K":
-//                        UserInterface.WK |= (1L << start);
-//                        UserInterface.WK &= ~(1L << end);
-//                        break;
-//                    case "p":
-//                        UserInterface.BP |= (1L << start);
-//                        UserInterface.BP &= ~(1L << end);
-//                        break;
-//                    case "n":
-//                        UserInterface.BN |= (1L << start);
-//                        UserInterface.BN &= ~(1L << end);
-//                        break;
-//                    case "b":
-//                        UserInterface.BB |= (1L << start);
-//                        UserInterface.BB &= ~(1L << end);
-//                        break;
-//                    case "r":
-//                        UserInterface.BR |= (1L << start);
-//                        UserInterface.BR &= ~(1L << end);
-//                        break;
-//                    case "q":
-//                        UserInterface.BQ |= (1L << start);
-//                        UserInterface.BQ &= ~(1L << end);
-//                        break;
-//                    case "k":
-//                        UserInterface.BK |= (1L << start);
-//                        UserInterface.BK &= ~(1L << end);
-//                        break;
-//                }
-//            } else if (piece.length() == 2) {
-//                switch (piece.charAt(0)) {
-//                    case 'P':
-//                        UserInterface.WP |= (1L << start);
-//                        UserInterface.WP &= ~(1L << end);
-//                        break;
-//                    case 'N':
-//                        UserInterface.WN |= (1L << start);
-//                        UserInterface.WN &= ~(1L << end);
-//                        break;
-//                    case 'B':
-//                        UserInterface.WB |= (1L << start);
-//                        UserInterface.WB &= ~(1L << end);
-//                        break;
-//                    case 'R':
-//                        UserInterface.WR |= (1L << start);
-//                        UserInterface.WR &= ~(1L << end);
-//                        break;
-//                    case 'Q':
-//                        UserInterface.WQ |= (1L << start);
-//                        UserInterface.WQ &= ~(1L << end);
-//                        break;
-//                    case 'K':
-//                        UserInterface.WK |= (1L << start);
-//                        UserInterface.WK &= ~(1L << end);
-//                        break;
-//                    case 'p':
-//                        UserInterface.BP |= (1L << start);
-//                        UserInterface.BP &= ~(1L << end);
-//                        break;
-//                    case 'n':
-//                        UserInterface.BN |= (1L << start);
-//                        UserInterface.BN &= ~(1L << end);
-//                        break;
-//                    case 'b':
-//                        UserInterface.BB |= (1L << start);
-//                        UserInterface.BB &= ~(1L << end);
-//                        break;
-//                    case 'r':
-//                        UserInterface.BR |= (1L << start);
-//                        UserInterface.BR &= ~(1L << end);
-//                        break;
-//                    case 'q':
-//                        UserInterface.BQ |= (1L << start);
-//                        UserInterface.BQ &= ~(1L << end);
-//                        break;
-//                    case 'k':
-//                        UserInterface.BK |= (1L << start);
-//                        UserInterface.BK &= ~(1L << end);
-//                        break;
-//                }
-//                switch (piece.charAt(1)) {
-//                    case 'P':
-//                        UserInterface.WP |= (1L << end);
-//                        break;
-//                    case 'N':
-//                        UserInterface.WN |= (1L << end);
-//                        break;
-//                    case 'B':
-//                        UserInterface.WB |= (1L << end);
-//                        break;
-//                    case 'R':
-//                        UserInterface.WR |= (1L << end);
-//                        break;
-//                    case 'Q':
-//                        UserInterface.WQ |= (1L << end);
-//                        break;
-//                    case 'K':
-//                        UserInterface.WK |= (1L << end);
-//                        break;
-//                    case 'p':
-//                        UserInterface.BP |= (1L << end);
-//                        break;
-//                    case 'n':
-//                        UserInterface.BN |= (1L << end);
-//                        break;
-//                    case 'b':
-//                        UserInterface.BB |= (1L << end);
-//                        break;
-//                    case 'r':
-//                        UserInterface.BR |= (1L << end);
-//                        break;
-//                    case 'q':
-//                        UserInterface.BQ |= (1L << end);
-//                        break;
-//                    case 'k':
-//                        UserInterface.BK |= (1L << end);
-//                        break;
-//                }
-//            } else if (piece.length() == 3) {
-//                if (piece.charAt(2) == 'C') {
-//                    if (piece.equals("KRC")) {
-//                        UserInterface.WK |= (1L << start);
-//                        UserInterface.WK &= ~(1L << end);
-//                        UserInterface.WR |= (1L << CASTLE_ROOKS[0]);
-//                        UserInterface.WR &= ~(1L << CASTLE_ROOKS[0] - 2);
-//                        UserInterface.CWK = true;
-//                    } else if (piece.equals("RKC")) {
-//                        UserInterface.WK |= (1L << start);
-//                        UserInterface.WK &= ~(1L << end);
-//                        UserInterface.WR |= (1L << CASTLE_ROOKS[1]);
-//                        UserInterface.WR &= ~(1L << CASTLE_ROOKS[1] + 3);
-//                        UserInterface.CWQ = true;
-//                    } else if (piece.equals("krC")) {
-//                        UserInterface.WK |= (1L << start);
-//                        UserInterface.WK &= ~(1L << end);
-//                        UserInterface.WR |= (1L << CASTLE_ROOKS[2]);
-//                        UserInterface.WR &= ~(1L << CASTLE_ROOKS[2] - 2);
-//                        UserInterface.CBK = true;
-//                    } else if (piece.equals("rkC")) {
-//                        UserInterface.WK |= (1L << start);
-//                        UserInterface.WK &= ~(1L << end);
-//                        UserInterface.WR |= (1L << CASTLE_ROOKS[3]);
-//                        UserInterface.WR &= ~(1L << CASTLE_ROOKS[3] + 3);
-//                        UserInterface.CWQ = true;
-//                    }
-//                }
-//            }
-//        } else if (move.charAt(3) == 'E') {
-//            if (move.charAt(2) == 'W') {
-//                int start = 3 * 8 + (move.charAt(0) - '0');
-//                int end = 2 * 8 + (move.charAt(1) - '0');
-//                if (start - end == 7) {
-//                    UserInterface.WP |= (1L << start);
-//                    UserInterface.WP &= ~(1L << end);
-//                    UserInterface.BP |= (1L << (start + 1));
-//                } else if (start - end == 9) {
-//                    UserInterface.WP |= (1L << start);
-//                    UserInterface.WP &= ~(1L << end);
-//                    UserInterface.BP |= (1L << (start - 1));
-//                }
-//            } else if (move.charAt(2) == 'B') {
-//                int start = 4 * 8 + (move.charAt(0) - '0');
-//                int end = 5 * 8 + (move.charAt(1) - '0');
-//                if (end - start == 7) {
-//                    UserInterface.BP |= (1L << start);
-//                    UserInterface.BP &= ~(1L << end);
-//                    UserInterface.WP |= (1L << (start - 1));
-//                } else if (end - start == 9) {
-//                    UserInterface.BP |= (1L << start);
-//                    UserInterface.BP &= ~(1L << end);
-//                    UserInterface.WP |= (1L << (start + 1));
-//                }
-//            }
-//        } else if (move.charAt(3) == 'P') {
-//            if (move.charAt(0) == move.charAt(1)) {
-//                if (Character.isUpperCase(move.charAt(2))) {
-//                    int start = 8 + (move.charAt(0) - '0');
-//                    int end = (move.charAt(0) - '0');
-//                    if (move.charAt(2) == 'N') {
-//                        UserInterface.WP |= (1L << start);
-//                        UserInterface.WP &= ~(1L << end);
-//                        UserInterface.WN &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'B') {
-//                        UserInterface.WP |= (1L << start);
-//                        UserInterface.WP &= ~(1L << end);
-//                        UserInterface.WB &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'R') {
-//                        UserInterface.WP |= (1L << start);
-//                        UserInterface.WP &= ~(1L << end);
-//                        UserInterface.WR &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'Q') {
-//                        UserInterface.WP |= (1L << start);
-//                        UserInterface.WP &= ~(1L << end);
-//                        UserInterface.WQ &= ~(1L << end);
-//                    }
-//                } else {
-//                    int start = 8 * 6 + (move.charAt(0) - '0');
-//                    int end = 8 * 7 + (move.charAt(0) - '0');
-//                    if (move.charAt(2) == 'n') {
-//                        UserInterface.BP |= (1L << start);
-//                        UserInterface.BP &= ~(1L << end);
-//                        UserInterface.BN &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'b') {
-//                        UserInterface.BP |= (1L << start);
-//                        UserInterface.BP &= ~(1L << end);
-//                        UserInterface.BB &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'r') {
-//                        UserInterface.BP |= (1L << start);
-//                        UserInterface.BP &= ~(1L << end);
-//                        UserInterface.BR &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'q') {
-//                        UserInterface.BP |= (1L << start);
-//                        UserInterface.BP &= ~(1L << end);
-//                        UserInterface.BQ &= ~(1L << end);
-//                    }
-//                }
-//            } else {
-//                if (Character.isUpperCase(move.charAt(2))) {
-//                    int start = 8 + (move.charAt(0) - '0');
-//                    int end = (move.charAt(1) - '0');
-//                    if (move.charAt(2) == 'N') {
-//                        UserInterface.WP |= (1L << start);
-//                        UserInterface.WP &= ~(1L << end);
-//                        UserInterface.WN &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'B') {
-//                        UserInterface.WP |= (1L << start);
-//                        UserInterface.WP &= ~(1L << end);
-//                        UserInterface.WB &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'R') {
-//                        UserInterface.WP |= (1L << start);
-//                        UserInterface.WP &= ~(1L << end);
-//                        UserInterface.WR &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'Q') {
-//                        UserInterface.WP |= (1L << start);
-//                        UserInterface.WP &= ~(1L << end);
-//                        UserInterface.WQ &= ~(1L << end);
-//                    }
-//                    if (piece.charAt(1) == 'n') {
-//                        UserInterface.BN |= (1L << end);
-//                    } else if (piece.charAt(1) == 'b') {
-//                        UserInterface.BB |= (1L << end);
-//                    } else if (piece.charAt(1) == 'r') {
-//                        UserInterface.BR |= (1L << end);
-//                    } else if (piece.charAt(1) == 'q') {
-//                        UserInterface.BQ |= (1L << end);
-//                    }
-//                } else {
-//                    int start = 8 * 6 + (move.charAt(0) - '0');
-//                    int end = 8 * 7 + (move.charAt(1) - '0');
-//                    if (move.charAt(2) == 'n') {
-//                        UserInterface.BP |= (1L << start);
-//                        UserInterface.BP &= ~(1L << end);
-//                        UserInterface.BN &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'b') {
-//                        UserInterface.BP |= (1L << start);
-//                        UserInterface.BP &= ~(1L << end);
-//                        UserInterface.BB &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'r') {
-//                        UserInterface.BP |= (1L << start);
-//                        UserInterface.BP &= ~(1L << end);
-//                        UserInterface.BR &= ~(1L << end);
-//                    } else if (move.charAt(2) == 'q') {
-//                        UserInterface.BP |= (1L << start);
-//                        UserInterface.BP &= ~(1L << end);
-//                        UserInterface.BQ &= ~(1L << end);
-//                    }
-//                    if (piece.charAt(1) == 'N') {
-//                        UserInterface.WN |= (1L << end);
-//                    } else if (piece.charAt(1) == 'B') {
-//                        UserInterface.WB |= (1L << end);
-//                    } else if (piece.charAt(1) == 'R') {
-//                        UserInterface.WR |= (1L << end);
-//                    } else if (piece.charAt(1) == 'Q') {
-//                        UserInterface.WQ |= (1L << end);
-//                    }
-//                }
-//            }
-//        }
-//        if (MOVE.size() >= 2) {
-//            UserInterface.EP = UserInterface.HISTORIC_EP.get(UserInterface.HISTORIC_EP.size() - 2);
-//        } else {
-//            UserInterface.EP = 0;
-//        }
-//        UserInterface.WhiteToMove = !UserInterface.WhiteToMove;
-//        MOVE.remove(MOVE.size() - 1);
-//        PIECE.remove(PIECE.size() - 1);
-//    }
-
-//    public static void getHistory(String move, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP,
-//                                  long WPt, long WNt, long WBt, long WRt, long WQt, long WKt, long BPt, long BNt, long BBt, long BRt, long BQt, long BKt, long EPt) {
-//        long[] oriList = {WP, 0, WN, 1, WB, 2, WR, 3, WQ, 4, WK, 5, BP, 6, BN, 7, BB, 8, BR, 9, BQ, 10, BK, 11, EP, 12};
-//        long[] tempList = {WPt, 0, WNt, 1, WBt, 2, WRt, 3, WQt, 4, WKt, 5, BPt, 6, BNt, 7, BBt, 8, BRt, 9, BQt, 10, BKt, 11, EPt, 12};
-//
-//        ArrayList<Long> checkingDiff = new ArrayList<Long>();
-//
-//        for (int i = 0; i < oriList.length; i += 2) {
-//            if ((oriList[i] ^ tempList[i]) != 0) {
-//                checkingDiff.add(tempList[i]);
-//                checkingDiff.add(tempList[i + 1]);
-//            }
-//        }
-////        System.out.println(checkingDiff.size());
-//        if (checkingDiff.size() == 2) {
-//            // only regular move and no capture
-//            String a = "";
-//            if (checkingDiff.get(1) == 0) {
-//                a += "P";
-//            } else if (checkingDiff.get(1) == 1) {
-//                a += "N";
-//            } else if (checkingDiff.get(1) == 2) {
-//                a += "B";
-//            } else if (checkingDiff.get(1) == 3) {
-//                a += "R";
-//            } else if (checkingDiff.get(1) == 4) {
-//                a += "Q";
-//            } else if (checkingDiff.get(1) == 5) {
-//                a += "K";
-//            } else if (checkingDiff.get(1) == 6) {
-//                a += "p";
-//            } else if (checkingDiff.get(1) == 7) {
-//                a += "n";
-//            } else if (checkingDiff.get(1) == 8) {
-//                a += "b";
-//            } else if (checkingDiff.get(1) == 9) {
-//                a += "r";
-//            } else if (checkingDiff.get(1) == 10) {
-//                a += "q";
-//            } else if (checkingDiff.get(1) == 11) {
-//                a += "k";
-//            }
-//            if (Math.abs(Long.numberOfTrailingZeros(WP ^ WPt) - Long.numberOfLeadingZeros(WP ^ WPt)) == 16 ||
-//                Math.abs(Long.numberOfTrailingZeros(BP ^ BPt) - Long.numberOfLeadingZeros(BP ^ BPt)) == 16)
-//            {
-//                UserInterface.HISTORIC_EP.add(EPt);
-//            }
-//            else
-//            {
-//                UserInterface.HISTORIC_EP.add(0L);
-//            }
-//            UserInterface.HISTORIC_PIECES.add(a);
-//
-//        } else if (checkingDiff.size() == 4) {
-//            if (Character.isDigit(move.charAt(3))) {
-//                int start = (Character.getNumericValue(move.charAt(0)) * 8) + (Character.getNumericValue(move.charAt(1)));
-//                int end = (Character.getNumericValue(move.charAt(2)) * 8) + (Character.getNumericValue(move.charAt(3)));
-//                int dist = Math.abs(Math.abs(start) - Math.abs(end));
-//                boolean d = dist >= 2;
-//                if ((WK & (1L << start)) != 0 && d) {
-//                    if (end - start == 2) {
-//                        UserInterface.HISTORIC_PIECES.add("KRC");
-//                    } else if (start - end == 3) {
-//                        UserInterface.HISTORIC_PIECES.add("RKC");
-//                    }
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                } else if ((BK & (1L << start)) != 0 && d) {
-//                    if (end - start == 2) {
-//                        UserInterface.HISTORIC_PIECES.add("krC");
-//                    } else if (start - end == 3) {
-//                        UserInterface.HISTORIC_PIECES.add("rkC");
-//                    }
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                } else if (checkingDiff.get(2) == EPt && dist == 16) {
-//                    if (checkingDiff.get(1) == 0) {
-//                        UserInterface.HISTORIC_PIECES.add("P");
-//                    } else if (checkingDiff.get(1) == 6) {
-//                        UserInterface.HISTORIC_PIECES.add("p");
-//                    }
-//                    UserInterface.HISTORIC_EP.add(EPt);
-//                }
-//                else {
-//                    StringBuilder a = new StringBuilder();
-//                    for (int i = 0; i < 4; i += 2) {
-//                        if ((checkingDiff.get(i) & (1L << start)) == 0 && (checkingDiff.get(i) & (1L << end)) != 0) {
-//                            if (a.length() == 2)
-//                            {
-//                                break;
-//                            }
-//                            if (checkingDiff.get(i + 1) == 0) {
-//                                a.append("P");
-//                            } else if (checkingDiff.get(i + 1) == 1) {
-//                                a.append("N");
-//                            } else if (checkingDiff.get(i + 1) == 2) {
-//                                a.append("B");
-//                            } else if (checkingDiff.get(i + 1) == 3) {
-//                                a.append("R");
-//                            } else if (checkingDiff.get(i + 1) == 4) {
-//                                a.append("Q");
-//                            } else if (checkingDiff.get(i + 1) == 5) {
-//                                a.append("K");
-//                            } else if (checkingDiff.get(i + 1) == 6) {
-//                                a.append("p");
-//                            } else if (checkingDiff.get(i + 1) == 7) {
-//                                a.append("n");
-//                            } else if (checkingDiff.get(i + 1) == 8) {
-//                                a.append("b");
-//                            } else if (checkingDiff.get(i + 1) == 9) {
-//                                a.append("r");
-//                            } else if (checkingDiff.get(i + 1) == 10) {
-//                                a.append("q");
-//                            } else if (checkingDiff.get(i + 1) == 11) {
-//                                a.append("k");
-//                            }
-//                            if (a.length() == 1)
-//                            {
-//                                i = -2;
-//                            }
-//                        }
-//                        else if ((checkingDiff.get(i) & (1L << start)) == 0 && (checkingDiff.get(i) & (1L << end)) == 0) {
-//                            if (a.isEmpty())
-//                            {
-//                                continue;
-//                            }
-//                            if (checkingDiff.get(i + 1) == 0) {
-//                                a.append("P");
-//                            } else if (checkingDiff.get(i + 1) == 1) {
-//                                a.append("N");
-//                            } else if (checkingDiff.get(i + 1) == 2) {
-//                                a.append("B");
-//                            } else if (checkingDiff.get(i + 1) == 3) {
-//                                a.append("R");
-//                            } else if (checkingDiff.get(i + 1) == 4) {
-//                                a.append("Q");
-//                            } else if (checkingDiff.get(i + 1) == 5) {
-//                                a.append("K");
-//                            } else if (checkingDiff.get(i + 1) == 6) {
-//                                a.append("p");
-//                            } else if (checkingDiff.get(i + 1) == 7) {
-//                                a.append("n");
-//                            } else if (checkingDiff.get(i + 1) == 8) {
-//                                a.append("b");
-//                            } else if (checkingDiff.get(i + 1) == 9) {
-//                                a.append("r");
-//                            } else if (checkingDiff.get(i + 1) == 10) {
-//                                a.append("q");
-//                            } else if (checkingDiff.get(i + 1) == 11) {
-//                                a.append("k");
-//                            }
-//                            if (a.length() == 2)
-//                            {
-//                                break;
-//                            }
-//                        }
-//                    }
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                    UserInterface.HISTORIC_PIECES.add(a.toString());
-//                }
-//            } else if (move.charAt(3) == 'P') {
-//                UserInterface.HISTORIC_PIECES.add("" + move.charAt(2) + move.charAt(3));
-//                UserInterface.HISTORIC_EP.add(0L);
-//            }
-//        } else if (checkingDiff.size() == 6) {
-//            //en passant
-//            if (move.charAt(3) == 'E') {
-//                if (move.charAt(2) == 'W') {
-//                    UserInterface.HISTORIC_PIECES.add("Pp");
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                } else if (move.charAt(2) == 'B') {
-//                    UserInterface.HISTORIC_PIECES.add("pP");
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                }
-//                return;
-//            }
-//
-//            //promote
-//            if (checkingDiff.get(0) == WPt) {
-//                if (checkingDiff.get(5) == 7) {
-//                    UserInterface.HISTORIC_PIECES.add(move.charAt(2) + "n");
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                } else if (checkingDiff.get(5) == 8) {
-//                    UserInterface.HISTORIC_PIECES.add(move.charAt(2) + "b");
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                } else if (checkingDiff.get(5) == 9) {
-//                    UserInterface.HISTORIC_PIECES.add(move.charAt(2) + "r");
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                } else if (checkingDiff.get(5) == 10) {
-//                    UserInterface.HISTORIC_PIECES.add(move.charAt(2) + "q");
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                }
-//            } else if (checkingDiff.get(2) == BPt) {
-//                if (checkingDiff.get(1) == 1) {
-//                    UserInterface.HISTORIC_PIECES.add(move.charAt(2) + "N");
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                } else if (checkingDiff.get(1) == 2) {
-//                    UserInterface.HISTORIC_PIECES.add(move.charAt(2) + "B");
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                } else if (checkingDiff.get(1) == 3) {
-//                    UserInterface.HISTORIC_PIECES.add(move.charAt(2) + "R");
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                } else if (checkingDiff.get(1) == 4) {
-//                    UserInterface.HISTORIC_PIECES.add(move.charAt(2) + "Q");
-//                    UserInterface.HISTORIC_EP.add(0L);
-//                }
-//            }
-//
-//            //no en passant and capture
-//
-//            System.out.println("awefawefawef");
-//        }
-//    }
-
     public static void undoMove2() {
-        int size = UserInterface.HISTORIC_BITBOARD.size();
-        UserInterface.WP = UserInterface.HISTORIC_BITBOARD.get(size - 1).WP;
-        UserInterface.WN = UserInterface.HISTORIC_BITBOARD.get(size - 1).WN;
-        UserInterface.WB = UserInterface.HISTORIC_BITBOARD.get(size - 1).WB;
-        UserInterface.WR = UserInterface.HISTORIC_BITBOARD.get(size - 1).WR;
-        UserInterface.WQ = UserInterface.HISTORIC_BITBOARD.get(size - 1).WQ;
-        UserInterface.WK = UserInterface.HISTORIC_BITBOARD.get(size - 1).WK;
-        UserInterface.BP = UserInterface.HISTORIC_BITBOARD.get(size - 1).BP;
-        UserInterface.BN = UserInterface.HISTORIC_BITBOARD.get(size - 1).BN;
-        UserInterface.BB = UserInterface.HISTORIC_BITBOARD.get(size - 1).BB;
-        UserInterface.BR = UserInterface.HISTORIC_BITBOARD.get(size - 1).BR;
-        UserInterface.BQ = UserInterface.HISTORIC_BITBOARD.get(size - 1).BQ;
-        UserInterface.BK = UserInterface.HISTORIC_BITBOARD.get(size - 1).BK;
-        UserInterface.EP = UserInterface.HISTORIC_BITBOARD.get(size - 1).EP;
+        int size = ChessGameController.HISTORIC_BITBOARD.size();
+        ChessGameController.WP = ChessGameController.HISTORIC_BITBOARD.get(size - 1).WP;
+        ChessGameController.WN = ChessGameController.HISTORIC_BITBOARD.get(size - 1).WN;
+        ChessGameController.WB = ChessGameController.HISTORIC_BITBOARD.get(size - 1).WB;
+        ChessGameController.WR = ChessGameController.HISTORIC_BITBOARD.get(size - 1).WR;
+        ChessGameController.WQ = ChessGameController.HISTORIC_BITBOARD.get(size - 1).WQ;
+        ChessGameController.WK = ChessGameController.HISTORIC_BITBOARD.get(size - 1).WK;
+        ChessGameController.BP = ChessGameController.HISTORIC_BITBOARD.get(size - 1).BP;
+        ChessGameController.BN = ChessGameController.HISTORIC_BITBOARD.get(size - 1).BN;
+        ChessGameController.BB = ChessGameController.HISTORIC_BITBOARD.get(size - 1).BB;
+        ChessGameController.BR = ChessGameController.HISTORIC_BITBOARD.get(size - 1).BR;
+        ChessGameController.BQ = ChessGameController.HISTORIC_BITBOARD.get(size - 1).BQ;
+        ChessGameController.BK = ChessGameController.HISTORIC_BITBOARD.get(size - 1).BK;
+        ChessGameController.EP = ChessGameController.HISTORIC_BITBOARD.get(size - 1).EP;
 
-        UserInterface.CWK = UserInterface.HISTORIC_BITBOARD.get(size - 1).CWK;
-        UserInterface.CWQ = UserInterface.HISTORIC_BITBOARD.get(size - 1).CWQ;
-        UserInterface.CBK = UserInterface.HISTORIC_BITBOARD.get(size - 1).CBK;
-        UserInterface.CBQ = UserInterface.HISTORIC_BITBOARD.get(size - 1).CBQ;
-        UserInterface.HISTORIC_BITBOARD.remove(size - 1);
+        ChessGameController.CWK = ChessGameController.HISTORIC_BITBOARD.get(size - 1).CWK;
+        ChessGameController.CWQ = ChessGameController.HISTORIC_BITBOARD.get(size - 1).CWQ;
+        ChessGameController.CBK = ChessGameController.HISTORIC_BITBOARD.get(size - 1).CBK;
+        ChessGameController.CBQ = ChessGameController.HISTORIC_BITBOARD.get(size - 1).CBQ;
+        ChessGameController.HISTORIC_BITBOARD.remove(size - 1);
     }
 
     public static boolean checkingSafe(String move, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, boolean isWhite) {
@@ -1747,24 +1040,24 @@ public class Moves {
 
 //    public static void keepOldBoard()
 //    {
-//        WPmt = UserInterface.WP;
-//        WNmt = UserInterface.WN;
-//        WBmt = UserInterface.WB;
-//        WRmt = UserInterface.WR;
-//        WQmt = UserInterface.WQ;
-//        WKmt = UserInterface.WK;
-//        BPmt = UserInterface.BP;
-//        BNmt = UserInterface.BN;
-//        BBmt = UserInterface.BB;
-//        BRmt = UserInterface.BR;
-//        BQmt = UserInterface.BQ;
-//        BKmt = UserInterface.BK;
-//        EPmt = UserInterface.EP;
+//        WPmt = ChessGameController.WP;
+//        WNmt = ChessGameController.WN;
+//        WBmt = ChessGameController.WB;
+//        WRmt = ChessGameController.WR;
+//        WQmt = ChessGameController.WQ;
+//        WKmt = ChessGameController.WK;
+//        BPmt = ChessGameController.BP;
+//        BNmt = ChessGameController.BN;
+//        BBmt = ChessGameController.BB;
+//        BRmt = ChessGameController.BR;
+//        BQmt = ChessGameController.BQ;
+//        BKmt = ChessGameController.BK;
+//        EPmt = ChessGameController.EP;
 //
-//        CWKm = UserInterface.CWK;
-//        CWQm = UserInterface.CWQ;
-//        CBKm = UserInterface.CBK;
-//        CBQm = UserInterface.CBQ;
+//        CWKm = ChessGameController.CWK;
+//        CWQm = ChessGameController.CWQ;
+//        CBKm = ChessGameController.CBK;
+//        CBQm = ChessGameController.CBQ;
 //    }
 
     public static String onlyCaptureMoves(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, boolean isWhite)

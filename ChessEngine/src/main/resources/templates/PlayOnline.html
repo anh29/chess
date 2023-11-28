@@ -9,13 +9,14 @@
     <link rel="stylesheet" href="/CSS/chessboard.css">
     <link rel="stylesheet" href="/CSS/nav.css">
     <link rel="stylesheet" href="/CSS/ContainPlay.css">
+    <link rel="stylesheet" href="/CSS/promotionPiece.css">
 </head>
 <body>
 <div class="container">
     <div class="sidebar">
         <ul>
             <div class="head">
-                <img class="brand" th:src="@{/IMAGE/icons8-chess-80_1.png}">
+                <img class="brand" th:src="@{/IMAGE/icons8-chess-80_1.png}" alt="">
                 <p class="titleChess">Chess</p>
             </div>
             <li class="items"><img class="img-lg" th:src="@{/IMAGE/playwhite.cea685ba.svg}" alt="">
@@ -57,6 +58,14 @@
 
     <div class="contain" >
         <div class="contain-board">
+            <div id="promotion-overlay" class="promotion-overlay" style="display:none;">
+                <div class="promotion-options">
+                    <img src="/IMAGE/wq.png" alt="Queen" class="promotion-piece" data-piece="q">
+                    <img src="/IMAGE/wr.png" alt="Rook" class="promotion-piece" data-piece="r">
+                    <img src="/IMAGE/wb.png" alt="Bishop" class="promotion-piece" data-piece="b">
+                    <img src="/IMAGE/wn.png" alt="Knight" class="promotion-piece" data-piece="n">
+                </div>
+            </div>
             <div class="user-top">
                 <img class="img-user"th:src="@{/IMAGE/br.png}" alt="">
                 <div class="contain-user">
@@ -78,7 +87,7 @@
         </div>
         <div class="contain-move">
             <div class="contain-count">
-                <select id="duration" class="selectMins" onchange="updateCountdown()">
+                <select id="duration" class="selectMins" onchange="updateCountdown()" title="a">
                     <option value="600">10 minutes</option>
                     <option value="900">15 minutes</option>
                     <option value="custom">Other</option>
@@ -94,6 +103,7 @@
         </div>
     </div>
 </div>
-<script th:src="@{/JS/playOnline.js}"></script>
+<script th:src="@{/javascript/playOnline.js}"></script>
+<script th:src="@{/javascript/move.js}"></script>
 </body>
 </html>

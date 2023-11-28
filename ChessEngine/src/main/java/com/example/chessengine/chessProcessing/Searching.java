@@ -1,5 +1,7 @@
 package com.example.chessengine.chessProcessing;
 
+import com.example.chessengine.rest.ChessGameController;
+
 import java.util.*;
 
 public class Searching {
@@ -54,7 +56,7 @@ public class Searching {
             System.out.println(counter++);
             System.out.println("------------------");
 //            }
-//            Moves.undoMove(UserInterface.HISTORIC_MOVES, UserInterface.HISTORIC_PIECES);
+//            Moves.undoMove(ChessGameController.HISTORIC_MOVES, ChessGameController.HISTORIC_PIECES);
             Moves.undoMove2();
             updateValue();
             if (alpha >= value) {
@@ -87,24 +89,24 @@ public class Searching {
     }
 
     public static void updateValue() {
-        WP = UserInterface.WP;
-        WN = UserInterface.WN;
-        WB = UserInterface.WB;
-        WR = UserInterface.WR;
-        WQ = UserInterface.WQ;
-        WK = UserInterface.WK;
-        BP = UserInterface.BP;
-        BN = UserInterface.BN;
-        BB = UserInterface.BB;
-        BR = UserInterface.BR;
-        BQ = UserInterface.BQ;
-        BK = UserInterface.BK;
-        EP = UserInterface.EP;
+        WP = ChessGameController.WP;
+        WN = ChessGameController.WN;
+        WB = ChessGameController.WB;
+        WR = ChessGameController.WR;
+        WQ = ChessGameController.WQ;
+        WK = ChessGameController.WK;
+        BP = ChessGameController.BP;
+        BN = ChessGameController.BN;
+        BB = ChessGameController.BB;
+        BR = ChessGameController.BR;
+        BQ = ChessGameController.BQ;
+        BK = ChessGameController.BK;
+        EP = ChessGameController.EP;
 
-        CWK = UserInterface.CWK;
-        CWQ = UserInterface.CWQ;
-        CBK = UserInterface.CBK;
-        CBQ = UserInterface.CBQ;
+        CWK = ChessGameController.CWK;
+        CWQ = ChessGameController.CWQ;
+        CBK = ChessGameController.CBK;
+        CBQ = ChessGameController.CBQ;
     }
 
     public static int Negamax2(int depth, int alpha, int beta, boolean isWhite) {

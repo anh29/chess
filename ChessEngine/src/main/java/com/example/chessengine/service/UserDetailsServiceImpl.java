@@ -17,7 +17,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String gmail) throws UsernameNotFoundException {
-        System.out.println("ăoiefjolszvnknjselwhawlifc;z");
+//        System.out.println("ăoiefjolszvnknjselwhawlifc;z");
         Accounts account = accountRepo.findAccountsByGmail(gmail).get();
         if (account == null) {
             throw new UsernameNotFoundException("Account not found");

@@ -1,5 +1,7 @@
 package com.example.chessengine.chessProcessing;
 
+import com.example.chessengine.rest.ChessGameController;
+
 public class Evaluation {
     public static final int pawnValue = 100;
     public static final int knightValue = 300;
@@ -44,8 +46,8 @@ public class Evaluation {
         {
             if (isWhite)
             {
-                int myKingSquare = Long.numberOfTrailingZeros(UserInterface.WK);
-                int opponentKingSquare = Long.numberOfTrailingZeros(UserInterface.BK);
+                int myKingSquare = Long.numberOfTrailingZeros(ChessGameController.WK);
+                int opponentKingSquare = Long.numberOfTrailingZeros(ChessGameController.BK);
                 mopUpScore += Calculation.centreManhattanDistance[opponentKingSquare] * 10;
                 mopUpScore += (14 - Calculation.NumRookMovesToReachSquare(myKingSquare, opponentKingSquare)) * 4;
 
@@ -53,8 +55,8 @@ public class Evaluation {
             }
             else
             {
-                int myKingSquare = Long.numberOfTrailingZeros(UserInterface.BK);
-                int opponentKingSquare = Long.numberOfTrailingZeros(UserInterface.WK);
+                int myKingSquare = Long.numberOfTrailingZeros(ChessGameController.BK);
+                int opponentKingSquare = Long.numberOfTrailingZeros(ChessGameController.WK);
                 mopUpScore += Calculation.centreManhattanDistance[opponentKingSquare] * 10;
                 mopUpScore += (14 - Calculation.NumRookMovesToReachSquare(myKingSquare, opponentKingSquare)) * 4;
 

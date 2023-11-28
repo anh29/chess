@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @Nonnull HttpServletResponse response,
                                     @Nonnull FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromCookie(request);
-        System.out.println("Token from cookie " + token);
+//        System.out.println("Token from cookie " + token);
         final String authorHeader = request.getHeader("Authorization");
         final String jwt;
         final String gmail;
