@@ -1,19 +1,42 @@
+const container = document.querySelector(".container")
+const countStart = document.querySelector("#countStart");
 
-const contain = document.querySelector(".contain");
-let loadedScript  = new Set();
+document.addEventListener("DOMContentLoaded", function () {
+    let seconds = 5;
+
+    function updateCountdown() {
+        countStart.innerHTML = "Start clock in " + seconds + " seconds";
+    }
+
+    function hideCountdown() {
+        countStart.style.display = "none";
+    }
+
+    function countdown() {
+        updateCountdown();
+        if (seconds === 0) {
+            hideCountdown();
+
+            init()
+        } else {
+            seconds--;
+            setTimeout(countdown, 1000);
+        }
+    }
+
+    // Start the countdown
+    setTimeout(countdown, 1000);
+});
+
 async function init() {
-    contain.innerHTML = await AJAX('/play');
-
-    const path = '/javascript/fragments/timeSelector.js';
+    const path = '/javascript/fragments/handleClock.js';
     const script = document.createElement('script');
     const text = document.createTextNode(await AJAX(path));
     script.appendChild(text);
-    contain.append(script);
+    container.append(script);
 
     loadedScript.add(path);
 }
-
-init()
 
 async function AJAX(fragment, json = false) {
     // var token = sessionStorage.getItem('jwtToken');

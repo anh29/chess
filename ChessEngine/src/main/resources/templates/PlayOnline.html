@@ -9,51 +9,10 @@
     <link rel="stylesheet" href="/CSS/chessboard.css">
     <link rel="stylesheet" href="/CSS/nav.css">
     <link rel="stylesheet" href="/CSS/ContainPlay.css">
-    <link rel="stylesheet" href="/CSS/promotionPiece.css">
 </head>
 <body>
 <div class="container">
-    <div class="sidebar">
-        <ul>
-            <div class="head">
-                <img class="brand" th:src="@{/IMAGE/icons8-chess-80_1.png}" alt="">
-                <p class="titleChess">Chess</p>
-            </div>
-            <li class="items"><img class="img-lg" th:src="@{/IMAGE/playwhite.cea685ba.svg}" alt="">
-                <p class="text"><a href="/play">Play</a> </p>
-            </li>
-            <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-puzzle-50_1.png}" alt="">
-                <p class="text">Puzzles</p>
-            </li>
-            <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-students-64_1.png}" alt="">
-                <p class="text">Learn</p>
-            </li>
-            <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-news-64_1.png}" alt="">
-                <p class="text">News</p>
-            </li>
-            <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-binoculars-64_1.png}" alt="">
-                <p class="text">Watch</p>
-            </li>
-            <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-ellipsis-50_1.png}" alt="">
-                <p class="text">More</p>
-            </li>
-            <li class="search">
-                <input type="text" placeholder="Search">
-            </li>
-            <li class="btn">
-                <button>Sign up</button>
-            </li>
-            <li class="btn">
-                <button>Login</button>
-            </li>
-<!--            <li class="items">-->
-<!--                <img class="img-lg" th:src="@{/IMAGE/icons8-language-skill-50_1.png}" alt="">-->
-<!--                <p class="text">Language</p>-->
-<!--            </li>-->
-<!--            <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-help-50_1.png}" alt="">-->
-<!--                <p class="text">Help</p>-->
-<!--            </li>-->
-        </ul>
+    <div class="sidebar" th:include="/fragments/sidebar">
     </div>
 
     <div class="contain" >
@@ -68,42 +27,44 @@
             </div>
             <div class="user-top">
                 <img class="img-user"th:src="@{/IMAGE/br.png}" alt="">
-                <div class="contain-user">
+                <div id="user1" class="contain-user">
                     <p class="username">ANNNNNNA</p>
                     <div class="count-clock">
-                        <div id="countdown"></div>
+                        <div id="clock-black"></div>
                     </div>
                 </div>
             </div>
+
             <div class="containPlayChess" th:include="/fragments/chessboard"></div>
+
             <div class="user-top">
-                <img class="img-user"th:src="@{/IMAGE/br.png}" alt="">
-                <div class="contain-user">
+                <img class="img-user" th:src="@{/IMAGE/br.png}" alt="">
+                <div id="user2" class="contain-user">
                     <p class="username">ANNNNNNA</p>
                     <div class="count-clock">
+                        <div id="clock-white"></div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="contain-move">
-            <div class="contain-count">
-                <select id="duration" class="selectMins" onchange="updateCountdown()" title="a">
-                    <option value="600">10 minutes</option>
-                    <option value="900">15 minutes</option>
-                    <option value="custom">Other</option>
-                </select>
-                <div class="btnCount">
-                    <input type="text" id="customInput" placeholder="mm:ss" style="display: none;">
-                    <button onclick="startCountdown()">Start Countdown</button>
+            <div th:if="${idTime}" class="show-time">
+                <div class="txtClock">
+                    <p>Game clock: <span id="idTime" th:text="${idTime}"></span></p>
+                </div>
+                <div class="txtTime">
+                    <p id="countStart">Start clock in 5 seconds</p>
                 </div>
             </div>
+
             <div class="shoe-move">
 
             </div>
         </div>
     </div>
 </div>
-<script th:src="@{/javascript/playOnline.js}"></script>
-<script th:src="@{/javascript/move.js}"></script>
+
+<script defer th:src="@{/javascript/fragments/playOnline.js}"></script>
+<script defer th:src="@{/javascript/fragments/move.js}"></script>
 </body>
 </html>
