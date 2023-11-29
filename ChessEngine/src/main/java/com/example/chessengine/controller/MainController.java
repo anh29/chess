@@ -44,4 +44,22 @@ public class MainController {
             return "index";
         }
     }
+
+    @GetMapping("/computer")
+    public String playComputer(
+            Model model,
+            Principal principal,
+            @RequestParam(name = "id", required = false) String idTime,
+            @RequestHeader(value = "request-source", required = false) String requestSource
+    ) {
+        if (idTime != null) {
+            // Use the gameId parameter as needed
+            model.addAttribute("idTime", idTime);
+            return "PlayComputer";
+        } else if (requestSource == null && principal != null) {
+            return "PlayComputer";
+        } else {
+            return "index";
+        }
+    }
 }
