@@ -25,7 +25,7 @@ public class Searching {
 
     static long WP = 0L, WN = 0L, WB = 0L, WR = 0L, WQ = 0L, WK = 0L, BP = 0L, BN = 0L, BB = 0L, BR = 0L, BQ = 0L, BK = 0L, EP = 0L;
     static int ply;
-    static String bestMove = "";
+    public static String bestMove = "";
     static boolean CWK = true, CWQ = true, CBK = true, CBQ = true, WhiteToMove = true;
     static int valueTemp = 0;
 
@@ -107,15 +107,17 @@ public class Searching {
         CWQ = ChessGameController.CWQ;
         CBK = ChessGameController.CBK;
         CBQ = ChessGameController.CBQ;
+
+        WhiteToMove = ChessGameController.WhiteToMove;
     }
 
-    public static int Negamax2(int depth, int alpha, int beta, boolean isWhite) {
+    public static int Negamax2(int depth, int alpha, int beta) {
         updateValue();
-        String captureMoves = Moves.onlyCaptureMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, isWhite);
-        String moves = isWhite ? Moves.WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ)
+        String captureMoves = Moves.onlyCaptureMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, WhiteToMove);
+        String moves = WhiteToMove ? Moves.WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ)
                 : Moves.BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ);
-        moves = SortMove(moves, isWhite);
-        if (isWhite) {
+        moves = SortMove(moves);
+        if (WhiteToMove) {
             if (Moves.BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, false, false, false, false).isEmpty()) {
                 if ((Moves.unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK) & BK) != 0) {
                     return -50000;
@@ -133,8 +135,8 @@ public class Searching {
             }
         }
         if (depth == 0) {
-//            return Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, isWhite);
-            return Quiescence(alpha, beta, isWhite);
+//            return Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WhiteToMove);
+            return Quiescence(alpha, beta);
         }
 
         String bestMoveSoFar = "";
@@ -143,16 +145,16 @@ public class Searching {
 //        int value = -Integer.MAX_VALUE;
         for (int i = 0; i < moves.length(); i += 4) {
             ply++;
-            Moves.moveOnBoard(moves.substring(i, i + 4), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, isWhite);
+            Moves.moveOnBoard(moves.substring(i, i + 4), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove);
             updateValue();
 
 //            BoardGeneration.drawArray(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
-            int value = -Negamax2(depth - 1, -beta, -alpha, !isWhite);
+            int value = -Negamax2(depth - 1, -beta, -alpha);
             ply--;
 
 //            System.out.println(moves.substring(i, i + 4));
-//            System.out.println(Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, isWhite));
-//            System.out.println(Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, !isWhite));
+//            System.out.println(Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WhiteToMove));
+//            System.out.println(Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, !WhiteToMove));
 //            System.out.println(counter++);
 //            System.out.println("------------------");
 
@@ -186,23 +188,23 @@ public class Searching {
         return alpha;
     }
 
-    public static int Quiescence(int alpha, int beta, boolean isWhite) {
-        int eval = Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, isWhite);
+    public static int Quiescence(int alpha, int beta) {
+        updateValue();
+        int eval = Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WhiteToMove);
         if (eval >= beta) {
             return beta;
         }
         if (eval > alpha) {
             alpha = eval;
         }
-        updateValue();
-        String moves = Moves.onlyCaptureMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, isWhite);
+        String moves = Moves.onlyCaptureMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, WhiteToMove);
 
         for (int i = 0; i < moves.length(); i += 4) {
             ply++;
-            Moves.moveOnBoard(moves.substring(i, i + 4), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, isWhite);
+            Moves.moveOnBoard(moves.substring(i, i + 4), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove);
             updateValue();
 
-            int score = -Quiescence(-beta, -alpha, !isWhite);
+            int score = -Quiescence(-beta, -alpha);
             ply--;
             Moves.undoMove2();
             updateValue();
@@ -218,8 +220,8 @@ public class Searching {
         return alpha;
     }
 
-    public static int ScoreMove(String move, boolean isWhite) {
-        String captureMoves = Moves.onlyCaptureMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, isWhite);
+    public static int ScoreMove(String move) {
+        String captureMoves = Moves.onlyCaptureMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, WhiteToMove);
 
         int start = (move.charAt(0) - '0') * 8 + move.charAt(1);
         int end = (move.charAt(2) - '0') * 8 + move.charAt(3);
@@ -246,13 +248,13 @@ public class Searching {
         }
     }
 
-    public static String SortMove(String moves, boolean isWhite)
+    public static String SortMove(String moves)
     {
         StringBuilder res = new StringBuilder();
         LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
         for (int i = 0; i < moves.length(); i += 4)
         {
-            map.put(moves.substring(i, i + 4), ScoreMove(moves.substring(i, i + 4), isWhite));
+            map.put(moves.substring(i, i + 4), ScoreMove(moves.substring(i, i + 4)));
         }
 
         List<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
