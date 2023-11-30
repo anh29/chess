@@ -921,8 +921,8 @@ public class Moves {
 
 
     public static void moveOnBoard(String move, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean CWK, boolean CWQ, boolean CBK, boolean CBQ, boolean WhiteToMove) {
-        if (WhiteToMove && WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).replace(move, "").length() < WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).length() ||
-                !WhiteToMove && BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).replace(move, "").length() < BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).length()) {
+        if ((WhiteToMove && WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).replace(move, "").length() < WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).length()) ||
+                (!WhiteToMove && BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).replace(move, "").length() < BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).length())) {
             long WPt = Moves.makeMove(WP, move, 'P'), WNt = Moves.makeMove(WN, move, 'N'),
                     WBt = Moves.makeMove(WB, move, 'B'), WRt = Moves.makeMove(WR, move, 'R'),
                     WQt = Moves.makeMove(WQ, move, 'Q'), WKt = Moves.makeMove(WK, move, 'K'),
@@ -992,7 +992,7 @@ public class Moves {
             System.out.println(WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).length());
             System.out.println(BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).replace(move, "").length());
             System.out.println(BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).length());
-
+            System.out.println("isWhite: " + WhiteToMove);
         }
     }
 
@@ -1016,6 +1016,7 @@ public class Moves {
         ChessGameController.CWQ = ChessGameController.HISTORIC_BITBOARD.get(size - 1).CWQ;
         ChessGameController.CBK = ChessGameController.HISTORIC_BITBOARD.get(size - 1).CBK;
         ChessGameController.CBQ = ChessGameController.HISTORIC_BITBOARD.get(size - 1).CBQ;
+        ChessGameController.WhiteToMove = ChessGameController.HISTORIC_BITBOARD.get(size - 1).WhiteToMove;
         ChessGameController.HISTORIC_BITBOARD.remove(size - 1);
     }
 
