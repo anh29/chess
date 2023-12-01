@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface AccountRepo extends JpaRepository<Accounts, Integer> {
     Optional<Accounts> findAccountsByGmail(String gmail);
 
+    Accounts findByGmail(String gmail);
+
     void deleteAccountsByGmail(String gmail);
 
     void deleteAccountsByAccountId(Integer id);
