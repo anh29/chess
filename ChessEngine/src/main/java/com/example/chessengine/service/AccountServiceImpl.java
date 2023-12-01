@@ -2,8 +2,8 @@ package com.example.chessengine.service;
 
 import com.example.chessengine.dao.AccountRepo;
 import com.example.chessengine.entity.Accounts;
-import com.example.chessengine.security.BcryptEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,6 +14,8 @@ import java.util.Date;
 public class AccountServiceImpl implements AccountService{
     @Autowired
     private AccountRepo accountRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public Accounts getAccountByGmail(String gmail) {
 //        System.out.println("plsessssssssssssssssssss");
@@ -28,5 +30,9 @@ public class AccountServiceImpl implements AccountService{
         accountRepo.save(account);
     }
 
-
+    @Override
+    public void changePassword(Accounts account, String newPassword) {
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepo.save(account);
+    }
 }
