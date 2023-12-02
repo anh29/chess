@@ -1,7 +1,7 @@
 .head {
   display: flex;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 30px;
   margin-left: 10px;
   margin-bottom: 10px;
 }
@@ -12,12 +12,13 @@
 }
 
 .brand {
-  width: 30%;
+  width: 40%;
   height: 30%;
+  margin-right: -8%;
 }
 
 .titleChess {
-  color: #000;
+  color: white;
   font-family: Tiro Devanagari Marathi;
   font-size: 40px;
   font-style: normal;
@@ -30,11 +31,27 @@ button {
   font-size: 26px;
   width: 100%;
   border-radius: 10px;
-}
 
-.btn {
+}
+.btn{
   margin: 20px;
 }
+.btn #btn1{
+  background-color: #4b4847;
+  color: white;
+}
+.btn #btn2{
+  background-color: #81b64c;
+  color: white;
+}
+#search{
+  background-color: #666564;
+  color: white;
+}
+#search::placeholder {
+  color: white;
+}
+
 
 button:hover {
   cursor: pointer;
@@ -50,7 +67,7 @@ button:hover {
 
 .items:hover {
   cursor: pointer;
-  background-color: #f5f5f5;
+  background-color: #595856;
   border-radius: 10px;
 }
 
