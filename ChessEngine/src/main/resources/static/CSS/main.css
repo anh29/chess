@@ -4,10 +4,15 @@
   overflow-y: scroll;
 }
 
+.name {
+  font-size: 30px;
+  color: white;
+}
 .sidebar {
   width: 175px;
   border-style: none solid none none;
   border-width: thin;
+  background-color: #262421;
 }
 
 .contain {
@@ -21,4 +26,5 @@
 
 .nav {
   width: 44%;
+  background-color: #312e2b;
 }
