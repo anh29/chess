@@ -1,0 +1,28 @@
+.match-result {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 20px;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 18px;
+    display: flex; /* Hide by default */
+    border-radius: 5px;
+    margin: 20px 0;
+    z-index: 1000;
+}
+
+.match-result.show {
+    display: block; /* Show when the winner is announced */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 20px;
+}

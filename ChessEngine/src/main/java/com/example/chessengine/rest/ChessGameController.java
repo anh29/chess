@@ -2,10 +2,8 @@ package com.example.chessengine.rest;
 
 import com.example.chessengine.chessProcessing.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -13,20 +11,24 @@ import java.util.ArrayList;
 @RequestMapping("/api/chess")
 public class ChessGameController {
     private final ChessMoveValidator chessMoveValidator;
+    private final SimpMessagingTemplate messagingTemplate;
     public static long WP = 0L, WN = 0L, WB = 0L, WR = 0L, WQ = 0L, WK = 0L, BP = 0L, BN = 0L, BB = 0L, BR = 0L, BQ = 0L, BK = 0L, EP = 0L;
     public static ArrayList<HistoricInfo> HISTORIC_BITBOARD = new ArrayList<HistoricInfo>();
     public static boolean CWK = true, CWQ = true, CBK = true, CBQ = true, WhiteToMove = true;
     public static int SearchingDepth = 4;
+    public static String idMatchType;
+    public static String idMatch;
 
-    public ChessGameController(ChessMoveValidator chessMoveValidator) {
+    public ChessGameController(ChessMoveValidator chessMoveValidator, SimpMessagingTemplate messagingTemplate) {
         this.chessMoveValidator = chessMoveValidator;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @PostMapping("/move")
     public ResponseEntity<MoveResponse> makeMove(@RequestBody MoveRequest moveRequest)
     {
         boolean isValid = chessMoveValidator.isValidMove(moveRequest, WhiteToMove);
-        MoveResponse moveResponse = MoveResponse.builder().validMove(isValid).build();
+        MoveResponse moveResponse = MoveResponse.builder().validMove(isValid).matchResult("").build();
         return ResponseEntity.ok(moveResponse);
     }
 
@@ -45,7 +47,30 @@ public class ChessGameController {
 //        System.out.println("WP in process: " + WP);
 //        boolean isValid = chessMoveValidator.isValidMove(moveRequest, WhiteToMove);
 //        WhiteToMove = !WhiteToMove;
-        MoveResponse moveResponse = MoveResponse.builder().validMove(true).build();
+        messagingTemplate.convertAndSend("/topic/move", new MoveRequest(moveRequest.getMove()));
+        String status = "";
+        if (!WhiteToMove) {
+            if (Moves.BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).isEmpty()) {
+                if ((Moves.unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK) & BK) != 0) {
+                    System.out.println("Black lose");
+                    status = "1-0";
+                } else {
+                    System.out.println("0.5-0.5");
+                    status = "0.5-0.5";
+                }
+            }
+        } else {
+            if (Moves.WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).isEmpty()) {
+                if ((Moves.unsafeForWhite(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK) & WK) != 0) {
+                    System.out.println("White lose");
+                    status = "0-1";
+                } else {
+                    System.out.println("StaleMate");
+                    status = "0.5-0.5";
+                }
+            }
+        }
+        MoveResponse moveResponse = MoveResponse.builder().validMove(true).matchResult(status).build();
         return ResponseEntity.ok(moveResponse);
     }
 
@@ -58,5 +83,16 @@ public class ChessGameController {
         Moves.moveOnBoard(moveBot, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove);
         MoveBotResponse moveBotResponse = MoveBotResponse.builder().moveBot(moveBot).isWhite(!WhiteToMove).build();
         return ResponseEntity.ok(moveBotResponse);
+    }
+
+    @PostMapping("/idMatchType")
+    public ResponseEntity<IdMatchTypeResponse> onlinePage(@RequestBody IdMatchTypeRequest idMatchTypeFromClient) {
+        idMatchType = idMatchTypeFromClient.getIdMatchType();
+        System.out.println("idMatchType: " + idMatchType);
+        String securedId = RNG.generateSecureId();
+        idMatch = securedId;
+        System.out.println(securedId);
+        IdMatchTypeResponse idMatchTypeResponse = IdMatchTypeResponse.builder().idMatch(securedId).build();
+        return ResponseEntity.ok(idMatchTypeResponse);
     }
 }

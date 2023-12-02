@@ -6,24 +6,119 @@ let pieceTypeCode = null;
 let selectedType = null;
 let sendMove = null;
 let isPromoting = false;
-window.addEventListener('load', () => {
-    let draggedImg = null; // This will store the dragged image
-    let startSquare = null; // This will store the starting square
 
-    // // Add event listeners for all squares
-    // const squares = document.querySelectorAll('.square');
-    // squares.forEach(square => {
-    //     square.addEventListener('dragover', onDragOver);
-    //     square.addEventListener('dragenter', onDragEnter);
-    //     square.addEventListener('dragleave', onDragLeave);
-    //     square.addEventListener('drop', onDrop);
-    // });
-    // // Add event listeners for all images inside squares
-    // const images = document.querySelectorAll('.square img');
-    // images.forEach(img => {
-    //     img.addEventListener('dragstart', onDragStart);
-    //     img.addEventListener('dragend', onDragEnd);
-    // });
+// function getAllPathVariables() {
+//     return window.location.pathname.split('/').filter(Boolean);
+// }
+
+
+// const pathVariables = getAllPathVariables();
+// const urlParams = new URLSearchParams(window.location.search);
+// const idVal = urlParams.get('id');
+// const idMatchTypeVal = pathVariables[1];
+// const idMatchVal = pathVariables[2];
+// console.log("path variables: ", pathVariables);
+// console.log("urlParams: ", urlParams);
+// console.log("idVal: ", idVal);
+const socket = new SockJS(`/online/ws`);
+const stompClient = Stomp.over(socket);
+
+window.addEventListener('load', () => {
+    stompClient.connect({}, frame => {
+        console.log("Socket: ", socket);
+        console.log("Stomp client: ", stompClient);
+        console.log("Connected to WebSocket");
+        stompClient.subscribe('/topic/move', handleMove);
+    }, () => {
+        console.log("Socket: ", socket);
+        console.log("Stomp client: ", stompClient);
+        console.error("wtf is happening")
+    });
+
+    function handleMove(response) {
+        const move = JSON.parse(response.body).move;
+        // Process the move received from the other player
+        // Update the board, etc.
+        const isUpperCase = letter => letter === letter.toUpperCase();
+        if (move[3] === 'E') {
+            if (move[2] === 'W') {
+                const source = document.querySelector(`.square[data-rank="3"][data-file="${move[0]}"]`);
+                const target = document.querySelector(`.square[data-rank="2"][data-file="${move[1]}"]`);
+                const captureBlackPawn = document.querySelector(`.square[data-rank="3"][data-file="${move[1]}"]`);
+
+                const sourceImg = source.querySelector('img');
+                const captureBlackPawnImg = captureBlackPawn.querySelector('img');
+
+                if (sourceImg && captureBlackPawnImg) {
+                    source.removeChild(sourceImg);
+                    target.appendChild(sourceImg);
+                    captureBlackPawn.removeChild(captureBlackPawnImg);
+                }
+            } else if (move[2] === 'B') {
+                const source = document.querySelector(`.square[data-rank="4"][data-file="${move[0]}"]`);
+                const target = document.querySelector(`.square[data-rank="5"][data-file="${move[1]}"]`);
+                const captureWhitePawn = document.querySelector(`.square[data-rank="4"][data-file="${move[1]}"]`);
+
+                const sourceImg = source.querySelector('img');
+                const captureWhitePawnImg = captureWhitePawn.querySelector('img');
+
+                if (sourceImg && captureWhitePawnImg) {
+                    source.removeChild(sourceImg);
+                    target.appendChild(sourceImg);
+                    captureWhitePawn.removeChild(captureWhitePawnImg);
+                }
+            }
+        } else if (move[3] === 'P') {
+            if (isUpperCase(move[2])) {
+                const source = document.querySelector(`.square[data-rank="1"][data-file="${move[0]}"]`);
+                const target = document.querySelector(`.square[data-rank="0"][data-file="${move[1]}"]`);
+
+                const sourceImg = source.querySelector('img');
+                const targetImg = target.querySelector('img');
+
+                if (sourceImg) {
+                    source.removeChild(sourceImg);
+                    if (targetImg) {
+                        target.removeChild(targetImg);
+                    }
+                    target.appendChild(sourceImg);
+                    target.querySelector('img').src = target.querySelector('img').src.replace('wp.png', 'w' + move[2].toLowerCase() + '.png');
+                }
+            } else {
+                const source = document.querySelector(`.square[data-rank="6"][data-file="${move[0]}"]`);
+                const target = document.querySelector(`.square[data-rank="7"][data-file="${move[1]}"]`);
+
+                const sourceImg = source.querySelector('img');
+                const targetImg = target.querySelector('img');
+
+                if (sourceImg) {
+                    source.removeChild(sourceImg);
+                    if (targetImg) {
+                        target.removeChild(targetImg);
+                    }
+                    target.appendChild(sourceImg);
+                    target.querySelector('img').src = target.querySelector('img').src.replace('bp.png', 'b' + move[2].toLowerCase() + '.png');
+                }
+            }
+        } else {
+            const source = document.querySelector(`.square[data-rank="${move[0]}"][data-file="${move[1]}"]`);
+            const target = document.querySelector(`.square[data-rank="${move[2]}"][data-file="${move[3]}"]`);
+
+            const sourceImg = source.querySelector('img');
+            const targetImg = target.querySelector('img');
+            if (sourceImg) {
+                source.removeChild(sourceImg);
+                if (targetImg) {
+                    target.removeChild(targetImg);
+                }
+                target.appendChild(sourceImg);
+            }
+        }
+        console.log('Received move:', move);
+    }
+
+    let draggedImg = null;
+    let startSquare = null;
 
     function getSquareCoords(square) {
         const rankIndex = [...square.parentNode.children].indexOf(square);
@@ -231,6 +326,16 @@ window.addEventListener('load', () => {
                                 move: sendMove
                             });
                             console.log("Move response: ", moveResponse);
+                            if (moveResponse.matchResult === "1-0") {
+                                console.log("White wins!!!!!!!!!!!!!!!!")
+                                showMatchResult('White wins!');
+                            } else if (moveResponse.matchResult === "0.5-0.5") {
+                                console.log("Draw!!!!!!!!!!!!!!!!")
+                                showMatchResult('It\'s a draw!');
+                            } else if (moveResponse.matchResult === "0-1") {
+                                console.log("Black wins!!!!!!!!!!!!!!!!")
+                                showMatchResult('Black wins!');
+                            }
                         }
                     } else {
                         targetEvent.style.background = '';
@@ -326,4 +431,17 @@ async function moveProcessing(moveProcessRequest) {
     } catch (error) {
         console.error('Error:', error);
     }
+}
+
+function showMatchResult(result) {
+    const matchResultElement = document.getElementById('matchResult');
+    matchResultElement.innerHTML = result + '<span class="close-button" onclick="closeMatchResult()">×</span>';
+    matchResultElement.style.display = 'block';
+    // matchResultElement.classList.add('show');
+}
+
+function closeMatchResult() {
+    const matchResultElement = document.getElementById('matchResult');
+    matchResultElement.style.display = 'none';
+    // matchResultElement.classList.remove('show');
 }

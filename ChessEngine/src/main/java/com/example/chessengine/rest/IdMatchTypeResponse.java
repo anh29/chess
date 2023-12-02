@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MoveResponse {
-    private boolean validMove;
-    private String matchResult;
+public class IdMatchTypeResponse {
+    private String idMatch;
 }

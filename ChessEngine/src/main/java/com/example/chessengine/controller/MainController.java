@@ -1,11 +1,9 @@
 package com.example.chessengine.controller;
 
+import jakarta.websocket.server.PathParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -27,11 +25,12 @@ public class MainController {
             return "fragments/containHome";
     }
 
-    @GetMapping("/online")
+    @GetMapping("/online/{idTime}/{idMatch}")
     public String play(
             Model model,
             Principal principal,
-            @RequestParam(name = "id", required = false) String idTime,
+            @PathVariable String idTime,
+            @PathVariable String idMatch,
             @RequestHeader(value = "request-source", required = false) String requestSource
     ) {
         if (idTime != null) {

@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class MoveResponse {
-    private boolean validMove;
-    private String matchResult;
+@NoArgsConstructor
+public class IdMatchTypeRequest {
+    private String idMatchType;
 }

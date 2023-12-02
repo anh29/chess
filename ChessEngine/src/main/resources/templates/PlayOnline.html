@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="/CSS/chessboard.css">
     <link rel="stylesheet" href="/CSS/nav.css">
     <link rel="stylesheet" href="/CSS/ContainPlay.css">
+    <link rel="stylesheet" href="/CSS/matchResult.css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
 </head>
 <body>
 <div class="container">
@@ -17,6 +21,8 @@
 
     <div class="contain" >
         <div class="contain-board">
+            <div id="matchResult" class="match-result" style="display:none;"></div>
+
             <div id="promotion-overlay" class="promotion-overlay" style="display:none;">
                 <div class="promotion-options">
                     <img src="/IMAGE/wq.png" alt="Queen" class="promotion-piece" data-piece="q">
