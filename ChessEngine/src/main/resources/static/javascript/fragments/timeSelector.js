@@ -5,6 +5,7 @@ const modalContainer = document.querySelector(".js-modal-container");
 
 function showTime() {
     modal.classList.add("open");
+    // window.location.href = "/online";
 }
 
 function closeTime() {
@@ -33,10 +34,49 @@ for (const pro of listPro) {
     pro.addEventListener("click", getTime);
 }
 
-function getTime(event) {
+async function getTime(event) {
     // Lấy ID của thẻ được click
     const clickedId = event.currentTarget.id;
-
+    let idMatchGetTime = null;
     // Chuyển trang đến /online và truyền ID
-    window.location.href = "/online?id=" + clickedId;
+    // window.location.href = "/online?id=" + clickedId;
+    // window.location.href = "/online";
+
+    const response = await fetch('/api/chess/idMatchType', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            idMatchType: clickedId,
+        })
+    });
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    if (data) {
+        idMatchGetTime = data.idMatch;
+        window.location.href = "/online/" + clickedId + "/" + idMatchGetTime;
+    } else {
+        console.error('No data received');
+    }
+
+    // fetch('/api/chess/idMatchType', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //             idMatchType: clickedId,
+    //         })
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (data) {
+    //                 idMatchGetTime = data.idMatch;
+    //             }
+    //         })
+    //         .catch(error => console.error(`${error}`));
 }
