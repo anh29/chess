@@ -35,4 +35,9 @@ public class AccountServiceImpl implements AccountService{
         account.setPassword(passwordEncoder.encode(newPassword));
         accountRepo.save(account);
     }
+
+    @Override
+    public int getAccountIdByGmail(String gmail) {
+        return accountRepo.findAccountsByGmail(gmail).get().getAccountId();
+    }
 }

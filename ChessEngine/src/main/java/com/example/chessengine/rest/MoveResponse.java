@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MoveResponse {
     private boolean validMove;
+    private String move;
     private String matchResult;
 }

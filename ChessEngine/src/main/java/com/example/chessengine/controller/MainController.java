@@ -1,6 +1,11 @@
 package com.example.chessengine.controller;
 
+import com.example.chessengine.entity.Accounts;
+import com.example.chessengine.entity.Matches;
+import com.example.chessengine.service.AccountService;
+import com.example.chessengine.service.MatchService;
 import jakarta.websocket.server.PathParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +14,12 @@ import java.security.Principal;
 
 @Controller
 public class MainController {
+    @Autowired
+    private MatchService matchService;
+
+    @Autowired
+    private AccountService accountService;
+
     @GetMapping()
     public String showIndex()
     {
@@ -36,6 +47,16 @@ public class MainController {
         if (idTime != null) {
             // Use the gameId parameter as needed
             model.addAttribute("idTime", idTime);
+//            System.out.println("App: " + ApplicationController.gmail);
+//            Accounts account = accountService.getAccountByGmail(ApplicationController.gmail);
+//            Matches match = matchService.getMatchByIdMatch(idMatch);
+//            if (match == null) {
+//                System.out.println("not info please: " + idMatch);
+//                match = Matches.builder().matchId(idMatch).status(0).build();
+//            } else {
+//                match.setStatus(1);
+//            }
+//            matchService.save(match);
             return "PlayOnline";
         } else if (requestSource == null && principal != null) {
             return "PlayOnline";

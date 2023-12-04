@@ -2,17 +2,25 @@ package com.example.chessengine.entity.embeddable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AccountsMatchesId implements Serializable {
     @Column(name = "account_id")
     private Integer accountId;
 
     @Column(name = "match_id")
-    private Integer matchId;
+    private String matchId;
 
     @Override
     public boolean equals(Object o) {

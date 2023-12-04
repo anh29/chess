@@ -2,6 +2,7 @@ package com.example.chessengine.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "roles")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Roles {

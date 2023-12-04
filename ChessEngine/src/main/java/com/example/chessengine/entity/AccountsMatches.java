@@ -2,11 +2,19 @@ package com.example.chessengine.entity;
 
 import com.example.chessengine.entity.embeddable.AccountsMatchesId;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "accounts_matches")
 public class AccountsMatches {
     @EmbeddedId
@@ -21,6 +29,9 @@ public class AccountsMatches {
     @MapsId("matchId")
     @JoinColumn(name = "match_id")
     private Matches match;
+
+    @Column(name = "flag")
+    private String flag;
 
     @Column(name = "status")
     private Integer status;

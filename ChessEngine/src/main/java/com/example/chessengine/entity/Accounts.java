@@ -2,6 +2,7 @@ package com.example.chessengine.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,6 +20,7 @@ import java.util.Set;
 @Entity
 @Table(name = "accounts")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Accounts implements UserDetails {
@@ -106,10 +108,11 @@ public class Accounts implements UserDetails {
         return true;
     }
 
-    public Accounts(String gmail, String password, Roles role) {
+    public Accounts(String gmail, String password, Roles role, int elo) {
         this.gmail = gmail;
         this.password = password;
         this.role = role;
+        this.elo = elo;
     }
 
 }
