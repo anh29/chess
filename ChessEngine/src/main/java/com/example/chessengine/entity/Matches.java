@@ -2,6 +2,7 @@ package com.example.chessengine.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,13 +13,13 @@ import java.util.Set;
 @Entity
 @Table(name = "matches")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Matches {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "match_id")
-    private Integer matchId;
+    private String matchId;
 
     @Column(name = "moves")
     private String moves;

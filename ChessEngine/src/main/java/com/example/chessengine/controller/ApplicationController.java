@@ -6,6 +6,7 @@ import com.example.chessengine.authentication.AuthenticationService;
 import com.example.chessengine.authentication.RegisterRequest;
 import com.example.chessengine.entity.Accounts;
 import com.example.chessengine.security.BcryptEncoder;
+import com.example.chessengine.security.JwtService;
 import com.example.chessengine.service.AccountService;
 import com.example.chessengine.service.emailSending.MailService;
 import gov.nih.nlm.nls.lvg.Util.Str;
@@ -27,6 +28,8 @@ public class ApplicationController {
     private AccountService accountService;
     @Autowired
     private AuthenticationService authenticationService;
+    @Autowired
+    private JwtService jwtService;
     @Autowired
     private MailService mailService;
     private Accounts currentAccount;
@@ -123,6 +126,11 @@ public class ApplicationController {
         Cookie cookie = new Cookie("jwtToken", token);
         cookie.setPath("/");
         response.addCookie(cookie);
+
+        Cookie cookie1 = new Cookie("gmail", account.getUsername());
+        cookie1.setPath("/");
+        response.addCookie(cookie1);
+//        System.out.println("gmail: " + gmail);
 //        System.out.println("Token from controller: "+ token);
         return "redirect:/play";
     }

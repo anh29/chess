@@ -27,7 +27,7 @@ public class AuthenticationService {
 //                .build();
         Roles role = roleRepo.findRolesByRoleName("player").orElseThrow();
 //        System.out.println(role + "ăoiejfoiwajefo");
-        var account = new Accounts(request.getGmail(), passwordEncoder.encode(request.getPassword()), role);
+        var account = new Accounts(request.getGmail(), passwordEncoder.encode(request.getPassword()), role, 1500);
         accountRepo.save(account);
 //
         var jwtToken = jwtService.generateToken(account);

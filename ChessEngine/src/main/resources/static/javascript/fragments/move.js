@@ -6,6 +6,7 @@ let pieceTypeCode = null;
 let selectedType = null;
 let sendMove = null;
 let isPromoting = false;
+let flag = null;
 
 // function getAllPathVariables() {
 //     return window.location.pathname.split('/').filter(Boolean);
@@ -23,100 +24,120 @@ let isPromoting = false;
 const socket = new SockJS(`/online/ws`);
 const stompClient = Stomp.over(socket);
 
-window.addEventListener('load', () => {
-    stompClient.connect({}, frame => {
-        console.log("Socket: ", socket);
-        console.log("Stomp client: ", stompClient);
-        console.log("Connected to WebSocket");
-        stompClient.subscribe('/topic/move', handleMove);
-    }, () => {
-        console.log("Socket: ", socket);
-        console.log("Stomp client: ", stompClient);
-        console.error("wtf is happening")
-    });
+stompClient.connect({}, async (frame) => {
+    console.log("Socket: ", socket);
+    console.log("Stomp client: ", stompClient);
+    console.log("Connected to WebSocket");
+    flag = await flagProcessing();
+    console.log("Flag: ", flag);
+    stompClient.subscribe('/topic/move', handleMove);
+}, () => {
+    console.log("Socket: ", socket);
+    console.log("Stomp client: ", stompClient);
+    console.error("wtf is happening")
+});
+async function handleMove(response) {
+    const move = JSON.parse(response.body).move;
+    const matchRes = JSON.parse(response.body).matchResult;
+    // Process the move received from the other player
+    // Update the board, etc.
+    const isUpperCase = letter => letter === letter.toUpperCase();
+    if (move[3] === 'E') {
+        if (move[2] === 'W') {
+            const source = document.querySelector(`.square[data-rank="3"][data-file="${move[0]}"]`);
+            const target = document.querySelector(`.square[data-rank="2"][data-file="${move[1]}"]`);
+            const captureBlackPawn = document.querySelector(`.square[data-rank="3"][data-file="${move[1]}"]`);
 
-    function handleMove(response) {
-        const move = JSON.parse(response.body).move;
-        // Process the move received from the other player
-        // Update the board, etc.
-        const isUpperCase = letter => letter === letter.toUpperCase();
-        if (move[3] === 'E') {
-            if (move[2] === 'W') {
-                const source = document.querySelector(`.square[data-rank="3"][data-file="${move[0]}"]`);
-                const target = document.querySelector(`.square[data-rank="2"][data-file="${move[1]}"]`);
-                const captureBlackPawn = document.querySelector(`.square[data-rank="3"][data-file="${move[1]}"]`);
+            const sourceImg = source.querySelector('img');
+            const captureBlackPawnImg = captureBlackPawn.querySelector('img');
 
-                const sourceImg = source.querySelector('img');
-                const captureBlackPawnImg = captureBlackPawn.querySelector('img');
-
-                if (sourceImg && captureBlackPawnImg) {
-                    source.removeChild(sourceImg);
-                    target.appendChild(sourceImg);
-                    captureBlackPawn.removeChild(captureBlackPawnImg);
-                }
-            } else if (move[2] === 'B') {
-                const source = document.querySelector(`.square[data-rank="4"][data-file="${move[0]}"]`);
-                const target = document.querySelector(`.square[data-rank="5"][data-file="${move[1]}"]`);
-                const captureWhitePawn = document.querySelector(`.square[data-rank="4"][data-file="${move[1]}"]`);
-
-                const sourceImg = source.querySelector('img');
-                const captureWhitePawnImg = captureWhitePawn.querySelector('img');
-
-                if (sourceImg && captureWhitePawnImg) {
-                    source.removeChild(sourceImg);
-                    target.appendChild(sourceImg);
-                    captureWhitePawn.removeChild(captureWhitePawnImg);
-                }
+            if (sourceImg && captureBlackPawnImg) {
+                source.removeChild(sourceImg);
+                target.appendChild(sourceImg);
+                captureBlackPawn.removeChild(captureBlackPawnImg);
             }
-        } else if (move[3] === 'P') {
-            if (isUpperCase(move[2])) {
-                const source = document.querySelector(`.square[data-rank="1"][data-file="${move[0]}"]`);
-                const target = document.querySelector(`.square[data-rank="0"][data-file="${move[1]}"]`);
+        } else if (move[2] === 'B') {
+            const source = document.querySelector(`.square[data-rank="4"][data-file="${move[0]}"]`);
+            const target = document.querySelector(`.square[data-rank="5"][data-file="${move[1]}"]`);
+            const captureWhitePawn = document.querySelector(`.square[data-rank="4"][data-file="${move[1]}"]`);
 
-                const sourceImg = source.querySelector('img');
-                const targetImg = target.querySelector('img');
+            const sourceImg = source.querySelector('img');
+            const captureWhitePawnImg = captureWhitePawn.querySelector('img');
 
-                if (sourceImg) {
-                    source.removeChild(sourceImg);
-                    if (targetImg) {
-                        target.removeChild(targetImg);
-                    }
-                    target.appendChild(sourceImg);
-                    target.querySelector('img').src = target.querySelector('img').src.replace('wp.png', 'w' + move[2].toLowerCase() + '.png');
-                }
-            } else {
-                const source = document.querySelector(`.square[data-rank="6"][data-file="${move[0]}"]`);
-                const target = document.querySelector(`.square[data-rank="7"][data-file="${move[1]}"]`);
-
-                const sourceImg = source.querySelector('img');
-                const targetImg = target.querySelector('img');
-
-                if (sourceImg) {
-                    source.removeChild(sourceImg);
-                    if (targetImg) {
-                        target.removeChild(targetImg);
-                    }
-                    target.appendChild(sourceImg);
-                    target.querySelector('img').src = target.querySelector('img').src.replace('bp.png', 'b' + move[2].toLowerCase() + '.png');
-                }
+            if (sourceImg && captureWhitePawnImg) {
+                source.removeChild(sourceImg);
+                target.appendChild(sourceImg);
+                captureWhitePawn.removeChild(captureWhitePawnImg);
             }
-        } else {
-            const source = document.querySelector(`.square[data-rank="${move[0]}"][data-file="${move[1]}"]`);
-            const target = document.querySelector(`.square[data-rank="${move[2]}"][data-file="${move[3]}"]`);
+        }
+    } else if (move[3] === 'P') {
+        if (isUpperCase(move[2])) {
+            const source = document.querySelector(`.square[data-rank="1"][data-file="${move[0]}"]`);
+            const target = document.querySelector(`.square[data-rank="0"][data-file="${move[1]}"]`);
 
             const sourceImg = source.querySelector('img');
             const targetImg = target.querySelector('img');
+
             if (sourceImg) {
                 source.removeChild(sourceImg);
                 if (targetImg) {
                     target.removeChild(targetImg);
                 }
                 target.appendChild(sourceImg);
+                target.querySelector('img').src = target.querySelector('img').src.replace('wp.png', 'w' + move[2].toLowerCase() + '.png');
+            }
+        } else {
+            const source = document.querySelector(`.square[data-rank="6"][data-file="${move[0]}"]`);
+            const target = document.querySelector(`.square[data-rank="7"][data-file="${move[1]}"]`);
+
+            const sourceImg = source.querySelector('img');
+            const targetImg = target.querySelector('img');
+
+            if (sourceImg) {
+                source.removeChild(sourceImg);
+                if (targetImg) {
+                    target.removeChild(targetImg);
+                }
+                target.appendChild(sourceImg);
+                target.querySelector('img').src = target.querySelector('img').src.replace('bp.png', 'b' + move[2].toLowerCase() + '.png');
             }
         }
-        console.log('Received move:', move);
-    }
+    } else {
+        const source = document.querySelector(`.square[data-rank="${move[0]}"][data-file="${move[1]}"]`);
+        const target = document.querySelector(`.square[data-rank="${move[2]}"][data-file="${move[3]}"]`);
 
+        const sourceImg = source.querySelector('img');
+        const targetImg = target.querySelector('img');
+        if (sourceImg) {
+            source.removeChild(sourceImg);
+            if (targetImg) {
+                target.removeChild(targetImg);
+            }
+            target.appendChild(sourceImg);
+        }
+    }
+    console.log('Received move:', move);
+    if (matchRes === "1-0") {
+        console.log("White wins!!!!!!!!!!!!!!!!")
+        showMatchResult('White wins!');
+        await endGame({
+            allMoves: moves.join(", "),
+        });
+    } else if (matchRes === "0.5-0.5") {
+        console.log("Draw!!!!!!!!!!!!!!!!")
+        showMatchResult('It\'s a draw!');
+        await endGame({
+            allMoves: moves.join(", "),
+        });
+    } else if (matchRes === "0-1") {
+        console.log("Black wins!!!!!!!!!!!!!!!!")
+        showMatchResult('Black wins!');
+        await endGame({
+            allMoves: moves.join(", "),
+        });
+    }
+}
+window.addEventListener('load', () => {
     let draggedImg = null;
     let startSquare = null;
 
@@ -174,12 +195,24 @@ window.addEventListener('load', () => {
                 pieceTypeCode = pieceMatch[2];
                 let pieceType;
                 switch (pieceTypeCode) {
-                    case 'p': pieceType = 'pawn'; break;
-                    case 'r': pieceType = 'rook'; break;
-                    case 'n': pieceType = 'knight'; break;
-                    case 'b': pieceType = 'bishop'; break;
-                    case 'q': pieceType = 'queen'; break;
-                    case 'k': pieceType = 'king'; break;
+                    case 'p':
+                        pieceType = 'pawn';
+                        break;
+                    case 'r':
+                        pieceType = 'rook';
+                        break;
+                    case 'n':
+                        pieceType = 'knight';
+                        break;
+                    case 'b':
+                        pieceType = 'bishop';
+                        break;
+                    case 'q':
+                        pieceType = 'queen';
+                        break;
+                    case 'k':
+                        pieceType = 'king';
+                        break;
                 }
             }
             const sourceCoords = getSquareCoords(startSquare);
@@ -209,7 +242,8 @@ window.addEventListener('load', () => {
 
             console.log("send move: ", sendMove);
             const moveRequest = {
-                move: sendMove
+                move: sendMove,
+                flag: flag,
             };
 
             // Send the move to the backend
@@ -223,128 +257,129 @@ window.addEventListener('load', () => {
             // })
             //     .then(response => response.json())
             //     .then(data => {
-                    if (data && data.validMove) {
-                        currentEvent.style.background = '';
-                        let targetImg = currentEvent.querySelector('img');
-                        if (draggedImg.classList.contains('img-cb') && draggedPieceColor === 'white' && targetCoords.rankIndex === 0 && draggedImg.src.includes('wp.png') && sourceCoords.rankIndex === 1) {
-                            showPromotionOverlay(draggedPieceColor, currentEvent);
-                        } else if (draggedImg.classList.contains('img-cb') && draggedPieceColor === 'black' && targetCoords.rankIndex === 7 && draggedImg.src.includes('bp.png') && sourceCoords.rankIndex === 6) {
-                            showPromotionOverlay(draggedPieceColor, currentEvent);
-                        }
+            if (data && data.validMove) {
+                currentEvent.style.background = '';
+                let targetImg = currentEvent.querySelector('img');
+                if (draggedImg.classList.contains('img-cb') && draggedPieceColor === 'white' && targetCoords.rankIndex === 0 && draggedImg.src.includes('wp.png') && sourceCoords.rankIndex === 1) {
+                    showPromotionOverlay(draggedPieceColor, currentEvent);
+                } else if (draggedImg.classList.contains('img-cb') && draggedPieceColor === 'black' && targetCoords.rankIndex === 7 && draggedImg.src.includes('bp.png') && sourceCoords.rankIndex === 6) {
+                    showPromotionOverlay(draggedPieceColor, currentEvent);
+                }
 
-                        if (targetImg) {
-                            const targetPieceColor = targetImg.src.includes('/IMAGE/w') ? 'white' : 'black';
+                if (targetImg) {
+                    const targetPieceColor = targetImg.src.includes('/IMAGE/w') ? 'white' : 'black';
 
-                            if (draggedPieceColor === targetPieceColor) {
-                                draggedImg.style.opacity = '';
-                                draggedImg = null;
-                                startSquare = null;
-                                return;
-                            }
-
-                            currentEvent.removeChild(targetImg);
-                        }
-                        if (pieceTypeCode === 'p') {
-                            const rankDiff = targetCoords.rankIndex - sourceCoords.rankIndex;
-                            const fileDiff = targetCoords.fileIndex - sourceCoords.fileIndex;
-
-                            // En passant conditions for white pawn
-                            if (draggedPieceColor === 'white' && rankDiff === -1 && Math.abs(fileDiff) === 1 && targetCoords.rankIndex === 2) {
-                                const captureSquare = document.querySelector(`.square[data-rank="${targetCoords.rankIndex + 1}"][data-file="${targetCoords.fileIndex}"]`);
-                                const capturedPawnImg = captureSquare ? captureSquare.querySelector('img') : null;
-                                if (capturedPawnImg && capturedPawnImg.src.includes('bp.png')) {
-                                    captureSquare.removeChild(capturedPawnImg);
-                                }
-                            }
-
-                            // En passant conditions for black pawn
-                            if (draggedPieceColor === 'black' && rankDiff === 1 && Math.abs(fileDiff) === 1 && targetCoords.rankIndex === 5) {
-                                const captureSquare = document.querySelector(`.square[data-rank="${targetCoords.rankIndex - 1}"][data-file="${targetCoords.fileIndex}"]`);
-                                const capturedPawnImg = captureSquare ? captureSquare.querySelector('img') : null;
-                                if (capturedPawnImg && capturedPawnImg.src.includes('wp.png')) {
-                                    captureSquare.removeChild(capturedPawnImg);
-                                }
-                            }
-                        }
-
-                        if (pieceTypeCode === 'k') {
-                            if (draggedPieceColor === 'white' && sourceCoords.rankIndex === 7 && sourceCoords.fileIndex === 4) {
-                                if (targetCoords.rankIndex === 7 && targetCoords.fileIndex === 6) {
-                                    const rookSquare = document.querySelector(`.square[data-rank="7"][data-file="7"]`);
-                                    const checkImg = rookSquare ? rookSquare.querySelector('img') : null;
-                                    if (checkImg && checkImg.src.includes('wr.png')) {
-                                        rookSquare.removeChild(checkImg);
-                                    }
-                                    const addRookSquare = document.querySelector(`.square[data-rank="7"][data-file="5"]`);
-                                    if (addRookSquare) {
-                                        addRookSquare.appendChild(checkImg);
-                                    }
-                                } else if (targetCoords.rankIndex === 7 && targetCoords.fileIndex === 2) {
-                                    const rookSquare = document.querySelector(`.square[data-rank="7"][data-file="0"]`);
-                                    const checkImg = rookSquare ? rookSquare.querySelector('img') : null;
-                                    if (checkImg && checkImg.src.includes('wr.png')) {
-                                        rookSquare.removeChild(checkImg);
-                                    }
-                                    const addRookSquare = document.querySelector(`.square[data-rank="7"][data-file="3"]`);
-                                    if (addRookSquare) {
-                                        addRookSquare.appendChild(checkImg);
-                                    }
-                                }
-                            } else if (draggedPieceColor === 'black' && sourceCoords.rankIndex === 0 && sourceCoords.fileIndex === 4) {
-                                if (targetCoords.rankIndex === 0 && targetCoords.fileIndex === 6) {
-                                    const rookSquare = document.querySelector(`.square[data-rank="0"][data-file="7"]`);
-                                    const checkImg = rookSquare ? rookSquare.querySelector('img') : null;
-                                    if (checkImg && checkImg.src.includes('wr.png')) {
-                                        rookSquare.removeChild(checkImg);
-                                    }
-                                    const addRookSquare = document.querySelector(`.square[data-rank="0"][data-file="5"]`);
-                                    if (addRookSquare) {
-                                        addRookSquare.appendChild(checkImg);
-                                    }
-                                } else if (targetCoords.rankIndex === 0 && targetCoords.fileIndex === 2) {
-                                    const rookSquare = document.querySelector(`.square[data-rank="0"][data-file="0"]`);
-                                    const checkImg = rookSquare ? rookSquare.querySelector('img') : null;
-                                    if (checkImg && checkImg.src.includes('wr.png')) {
-                                        rookSquare.removeChild(checkImg);
-                                    }
-                                    const addRookSquare = document.querySelector(`.square[data-rank="0"][data-file="3"]`);
-                                    if (addRookSquare) {
-                                        addRookSquare.appendChild(checkImg);
-                                    }
-                                }
-                            }
-                        }
-
-                        currentEvent.appendChild(draggedImg);
+                    if (draggedPieceColor === targetPieceColor) {
                         draggedImg.style.opacity = '';
                         draggedImg = null;
                         startSquare = null;
-                        if (sendMove[3] !== 'P') {
-                            moves.push(sendMove);
-                            console.log("moves: ", moves);
-                            const moveResponse = await moveProcessing({
-                                move: sendMove
-                            });
-                            console.log("Move response: ", moveResponse);
-                            if (moveResponse.matchResult === "1-0") {
-                                console.log("White wins!!!!!!!!!!!!!!!!")
-                                showMatchResult('White wins!');
-                            } else if (moveResponse.matchResult === "0.5-0.5") {
-                                console.log("Draw!!!!!!!!!!!!!!!!")
-                                showMatchResult('It\'s a draw!');
-                            } else if (moveResponse.matchResult === "0-1") {
-                                console.log("Black wins!!!!!!!!!!!!!!!!")
-                                showMatchResult('Black wins!');
+                        return;
+                    }
+
+                    currentEvent.removeChild(targetImg);
+                }
+                if (pieceTypeCode === 'p') {
+                    const rankDiff = targetCoords.rankIndex - sourceCoords.rankIndex;
+                    const fileDiff = targetCoords.fileIndex - sourceCoords.fileIndex;
+
+                    // En passant conditions for white pawn
+                    if (draggedPieceColor === 'white' && rankDiff === -1 && Math.abs(fileDiff) === 1 && targetCoords.rankIndex === 2) {
+                        const captureSquare = document.querySelector(`.square[data-rank="${targetCoords.rankIndex + 1}"][data-file="${targetCoords.fileIndex}"]`);
+                        const capturedPawnImg = captureSquare ? captureSquare.querySelector('img') : null;
+                        if (capturedPawnImg && capturedPawnImg.src.includes('bp.png')) {
+                            captureSquare.removeChild(capturedPawnImg);
+                        }
+                    }
+
+                    // En passant conditions for black pawn
+                    if (draggedPieceColor === 'black' && rankDiff === 1 && Math.abs(fileDiff) === 1 && targetCoords.rankIndex === 5) {
+                        const captureSquare = document.querySelector(`.square[data-rank="${targetCoords.rankIndex - 1}"][data-file="${targetCoords.fileIndex}"]`);
+                        const capturedPawnImg = captureSquare ? captureSquare.querySelector('img') : null;
+                        if (capturedPawnImg && capturedPawnImg.src.includes('wp.png')) {
+                            captureSquare.removeChild(capturedPawnImg);
+                        }
+                    }
+                }
+
+                if (pieceTypeCode === 'k') {
+                    if (draggedPieceColor === 'white' && sourceCoords.rankIndex === 7 && sourceCoords.fileIndex === 4) {
+                        if (targetCoords.rankIndex === 7 && targetCoords.fileIndex === 6) {
+                            const rookSquare = document.querySelector(`.square[data-rank="7"][data-file="7"]`);
+                            const checkImg = rookSquare ? rookSquare.querySelector('img') : null;
+                            if (checkImg && checkImg.src.includes('wr.png')) {
+                                rookSquare.removeChild(checkImg);
+                            }
+                            const addRookSquare = document.querySelector(`.square[data-rank="7"][data-file="5"]`);
+                            if (addRookSquare) {
+                                addRookSquare.appendChild(checkImg);
+                            }
+                        } else if (targetCoords.rankIndex === 7 && targetCoords.fileIndex === 2) {
+                            const rookSquare = document.querySelector(`.square[data-rank="7"][data-file="0"]`);
+                            const checkImg = rookSquare ? rookSquare.querySelector('img') : null;
+                            if (checkImg && checkImg.src.includes('wr.png')) {
+                                rookSquare.removeChild(checkImg);
+                            }
+                            const addRookSquare = document.querySelector(`.square[data-rank="7"][data-file="3"]`);
+                            if (addRookSquare) {
+                                addRookSquare.appendChild(checkImg);
                             }
                         }
-                    } else {
-                        targetEvent.style.background = '';
-                        targetEvent.style.opacity = '';
+                    } else if (draggedPieceColor === 'black' && sourceCoords.rankIndex === 0 && sourceCoords.fileIndex === 4) {
+                        if (targetCoords.rankIndex === 0 && targetCoords.fileIndex === 6) {
+                            const rookSquare = document.querySelector(`.square[data-rank="0"][data-file="7"]`);
+                            const checkImg = rookSquare ? rookSquare.querySelector('img') : null;
+                            if (checkImg && checkImg.src.includes('wr.png')) {
+                                rookSquare.removeChild(checkImg);
+                            }
+                            const addRookSquare = document.querySelector(`.square[data-rank="0"][data-file="5"]`);
+                            if (addRookSquare) {
+                                addRookSquare.appendChild(checkImg);
+                            }
+                        } else if (targetCoords.rankIndex === 0 && targetCoords.fileIndex === 2) {
+                            const rookSquare = document.querySelector(`.square[data-rank="0"][data-file="0"]`);
+                            const checkImg = rookSquare ? rookSquare.querySelector('img') : null;
+                            if (checkImg && checkImg.src.includes('wr.png')) {
+                                rookSquare.removeChild(checkImg);
+                            }
+                            const addRookSquare = document.querySelector(`.square[data-rank="0"][data-file="3"]`);
+                            if (addRookSquare) {
+                                addRookSquare.appendChild(checkImg);
+                            }
+                        }
                     }
-                // })
-                // .catch(error => {
-                //     console.error('Error:', error);
-                // });
+                }
+
+                currentEvent.appendChild(draggedImg);
+                draggedImg.style.opacity = '';
+                draggedImg = null;
+                startSquare = null;
+                if (sendMove[3] !== 'P') {
+                    moves.push(sendMove);
+                    console.log("moves: ", moves);
+                    const moveResponse = await moveProcessing({
+                        move: sendMove,
+                        allMoves: moves.join(", "),
+                    });
+                    console.log("Move response: ", moveResponse);
+                    if (moveResponse.matchResult === "1-0") {
+                        console.log("White wins!!!!!!!!!!!!!!!!")
+                        showMatchResult('White wins!');
+                    } else if (moveResponse.matchResult === "0.5-0.5") {
+                        console.log("Draw!!!!!!!!!!!!!!!!")
+                        showMatchResult('It\'s a draw!');
+                    } else if (moveResponse.matchResult === "0-1") {
+                        console.log("Black wins!!!!!!!!!!!!!!!!")
+                        showMatchResult('Black wins!');
+                    }
+                }
+            } else {
+                targetEvent.style.background = '';
+                targetEvent.style.opacity = '';
+            }
+            // })
+            // .catch(error => {
+            //     console.error('Error:', error);
+            // });
         }
     }
 
@@ -397,7 +432,8 @@ async function selectPromotionPiece(img, square) {
     moves.push(sendMove);
     console.log("moves: ", moves);
     const moveResponse = await moveProcessing({
-        move: sendMove
+        move: sendMove,
+        allMoves: moves.join(", "),
     });
     console.log("Move response: ", moveResponse);
     isPromoting = false;
@@ -430,6 +466,33 @@ async function moveProcessing(moveProcessRequest) {
         return await response.json();
     } catch (error) {
         console.error('Error:', error);
+    }
+}
+
+async function endGame(all) {
+    try {
+        const response = await fetch('/api/chess/endgame', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(all)
+        });
+        return await response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
+async function flagProcessing() {
+    try {
+        const response = await fetch('flagProcessing', {
+            method: 'POST',
+        });
+        return await response.text();
+    } catch (error) {
+        console.error('Error: ', error);
     }
 }
 

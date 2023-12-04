@@ -1,15 +1,29 @@
 package com.example.chessengine.rest;
 
 import com.example.chessengine.chessProcessing.*;
+import com.example.chessengine.entity.AccountsMatches;
+import com.example.chessengine.entity.Matches;
+import com.example.chessengine.service.AccountMatchService;
+import com.example.chessengine.service.MatchService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/api/chess")
 public class ChessGameController {
+    @Autowired
+    private MatchService matchService;
+
+    @Autowired
+    private AccountMatchService accountMatchService;
+
     private final ChessMoveValidator chessMoveValidator;
     private final SimpMessagingTemplate messagingTemplate;
     public static long WP = 0L, WN = 0L, WB = 0L, WR = 0L, WQ = 0L, WK = 0L, BP = 0L, BN = 0L, BB = 0L, BR = 0L, BQ = 0L, BK = 0L, EP = 0L;
@@ -47,30 +61,38 @@ public class ChessGameController {
 //        System.out.println("WP in process: " + WP);
 //        boolean isValid = chessMoveValidator.isValidMove(moveRequest, WhiteToMove);
 //        WhiteToMove = !WhiteToMove;
-        messagingTemplate.convertAndSend("/topic/move", new MoveRequest(moveRequest.getMove()));
-        String status = "";
+        String matchScore = "";
         if (!WhiteToMove) {
             if (Moves.BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).isEmpty()) {
                 if ((Moves.unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK) & BK) != 0) {
                     System.out.println("Black lose");
-                    status = "1-0";
+                    matchScore = "1-0";
                 } else {
                     System.out.println("0.5-0.5");
-                    status = "0.5-0.5";
+                    matchScore = "0.5-0.5";
                 }
             }
         } else {
             if (Moves.WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).isEmpty()) {
                 if ((Moves.unsafeForWhite(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK) & WK) != 0) {
                     System.out.println("White lose");
-                    status = "0-1";
+                    matchScore = "0-1";
                 } else {
                     System.out.println("StaleMate");
-                    status = "0.5-0.5";
+                    matchScore = "0.5-0.5";
                 }
             }
         }
-        MoveResponse moveResponse = MoveResponse.builder().validMove(true).matchResult(status).build();
+        if (!matchScore.isEmpty()) {
+            Matches match = matchService.getMatchByIdMatch(idMatch);
+            match.setScore(matchScore);
+            match.setMoves(moveRequest.getAllMoves());
+            match.setStatus(2);
+            matchService.save(match);
+        }
+        MoveResponse simpTempResponse = MoveResponse.builder().move(moveRequest.getMove()).matchResult(matchScore).build();
+        messagingTemplate.convertAndSend("/topic/move", simpTempResponse);
+        MoveResponse moveResponse = MoveResponse.builder().validMove(true).matchResult(matchScore).build();
         return ResponseEntity.ok(moveResponse);
     }
 
@@ -89,10 +111,26 @@ public class ChessGameController {
     public ResponseEntity<IdMatchTypeResponse> onlinePage(@RequestBody IdMatchTypeRequest idMatchTypeFromClient) {
         idMatchType = idMatchTypeFromClient.getIdMatchType();
         System.out.println("idMatchType: " + idMatchType);
-        String securedId = RNG.generateSecureId();
-        idMatch = securedId;
-        System.out.println(securedId);
-        IdMatchTypeResponse idMatchTypeResponse = IdMatchTypeResponse.builder().idMatch(securedId).build();
+        List<Matches> matchesList = matchService.getAllMatchesByStatus(0);
+        if (matchesList.isEmpty()) {
+            String securedId = RNG.generateSecureId();
+            idMatch = securedId;
+            System.out.println(securedId);
+            matchService.save(Matches.builder().matchId(idMatch).status(0).build());
+        } else {
+            idMatch = matchesList.get(0).getMatchId();
+            Matches match = matchService.getMatchByIdMatch(idMatch);
+            match.setStatus(1);
+            matchService.save(match);
+            System.out.println("idMatchhhhhhhh: " + idMatch);
+        }
+        IdMatchTypeResponse idMatchTypeResponse = IdMatchTypeResponse.builder().idMatch(idMatch).build();
         return ResponseEntity.ok(idMatchTypeResponse);
+    }
+
+    @PostMapping("/endgame")
+    public ResponseEntity<Void> endgameHandling(@RequestBody MoveRequest moveRequest) {
+        matchService.updateMatchMoves(idMatch, moveRequest.getAllMoves());
+        return ResponseEntity.ok(null);
     }
 }

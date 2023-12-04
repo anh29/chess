@@ -4,11 +4,14 @@ import com.example.chessengine.rest.ChessGameController;
 import com.example.chessengine.rest.MoveRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class ChessMoveValidator {
     public boolean isValidMove(MoveRequest moveRequest, boolean isWhite) {
         String move = moveRequest.getMove();
-        if (isWhite) {
+        boolean turn = Objects.equals(moveRequest.getFlag(), "white");
+        if (isWhite && turn) {
             return Moves.WhitePossibleMoves(ChessGameController.WP,
                     ChessGameController.WN,
                     ChessGameController.WB,
@@ -26,7 +29,7 @@ public class ChessMoveValidator {
                     ChessGameController.CWQ,
                     ChessGameController.CBK,
                     ChessGameController.CBQ).contains(move);
-        } else {
+        } else if (!isWhite && !turn) {
             return Moves.BlackPossibleMoves(ChessGameController.WP,
                     ChessGameController.WN,
                     ChessGameController.WB,
@@ -45,5 +48,6 @@ public class ChessMoveValidator {
                     ChessGameController.CBK,
                     ChessGameController.CBQ).contains(move);
         }
+        return false;
     }
 }

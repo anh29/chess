@@ -3,6 +3,7 @@ package com.example.chessengine.entity;
 import com.example.chessengine.entity.embeddable.AccountsChatsId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,6 +11,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "accounts_chats")
 public class AccountsChats {
     @EmbeddedId

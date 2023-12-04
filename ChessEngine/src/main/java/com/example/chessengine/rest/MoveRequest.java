@@ -11,4 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MoveRequest {
     private String move;
+    private String allMoves;
+    private String flag;
+
+    public MoveRequest(String move) {
+        this.move = move;
+    }
 }
