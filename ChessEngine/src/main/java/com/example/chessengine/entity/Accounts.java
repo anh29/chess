@@ -108,11 +108,12 @@ public class Accounts implements UserDetails {
         return true;
     }
 
-    public Accounts(String gmail, String password, Roles role, int elo) {
+    public Accounts(String gmail, String password, Roles role, int elo, int status) {
         this.gmail = gmail;
         this.password = password;
         this.role = role;
         this.elo = elo;
+        this.status = status;
     }
 
 }

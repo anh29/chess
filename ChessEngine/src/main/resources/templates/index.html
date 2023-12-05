@@ -15,7 +15,7 @@
 
 <body>
     <div class="container">
-         <div class="sidebar" th:include="/fragments/sidebar.html">
+         <div class="sidebar" th:insert="~{/fragments/sidebar.html}">
 <!--            <ul>-->
 <!--                <div class="head">-->
 <!--                    <img class="brand" th:src="@{/IMAGE/icons8-chess-80_1.png}">-->
@@ -62,7 +62,7 @@
         <div class="contain">
         </div>
     </div>
-    <div th:include="/fragments/timeSelector" class="containModal"></div>
+    <div th:insert="~{/fragments/timeSelector}" class="containModal"></div>
 
     <script th:src="@{/javascript/main.js}"></script>
 </body>

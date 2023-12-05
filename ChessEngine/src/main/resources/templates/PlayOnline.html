@@ -16,7 +16,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="sidebar" th:include="/fragments/sidebar">
+    <div class="sidebar" th:insert="~{/fragments/sidebar}">
     </div>
 
     <div class="contain" >
@@ -41,7 +41,7 @@
                 </div>
             </div>
 
-            <div class="containPlayChess" th:include="/fragments/chessboard"></div>
+            <div class="containPlayChess" th:insert="~{/fragments/chessboard}"></div>
 
             <div class="user-top">
                 <img class="img-user" th:src="@{/IMAGE/br.png}" alt="">

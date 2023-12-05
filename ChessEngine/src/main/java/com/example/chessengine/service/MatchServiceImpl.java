@@ -37,20 +37,24 @@ public class MatchServiceImpl implements MatchService{
         int totalMoves = oldMovesArray.length + newMovesArray.length;
         String[] combinedMovesArray = new String[totalMoves];
         if (score.equals("1-0")) {
-            for (int i = 0; i < totalMoves; i++) {
-                if (i < oldMovesArray.length) {
-                    combinedMovesArray[i] = oldMovesArray[i];
-                } else {
-                    combinedMovesArray[i] = newMovesArray[i - oldMovesArray.length];
-                }
+            int j = 0;
+            for (int i = 0; i < totalMoves / 2; i++) {
+                combinedMovesArray[i] = oldMovesArray[j];
+                combinedMovesArray[i + 1] = newMovesArray[j];
+                j++;
+            }
+            if (totalMoves % 2 != 0) {
+                combinedMovesArray[totalMoves - 1] = oldMovesArray[oldMovesArray.length - 1];
             }
         } else if (score.equals("0-1")) {
+            int j = 0;
             for (int i = 0; i < totalMoves; i++) {
-                if (i < newMovesArray.length) {
-                    combinedMovesArray[i] = newMovesArray[i];
-                } else {
-                    combinedMovesArray[i] = oldMovesArray[i - newMovesArray.length];
-                }
+                combinedMovesArray[i] = newMovesArray[j];
+                combinedMovesArray[i + 1] = oldMovesArray[j];
+                j++;
+            }
+            if (totalMoves % 2 != 0) {
+                combinedMovesArray[totalMoves - 1] = oldMovesArray[oldMovesArray.length - 1];
             }
         }
         String allMoves = String.join(", ", combinedMovesArray);

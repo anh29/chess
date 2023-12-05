@@ -1,6 +1,7 @@
 package com.example.chessengine.rest;
 
 import com.example.chessengine.chessProcessing.*;
+import com.example.chessengine.constant.MatchStatus;
 import com.example.chessengine.entity.AccountsMatches;
 import com.example.chessengine.entity.Matches;
 import com.example.chessengine.service.AccountMatchService;
@@ -87,7 +88,7 @@ public class ChessGameController {
             Matches match = matchService.getMatchByIdMatch(idMatch);
             match.setScore(matchScore);
             match.setMoves(moveRequest.getAllMoves());
-            match.setStatus(2);
+            match.setStatus(MatchStatus.ENDED);
             matchService.save(match);
         }
         MoveResponse simpTempResponse = MoveResponse.builder().move(moveRequest.getMove()).matchResult(matchScore).build();
@@ -111,16 +112,16 @@ public class ChessGameController {
     public ResponseEntity<IdMatchTypeResponse> onlinePage(@RequestBody IdMatchTypeRequest idMatchTypeFromClient) {
         idMatchType = idMatchTypeFromClient.getIdMatchType();
         System.out.println("idMatchType: " + idMatchType);
-        List<Matches> matchesList = matchService.getAllMatchesByStatus(0);
+        List<Matches> matchesList = matchService.getAllMatchesByStatus(MatchStatus.PENDING);
         if (matchesList.isEmpty()) {
             String securedId = RNG.generateSecureId();
             idMatch = securedId;
             System.out.println(securedId);
-            matchService.save(Matches.builder().matchId(idMatch).status(0).build());
+            matchService.save(Matches.builder().matchId(idMatch).status(MatchStatus.PENDING).build());
         } else {
             idMatch = matchesList.get(0).getMatchId();
             Matches match = matchService.getMatchByIdMatch(idMatch);
-            match.setStatus(1);
+            match.setStatus(MatchStatus.PLAYING);
             matchService.save(match);
             System.out.println("idMatchhhhhhhh: " + idMatch);
         }
