@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Play Online</title>
+    <link rel="stylesheet" href="/CSS/reset.css">
+    <link rel="stylesheet" href="/CSS/main.css">
+    <link rel="stylesheet" href="/CSS/sidebar.css">
+    <link rel="stylesheet" href="/CSS/chessboard.css">
+    <link rel="stylesheet" href="/CSS/nav.css">
+    <link rel="stylesheet" href="/CSS/ContainPlay.css">
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" th:include="/fragments/sidebar">
+    </div>
+
+    <div class="contain" >
+        <div class="contain-board">
+            <div class="containPlayChess" th:include="/fragments/chessboard"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
