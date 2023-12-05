@@ -1,6 +1,7 @@
 .contain-board {
     margin-left: 3rem;
     align-self: center;
+    margin-top: -4.5%;
 }
 
 .containPlayChess {
@@ -11,6 +12,7 @@
     display: flex;
     width: 500px;
     place-content: space-between;
+
 }
 
 .img-user {
@@ -21,6 +23,7 @@
 .user-top {
     display: flex;
     align-items: center;
+    color: white;
 }
 
 .contain-count {
@@ -61,4 +64,5 @@ height: 25px;
     border-radius: 10px;
     font-weight: 700;
     margin-right: 20px;
+    color: white;
 }

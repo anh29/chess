@@ -1,5 +1,6 @@
 package com.example.chessengine.authentication;
 
+import com.example.chessengine.constant.AccountStatus;
 import com.example.chessengine.dao.AccountRepo;
 import com.example.chessengine.dao.RoleRepo;
 import com.example.chessengine.entity.Accounts;
@@ -27,7 +28,7 @@ public class AuthenticationService {
 //                .build();
         Roles role = roleRepo.findRolesByRoleName("player").orElseThrow();
 //        System.out.println(role + "ăoiejfoiwajefo");
-        var account = new Accounts(request.getGmail(), passwordEncoder.encode(request.getPassword()), role, 1500);
+        var account = new Accounts(request.getGmail(), passwordEncoder.encode(request.getPassword()), role, 1500, AccountStatus.ACTIVE);
         accountRepo.save(account);
 //
         var jwtToken = jwtService.generateToken(account);

@@ -36,6 +36,9 @@ pre {
 p {
   margin: 0;
 }
+#countStart{
+  color: white;
+}
 
 a {
   background-color: transparent;
