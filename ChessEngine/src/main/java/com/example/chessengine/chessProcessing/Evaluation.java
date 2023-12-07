@@ -11,7 +11,7 @@ public class Evaluation {
     public static int whitePawnNum;
     public static int blackPawnNum;
     static final double endgameMaterialStart = rookValue * 2 + bishopValue + knightValue;
-    public static int Evaluate(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean isWhite)
+    public static int Evaluate(long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean isWhite, String chessGameId)
     {
         whitePawnNum = Long.bitCount(WP);
         blackPawnNum = Long.bitCount(BP);
@@ -28,8 +28,8 @@ public class Evaluation {
 
         whiteEval += whiteMaterial;
         blackEval += blackMaterial;
-        whiteEval += MopUpEval(whiteMaterial, blackMaterial, blackEndgamePhaseWeight, true);
-        blackEval += MopUpEval(blackMaterial, whiteMaterial, whiteEndgamePhaseWeight, false);
+        whiteEval += MopUpEval(whiteMaterial, blackMaterial, blackEndgamePhaseWeight, true, chessGameId);
+        blackEval += MopUpEval(blackMaterial, whiteMaterial, whiteEndgamePhaseWeight, false, chessGameId);
 
         whiteEval += EvaluatePieceTable(blackEndgamePhaseWeight, WP, WN, WB, WR, WQ, WK, true);
         blackEval += EvaluatePieceTable(whiteEndgamePhaseWeight, BP, BN, BB, BR, BQ, BK, false);
@@ -39,15 +39,15 @@ public class Evaluation {
         return eval * perspective;
     }
 
-    public static int MopUpEval(int myMaterial, int opponentMaterial, double endgameWeight, boolean isWhite)
+    public static int MopUpEval(int myMaterial, int opponentMaterial, double endgameWeight, boolean isWhite, String chessGameId)
     {
         int mopUpScore = 0;
         if (myMaterial > opponentMaterial + pawnValue * 2 && endgameWeight > 0)
         {
             if (isWhite)
             {
-                int myKingSquare = Long.numberOfTrailingZeros(ChessGameController.WK);
-                int opponentKingSquare = Long.numberOfTrailingZeros(ChessGameController.BK);
+                int myKingSquare = Long.numberOfTrailingZeros(ChessGameController.games.get(chessGameId).WK);
+                int opponentKingSquare = Long.numberOfTrailingZeros(ChessGameController.games.get(chessGameId).BK);
                 mopUpScore += Calculation.centreManhattanDistance[opponentKingSquare] * 10;
                 mopUpScore += (14 - Calculation.NumRookMovesToReachSquare(myKingSquare, opponentKingSquare)) * 4;
 
@@ -55,8 +55,8 @@ public class Evaluation {
             }
             else
             {
-                int myKingSquare = Long.numberOfTrailingZeros(ChessGameController.BK);
-                int opponentKingSquare = Long.numberOfTrailingZeros(ChessGameController.WK);
+                int myKingSquare = Long.numberOfTrailingZeros(ChessGameController.games.get(chessGameId).BK);
+                int opponentKingSquare = Long.numberOfTrailingZeros(ChessGameController.games.get(chessGameId).WK);
                 mopUpScore += Calculation.centreManhattanDistance[opponentKingSquare] * 10;
                 mopUpScore += (14 - Calculation.NumRookMovesToReachSquare(myKingSquare, opponentKingSquare)) * 4;
 

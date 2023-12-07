@@ -14,9 +14,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -29,6 +31,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @Nonnull HttpServletResponse response,
                                     @Nonnull FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromCookie(request);
+        if (Objects.equals(token, "")) {
+            token = getTokenFromRequest(request);
+        }
 //        System.out.println("Token from cookie " + token);
         final String authorHeader = request.getHeader("Authorization");
         final String jwt;
@@ -78,6 +83,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
+        return "";
+    }
+
+    private String getTokenFromRequest(HttpServletRequest request) {
+        // Example of extracting token from header
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        // If you are storing the token in the session, extract it here
         return "";
     }
 }

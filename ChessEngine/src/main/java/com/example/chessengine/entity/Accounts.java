@@ -68,11 +68,14 @@ public class Accounts implements UserDetails {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedDate;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<AccountsChats> accountsChatsSet;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<AccountsMatches> accountsMatchesSet;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<AccountsPuzzles> accountsPuzzlesSet;
 
     @ManyToOne()
     @JoinColumn(name = "role_id")

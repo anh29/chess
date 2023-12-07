@@ -42,7 +42,7 @@ public class Chats {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedDate;
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<AccountsChats> accountsChatsSet;
 
     @ManyToOne

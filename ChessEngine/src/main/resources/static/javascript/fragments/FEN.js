@@ -45,7 +45,18 @@ const FENRequest = {
     fenRequest: fen
 };
 
-fetch('/api/chess/fen', {
+function getAllPathVariables() {
+    return window.location.pathname.split('/').filter(Boolean);
+}
+
+
+const pathVariables = getAllPathVariables();
+// const urlParams = new URLSearchParams(window.location.search);
+// const idVal = urlParams.get('id');
+const idMatchTypeVal1 = pathVariables[1];
+const idMatchVal1 = pathVariables[2];
+
+fetch(`/api/chess/fen/${idMatchVal1}`, {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
