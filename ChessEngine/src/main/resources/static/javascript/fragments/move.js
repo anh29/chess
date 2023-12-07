@@ -7,17 +7,22 @@ let selectedType = null;
 let sendMove = null;
 let isPromoting = false;
 let flag = null;
+const token = getCookie('jwtToken');
 
-// function getAllPathVariables() {
-//     return window.location.pathname.split('/').filter(Boolean);
-// }
+console.log("token:::::: ", token);
+
+function getAllPathVariables1() {
+    return window.location.pathname.split('/').filter(Boolean);
+}
 
 
-// const pathVariables = getAllPathVariables();
+const hello = getAllPathVariables1();
 // const urlParams = new URLSearchParams(window.location.search);
 // const idVal = urlParams.get('id');
-// const idMatchTypeVal = pathVariables[1];
-// const idMatchVal = pathVariables[2];
+const idMatchTypeVal = hello[1];
+const idMatchVal = hello[2];
+// console.log("idMatchTypeVal: ", idMatchTypeVal);
+// console.log("idMatchVal: ", idMatchVal);
 // console.log("path variables: ", pathVariables);
 // console.log("urlParams: ", urlParams);
 // console.log("idVal: ", idVal);
@@ -30,7 +35,7 @@ stompClient.connect({}, async (frame) => {
     console.log("Connected to WebSocket");
     flag = await flagProcessing();
     console.log("Flag: ", flag);
-    stompClient.subscribe('/topic/move', handleMove);
+    stompClient.subscribe(`/topic/move/${idMatchVal}`, handleMove);
 }, () => {
     console.log("Socket: ", socket);
     console.log("Stomp client: ", stompClient);
@@ -441,10 +446,11 @@ async function selectPromotionPiece(img, square) {
 
 async function makeMove(moveRequest) {
     try {
-        const response = await fetch('/api/chess/move', {
+        const response = await fetch(`/api/chess/move/${idMatchVal}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(moveRequest)
         });
@@ -456,10 +462,11 @@ async function makeMove(moveRequest) {
 
 async function moveProcessing(moveProcessRequest) {
     try {
-        const response = await fetch('/api/chess/process', {
+        const response = await fetch(`/api/chess/process/${idMatchVal}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(moveProcessRequest)
         });
@@ -471,10 +478,11 @@ async function moveProcessing(moveProcessRequest) {
 
 async function endGame(all) {
     try {
-        const response = await fetch('/api/chess/endgame', {
+        const response = await fetch(`/api/chess/endgame/${idMatchVal}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(all)
         });
@@ -487,7 +495,7 @@ async function endGame(all) {
 
 async function flagProcessing() {
     try {
-        const response = await fetch('flagProcessing', {
+        const response = await fetch(`flagProcessing/${idMatchVal}`, {
             method: 'POST',
         });
         return await response.text();
@@ -507,4 +515,16 @@ function closeMatchResult() {
     const matchResultElement = document.getElementById('matchResult');
     matchResultElement.style.display = 'none';
     // matchResultElement.classList.remove('show');
+}
+
+function getCookie(name) {
+    const cookieString = document.cookie;
+    const cookies = cookieString.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+            return cookie.substring(name.length + 1);
+        }
+    }
+    return '';
 }

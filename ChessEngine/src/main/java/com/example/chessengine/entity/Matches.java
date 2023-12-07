@@ -47,10 +47,10 @@ public class Matches {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedDate;
 
-    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<AccountsMatches> accountsMatchesSet;
 
-    @OneToOne(mappedBy = "match", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     private Rooms room;
 }

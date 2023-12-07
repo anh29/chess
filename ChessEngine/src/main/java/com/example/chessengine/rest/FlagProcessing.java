@@ -1,6 +1,5 @@
 package com.example.chessengine.rest;
 
-import com.example.chessengine.controller.ApplicationController;
 import com.example.chessengine.entity.Accounts;
 import com.example.chessengine.entity.AccountsMatches;
 import com.example.chessengine.entity.Matches;
@@ -17,25 +16,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
-
 @RestController
-public class ExceptionHandling {
+public class FlagProcessing {
     @Autowired
     private AccountMatchService accountMatchService;
     @Autowired
     private AccountService accountService;
     @Autowired
     private MatchService matchService;
-    private static final int MAX_PLAYERS = 2;
-    private static final AtomicInteger playerCounter = new AtomicInteger(0);
 
-    @PostMapping("online/{idType}/flagProcessing")
-    public ResponseEntity<String> flagProcessing(@PathVariable String idType, HttpServletRequest request) {
-        int currentPlayer = playerCounter.incrementAndGet();
-        if (currentPlayer <= MAX_PLAYERS) {
-            String playSide = (currentPlayer == 1) ? "white" : "black";
+    @PostMapping("online/{idType}/flagProcessing/{idMatch}")
+    public ResponseEntity<String> flagProcessing(@PathVariable String idType, @PathVariable String idMatch, HttpServletRequest request) {
+        int currentPlayer = ChessGameController.games.get(idMatch).counter;
+        if (currentPlayer < ChessGameController.games.get(idMatch).MAX_PLAYERS) {
+            String playSide = (currentPlayer == 0) ? "white" : "black";
 
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
@@ -57,7 +51,8 @@ public class ExceptionHandling {
                     }
                 }
             }
-
+            ChessGameController.games.get(idMatch).counter = currentPlayer + 1;
+            System.out.println("counterrrrrrrrrr: " + ChessGameController.games.get(idMatch).counter);
 
             return ResponseEntity.ok(playSide);
         } else {

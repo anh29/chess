@@ -126,6 +126,7 @@ public class ApplicationController {
         Cookie cookie = new Cookie("jwtToken", token);
         cookie.setPath("/");
         response.addCookie(cookie);
+//        System.out.println("token::::::::::::::" + token);
 
         Cookie cookie1 = new Cookie("gmail", account.getUsername());
         cookie1.setPath("/");
