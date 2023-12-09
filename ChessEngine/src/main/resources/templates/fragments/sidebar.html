@@ -4,7 +4,7 @@
             <p class="name">Chess</p>
         </div>
         <li class="items"><img class="img-lg" th:src="@{/IMAGE/playwhite.cea685ba.svg}" alt="">
-            <p class="text">Play</p>
+            <p class="text"><a href="/play" style="color: white">Play</a> </p>
         </li>
         <li class="items"><img class="img-lg" th:src="@{/IMAGE/icons8-puzzle-50-white.png}" alt="">
             <p class="text">Puzzles</p>
@@ -25,9 +25,9 @@
             <input id="search" type="text" placeholder="Search">
         </li>
         <li class="btn">
-            <button id="btn1">Sign up</button>
+            <button><span style="color:#000;" th:text="${username}"></span></button>
         </li>
         <li class="btn">
-            <button id="btn2">Login</button>
+            <button id="btn2"><a href="public/login"  style="color: white">Log out</a></button>
         </li>
     </ul>

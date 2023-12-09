@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class MainController {
@@ -19,6 +21,8 @@ public class MainController {
 
     @Autowired
     private AccountService accountService;
+
+    private Map<String, String> playersInMatches = new HashMap<>();
 
     @GetMapping()
     public String showIndex()
@@ -30,10 +34,13 @@ public class MainController {
     public String showLearn(Model model, Principal principal,
                             @RequestHeader(value = "request-source", required = false) String requestSource) {
         if (requestSource == null && principal != null) {
+            String username = principal.getName();
+            model.addAttribute("username", extractNameFromEmail(username));
+
             return "index";
-        }
-        else
+        } else {
             return "fragments/containHome";
+        }
     }
 
     @GetMapping("/online/{idTime}/{idMatch}")
@@ -45,8 +52,14 @@ public class MainController {
             @RequestHeader(value = "request-source", required = false) String requestSource
     ) {
         if (idTime != null) {
-            // Use the gameId parameter as needed
             model.addAttribute("idTime", idTime);
+
+            // Retrieve username from Principal
+            String username = extractNameFromEmail(principal.getName());
+            model.addAttribute("username", username);
+
+            playersInMatches.put(username, idMatch);
+
 //            System.out.println("App: " + ApplicationController.gmail);
 //            Accounts account = accountService.getAccountByGmail(ApplicationController.gmail);
 //            Matches match = matchService.getMatchByIdMatch(idMatch);
@@ -59,6 +72,13 @@ public class MainController {
 //            matchService.save(match);
             return "PlayOnline";
         } else if (requestSource == null && principal != null) {
+            // Retrieve the match ID for the current player
+            String username = extractNameFromEmail(principal.getName());
+            String matchId = playersInMatches.get(username);
+
+            // Add the match ID and player's username to the model
+            model.addAttribute("matchId", matchId);
+
             return "PlayOnline";
         } else {
             return "index";
@@ -73,13 +93,37 @@ public class MainController {
             @RequestHeader(value = "request-source", required = false) String requestSource
     ) {
         if (idTime != null) {
-            // Use the gameId parameter as needed
             model.addAttribute("idTime", idTime);
+
+            // Retrieve username from Principal
+            String username = principal.getName();
+            model.addAttribute("username", extractNameFromEmail(username));
+
             return "PlayComputer";
         } else if (requestSource == null && principal != null) {
+            // Retrieve username from Principal
+            String username = principal.getName();
+            model.addAttribute("username", username);
+
             return "PlayComputer";
         } else {
             return "index";
         }
     }
+    public static String extractNameFromEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            return null;
+        }
+
+        // Tách phần tên từ địa chỉ email
+        String[] parts = email.split("@");
+
+        // Kiểm tra xem có ít nhất một phần tử sau khi tách không
+        if (parts.length >= 2) {
+            return parts[0]; // Trả về phần tử đầu tiên sau khi tách
+        } else {
+            return null; // Trả về null nếu không thể tách được địa chỉ email
+        }
+    }
+
 }

@@ -115,26 +115,31 @@ public class ApplicationController {
     }
 
     @PostMapping("/login")
-    public String handleLogin(@ModelAttribute("account") Accounts account, HttpServletResponse response) {
-//        System.out.println("00000000000000000000000000000000000000000000000000000000");
-        AuthenticationResponse authenticationResponse = authenticationService.
-                authenticate(AuthenticationRequest.builder()
+    public String handleLogin(@ModelAttribute("account") Accounts account, Model model, HttpServletResponse response) {
+        AuthenticationResponse authenticationResponse = authenticationService.authenticate(
+                AuthenticationRequest.builder()
                         .gmail(account.getUsername())
                         .password(account.getPassword()).build());
-//        System.out.println("ajwoeifjoajweiof");
+
         String token = authenticationResponse.getToken();
         Cookie cookie = new Cookie("jwtToken", token);
         cookie.setPath("/");
         response.addCookie(cookie);
-//        System.out.println("token::::::::::::::" + token);
 
         Cookie cookie1 = new Cookie("gmail", account.getUsername());
         cookie1.setPath("/");
         response.addCookie(cookie1);
-//        System.out.println("gmail: " + gmail);
-//        System.out.println("Token from controller: "+ token);
+
+        // Retrieve the authenticated user
+        Accounts authenticatedUser = accountService.getAccountByGmail(account.getUsername());
+
+        // Add the username12 to the model
+        model.addAttribute("username", authenticatedUser.getUsername12());
+        System.out.println("username" + authenticatedUser.getUsername12());
+
         return "redirect:/play";
     }
+
 
     @GetMapping("/learn")
     public String showLearn(Model model, Principal principal, @RequestHeader(value = "request-source", required = false) String requestSource) {

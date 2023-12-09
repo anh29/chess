@@ -66,6 +66,7 @@
     letter-spacing: 8px;
     background: #4b4847;
     color: #fff;
+    border-radius: 10px 10px 0 0;
 }
 
 .modal-heading-icon {
@@ -80,6 +81,7 @@
     height: 60vh;
     animation: modalFadeIn ease 0.5s;
     border-radius: 10px;
+    box-shadow: rgb(255 255 255 / 25%) 0px 54px 55px, rgb(255 255 255 / 12%) 0px -12px 30px, rgb(255 255 255 / 12%) 0px 4px 6px, rgb(255 255 255 / 17%) 0px 12px 13px, rgb(255 255 255 / 9%) 0px -3px 5px;
 }
 
 @keyframes modalFadeIn {
