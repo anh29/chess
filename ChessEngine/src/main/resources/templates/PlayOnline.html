@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/CSS/sidebar.css">
     <link rel="stylesheet" href="/CSS/chessboard.css">
     <link rel="stylesheet" href="/CSS/nav.css">
+    <link rel="stylesheet" href="/CSS/chat.css">
     <link rel="stylesheet" href="/CSS/ContainPlay.css">
     <link rel="stylesheet" href="/CSS/matchResult.css">
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
@@ -46,31 +47,53 @@
             <div class="user-top">
                 <img class="img-user" th:src="@{/IMAGE/br.png}" alt="">
                 <div id="user2" class="contain-user">
-                    <p class="username">ANNNNNNA</p>
+                    <span  th:text="${username}" class="username"></span>
                     <div class="count-clock">
                         <div id="clock-white"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="contain-move">
-            <div th:if="${idTime}" class="show-time">
-                <div class="txtClock">
-                    <p>Game clock: <span id="idTime" th:text="${idTime}"></span></p>
+        <div class="right-bar">
+            <div class="contain-move">
+                <div th:if="${idTime}" class="show-time">
+                    <div class="txtClock">
+                        <p>Game clock: <span id="idTime" th:text="${idTime}"></span></p>
+                    </div>
+                    <div class="txtTime">
+                        <p id="countStart">Start clock in 5 seconds</p>
+                    </div>
                 </div>
-                <div class="txtTime">
-                    <p id="countStart">Start clock in 5 seconds</p>
+
+                <div id="chat-page">
+                    <div class="chat-container">
+                        <div class="chat-header">
+                            <h2>Chess Match Chat</h2>
+                        </div>
+                        <ul id="messageArea"></ul>
+                        <form id="messageForm">
+                            <div class="form-group">
+                                <div class="input-group clearfix">
+                                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control" />
+                                    <button type="submit" class="primary">Send</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
+             </div>
 
-            <div class="shoe-move">
-
-            </div>
-        </div>
+           </div>
     </div>
 </div>
 
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
 <script defer th:src="@{/javascript/fragments/playOnline.js}"></script>
 <script defer th:src="@{/javascript/fragments/move.js}"></script>
+<script defer th:src="@{/javascript/fragments/chat.js}"></script>
 </body>
 </html>
