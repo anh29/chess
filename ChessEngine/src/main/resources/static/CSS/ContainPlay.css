@@ -49,6 +49,11 @@
     margin-bottom: 10px;
 }
 
+.contain-move {
+    min-width: 404px;
+    padding: 0 20px;
+}
+
 .show-time {
 height: 25px;
     text-align: center;
