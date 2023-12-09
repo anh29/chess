@@ -36,6 +36,16 @@ public class MainController {
             return "fragments/containHome";
     }
 
+    @GetMapping("/puzzles")
+    public String showPuzzles(Model model, Principal principal,
+                            @RequestHeader(value = "request-source", required = false) String requestSource) {
+        if (requestSource == null && principal != null) {
+            return "Puzzles";
+        }
+        else
+            return "fragments/containPuzzles";
+    }
+
     @GetMapping("/online/{idTime}/{idMatch}")
     public String play(
             Model model,
