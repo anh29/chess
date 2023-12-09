@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Play Online</title>
+    <link rel="stylesheet" href="/CSS/reset.css">
+    <link rel="stylesheet" href="/CSS/main.css">
+    <link rel="stylesheet" href="/CSS/sidebar.css">
+    <link rel="stylesheet" href="/CSS/chessboard.css">
+    <link rel="stylesheet" href="/CSS/nav.css">
+    <link rel="stylesheet" href="/CSS/ContainPlay.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" th:insert="~{/fragments/sidebar}">
+    </div>
+
+    <div class="contain" >
+        <div class="contain-board">
+            <div class="dad-container chessB">
+                <div class="main-container">
+                    <div class="file-a files">
+                        <div class="square square-sm" data-rank="0" data-file="0"></div>
+                        <div class="square square-sm" data-rank="1" data-file="0"></div>
+                        <div class="square square-sm" data-rank="2" data-file="0"></div>
+                        <div class="square square-sm" data-rank="3" data-file="0"></div>
+                        <div class="square square-sm" data-rank="4" data-file="0"></div>
+                        <div class="square square-sm" data-rank="5" data-file="0"></div>
+                        <div class="square square-sm" data-rank="6" data-file="0"></div>
+                        <div class="square square-sm" data-rank="7" data-file="0"></div>
+                    </div>
+                    <div class="file-b files">
+                        <div class="square square-sm" data-rank="0" data-file="1"></div>
+                        <div class="square square-sm" data-rank="1" data-file="1"></div>
+                        <div class="square square-sm" data-rank="2" data-file="1"></div>
+                        <div class="square square-sm" data-rank="3" data-file="1"></div>
+                        <div class="square square-sm" data-rank="4" data-file="1"></div>
+                        <div class="square square-sm" data-rank="5" data-file="1"></div>
+                        <div class="square square-sm" data-rank="6" data-file="1"></div>
+                        <div class="square square-sm" data-rank="7" data-file="1"></div>
+
+                    </div>
+                    <div class="file-c files">
+                        <div class="square square-sm" data-rank="0" data-file="2"></div>
+                        <div class="square square-sm" data-rank="1" data-file="2"></div>
+                        <div class="square square-sm" data-rank="2" data-file="2"></div>
+                        <div class="square square-sm" data-rank="3" data-file="2"></div>
+                        <div class="square square-sm" data-rank="4" data-file="2"></div>
+                        <div class="square square-sm" data-rank="5" data-file="2"></div>
+                        <div class="square square-sm" data-rank="6" data-file="2"></div>
+                        <div class="square square-sm" data-rank="7" data-file="2"></div>
+
+                    </div>
+                    <div class="file-d files">
+                        <div class="square square-sm" data-rank="0" data-file="3"></div>
+                        <div class="square square-sm" data-rank="1" data-file="3"></div>
+                        <div class="square square-sm" data-rank="2" data-file="3"></div>
+                        <div class="square square-sm" data-rank="3" data-file="3"></div>
+                        <div class="square square-sm" data-rank="4" data-file="3"></div>
+                        <div class="square square-sm" data-rank="5" data-file="3"></div>
+                        <div class="square square-sm" data-rank="6" data-file="3"></div>
+                        <div class="square square-sm" data-rank="7" data-file="3"></div>
+
+                    </div>
+                    <div class="file-e files">
+                        <div class="square square-sm" data-rank="0" data-file="4"></div>
+                        <div class="square square-sm" data-rank="1" data-file="4"></div>
+                        <div class="square square-sm" data-rank="2" data-file="4"></div>
+                        <div class="square square-sm" data-rank="3" data-file="4"></div>
+                        <div class="square square-sm" data-rank="4" data-file="4"></div>
+                        <div class="square square-sm" data-rank="5" data-file="4"></div>
+                        <div class="square square-sm" data-rank="6" data-file="4"></div>
+                        <div class="square square-sm" data-rank="7" data-file="4"></div>
+
+                    </div>
+                    <div class="file-f files">
+                        <div class="square square-sm" data-rank="0" data-file="5"></div>
+                        <div class="square square-sm" data-rank="1" data-file="5"></div>
+                        <div class="square square-sm" data-rank="2" data-file="5"></div>
+                        <div class="square square-sm" data-rank="3" data-file="5"></div>
+                        <div class="square square-sm" data-rank="4" data-file="5"></div>
+                        <div class="square square-sm" data-rank="5" data-file="5"></div>
+                        <div class="square square-sm" data-rank="6" data-file="5"></div>
+                        <div class="square square-sm" data-rank="7" data-file="5"></div>
+
+                    </div>
+                    <div class="file-g files">
+                        <div class="square square-sm" data-rank="0" data-file="6"></div>
+                        <div class="square square-sm" data-rank="1" data-file="6"></div>
+                        <div class="square square-sm" data-rank="2" data-file="6"></div>
+                        <div class="square square-sm" data-rank="3" data-file="6"></div>
+                        <div class="square square-sm" data-rank="4" data-file="6"></div>
+                        <div class="square square-sm" data-rank="5" data-file="6"></div>
+                        <div class="square square-sm" data-rank="6" data-file="6"></div>
+                        <div class="square square-sm" data-rank="7" data-file="6"></div>
+
+                    </div>
+                    <div class="file-h files">
+                        <div class="square square-sm" data-rank="0" data-file="7"></div>
+                        <div class="square square-sm" data-rank="1" data-file="7"></div>
+                        <div class="square square-sm" data-rank="2" data-file="7"></div>
+                        <div class="square square-sm" data-rank="3" data-file="7"></div>
+                        <div class="square square-sm" data-rank="4" data-file="7"></div>
+                        <div class="square square-sm" data-rank="5" data-file="7"></div>
+                        <div class="square square-sm" data-rank="6" data-file="7"></div>
+                        <div class="square square-sm" data-rank="7" data-file="7"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script defer src="/javascript/fragments/puzzles.js"></script>
+</html>

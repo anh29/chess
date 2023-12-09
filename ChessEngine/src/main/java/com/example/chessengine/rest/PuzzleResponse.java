@@ -7,14 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class MoveRequest {
-    private String move;
-    private String allMoves;
-    private String flag;
+@NoArgsConstructor
+public class PuzzleResponse {
     private String id;
-    public MoveRequest(String move) {
-        this.move = move;
-    }
+    private String fen;
+    private String flag;
+    private String firstMove;
+    private boolean right;
+    private boolean done;
 }
