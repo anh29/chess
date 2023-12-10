@@ -1,5 +1,6 @@
 package com.example.chessengine.chessProcessing;
 
+import com.example.chessengine.constant.Side;
 import com.example.chessengine.rest.ChessGameController;
 import com.example.chessengine.rest.MoveRequest;
 import com.example.chessengine.utility.MatchCombinedId;
@@ -12,7 +13,7 @@ public class ChessMoveValidator {
     public boolean isValidMove(MoveRequest moveRequest, boolean isWhite, String idMatchType, String chessGameId) {
         MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idMatchType).matchId(chessGameId).build();
         String move = moveRequest.getMove();
-        boolean turn = Objects.equals(moveRequest.getFlag(), "white");
+        boolean turn = Objects.equals(moveRequest.getFlag(), Side.WHITE);
         if (isWhite && turn) {
             return Moves.WhitePossibleMoves(ChessGameController.games.get(combinedId).WP,
                     ChessGameController.games.get(combinedId).WN,

@@ -1,5 +1,6 @@
 package com.example.chessengine.rest;
 
+import com.example.chessengine.constant.Side;
 import com.example.chessengine.entity.Puzzles;
 import com.example.chessengine.service.PuzzleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class RandPuzzleController {
 
         String position = fenParts[0];         // The position of the pieces on the board
         String activeColor = fenParts[1];
-        String flag = (Objects.equals(activeColor, "w")) ? "black" : "white";
+        String flag = (Objects.equals(activeColor, "w")) ? Side.BLACK : Side.WHITE;
 
         String allMoves = puzzle.getSolution();
         String[] moveSeq = allMoves.split(" ");

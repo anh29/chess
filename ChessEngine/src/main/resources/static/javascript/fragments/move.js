@@ -129,18 +129,21 @@ async function handleMove(response) {
         showMatchResult('White wins!');
         await endGame({
             allMoves: moves.join(", "),
+            flag: flag
         });
     } else if (matchRes === "0.5-0.5") {
         console.log("Draw!!!!!!!!!!!!!!!!")
         showMatchResult('It\'s a draw!');
         await endGame({
             allMoves: moves.join(", "),
+            flag: flag
         });
     } else if (matchRes === "0-1") {
         console.log("Black wins!!!!!!!!!!!!!!!!")
         showMatchResult('Black wins!');
         await endGame({
             allMoves: moves.join(", "),
+            flag: flag
         });
     }
 }
@@ -371,12 +374,24 @@ window.addEventListener('load', () => {
                     if (moveResponse.matchResult === "1-0") {
                         console.log("White wins!!!!!!!!!!!!!!!!")
                         showMatchResult('White wins!');
+                        await endGame({
+                            allMoves: moves.join(", "),
+                            flag: flag
+                        });
                     } else if (moveResponse.matchResult === "0.5-0.5") {
                         console.log("Draw!!!!!!!!!!!!!!!!")
                         showMatchResult('It\'s a draw!');
+                        await endGame({
+                            allMoves: moves.join(", "),
+                            flag: flag
+                        });
                     } else if (moveResponse.matchResult === "0-1") {
                         console.log("Black wins!!!!!!!!!!!!!!!!")
                         showMatchResult('Black wins!');
+                        await endGame({
+                            allMoves: moves.join(", "),
+                            flag: flag
+                        });
                     }
                 }
             } else {
