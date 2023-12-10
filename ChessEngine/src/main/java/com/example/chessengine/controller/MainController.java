@@ -120,6 +120,22 @@ public class MainController {
             return "index";
         }
     }
+
+    @GetMapping("/tool")
+    public String showTool(Model model, Principal principal,
+                            @RequestHeader(value = "request-source", required = false) String requestSource) {
+        if (requestSource == null && principal != null) {
+            String username = principal.getName();
+            model.addAttribute("username", extractNameFromEmail(username));
+
+            return "Tool";
+        } else {
+            return "fragments/chessboard";
+        }
+    }
+
+
+
     public static String extractNameFromEmail(String email) {
         if (email == null || email.isEmpty()) {
             return null;
@@ -135,5 +151,6 @@ public class MainController {
             return null; // Trả về null nếu không thể tách được địa chỉ email
         }
     }
+
 
 }

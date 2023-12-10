@@ -1,0 +1,33 @@
+.contain {
+    padding-left: 2%;
+    display: block;
+    width: fit-content;
+    align-self: center;
+}
+
+.contain-board {
+    width: fit-content;
+    margin: 10px 0;
+}
+
+.top, .bottom{
+    text-align: -webkit-center;
+}
+
+.top-list {
+    display: flex;
+    background-color: #595856;
+    width: fit-content;
+    height: 9vh;
+}
+
+.icon {
+    width: -webkit-fill-available;
+    height: 10%;
+}
+
+.icon-cb {
+    width: 50px;
+    padding: 7px;
+    border: 1px solid white;
+}

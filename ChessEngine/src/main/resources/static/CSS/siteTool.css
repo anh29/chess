@@ -1,0 +1,97 @@
+.site {
+    color: white; /* Set text color to white for better visibility on a black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin-left: 2%;
+}
+
+#board-editor {
+    display: flex;
+    flex-direction: column;
+    background-color: #333; /* Darker background for the board editor */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.board-editor__tools {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #444; /* Darker background for the tools */
+}
+
+.metadata {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+}
+
+.color select,
+#enpassant-select {
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 3px;
+    background-color: #555; /* Darker background for the select boxes */
+    color: white; /* Text color for select boxes */
+}
+
+.castling,
+.enpassant {
+    margin-top: 10px;
+}
+
+.castling label,
+.enpassant label {
+    margin-right: 10px;
+}
+
+.lb {
+    display: flex;
+    align-items: center;
+}
+
+.txt-lb {
+    width: 140px;
+}
+
+.flex {
+    display: flex;
+    margin-top: 4px;
+}
+
+.positions {
+    margin: 4px;
+    height: 30px;
+    border-radius: 10px;
+    padding: 0 6px ;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+}
+
+.button {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: left;
+    text-decoration: none;
+    color: white;
+    background-color: #444;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #555;
+}
+
+.text {
+    margin-left: 10px;
+}
