@@ -1,5 +1,6 @@
 package com.example.chessengine.rest;
 
+import com.example.chessengine.constant.Side;
 import com.example.chessengine.entity.Accounts;
 import com.example.chessengine.entity.AccountsMatches;
 import com.example.chessengine.entity.Matches;
@@ -27,11 +28,11 @@ public class FlagProcessing {
     private MatchService matchService;
 
     @PostMapping("online/{idType}/flagProcessing/{idMatch}")
-    public ResponseEntity<String> flagProcessing(@PathVariable String idType, @PathVariable String idMatch, HttpServletRequest request) {
+    public synchronized ResponseEntity<String> flagProcessing(@PathVariable String idType, @PathVariable String idMatch, HttpServletRequest request) {
         MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idType).matchId(idMatch).build();
         int currentPlayer = ChessGameController.games.get(combinedId).counter;
         if (currentPlayer < ChessGameController.games.get(combinedId).MAX_PLAYERS) {
-            String playSide = (currentPlayer == 0) ? "white" : "black";
+            String playSide = (currentPlayer == 0) ? Side.WHITE : Side.BLACK;
 
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {

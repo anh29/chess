@@ -159,7 +159,8 @@ public class ChessGameController {
 
     @PostMapping("/endgame/{matchTypeId}/{matchId}")
     public ResponseEntity<Void> endgameHandling(@PathVariable String matchTypeId, @PathVariable String matchId, @RequestBody MoveRequest moveRequest) {
-        matchService.updateMatchMoves(idMatch, moveRequest.getAllMoves());
+        matchService.updateMatchMovesFirst(matchId, moveRequest.getAllMoves(), moveRequest.getFlag());
+        matchService.updateMatchMovesSecond(matchId, moveRequest.getAllMoves(), moveRequest.getFlag());
         MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(matchTypeId).matchId(matchId).build();
         games.remove(combinedId);
         return ResponseEntity.ok(null);
