@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface MatchRepo extends JpaRepository<Matches, String> {
     Matches findMatchesByMatchId(String matchId);
-    List<Matches> findAllByStatus(int status);
+    List<Matches> findAllByStatusAndIdMatchType(int status, String idMatchType);
 
     @Modifying
     @Query("UPDATE Matches m SET m.moves = CONCAT(m.moves, :newMoves) WHERE m.matchId = :matchId")

@@ -7,6 +7,7 @@ import com.example.chessengine.entity.embeddable.AccountsMatchesId;
 import com.example.chessengine.service.AccountMatchService;
 import com.example.chessengine.service.AccountService;
 import com.example.chessengine.service.MatchService;
+import com.example.chessengine.utility.MatchCombinedId;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,9 @@ public class FlagProcessing {
 
     @PostMapping("online/{idType}/flagProcessing/{idMatch}")
     public ResponseEntity<String> flagProcessing(@PathVariable String idType, @PathVariable String idMatch, HttpServletRequest request) {
-        int currentPlayer = ChessGameController.games.get(idMatch).counter;
-        if (currentPlayer < ChessGameController.games.get(idMatch).MAX_PLAYERS) {
+        MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idType).matchId(idMatch).build();
+        int currentPlayer = ChessGameController.games.get(combinedId).counter;
+        if (currentPlayer < ChessGameController.games.get(combinedId).MAX_PLAYERS) {
             String playSide = (currentPlayer == 0) ? "white" : "black";
 
             Cookie[] cookies = request.getCookies();
@@ -51,8 +53,8 @@ public class FlagProcessing {
                     }
                 }
             }
-            ChessGameController.games.get(idMatch).counter = currentPlayer + 1;
-            System.out.println("counterrrrrrrrrr: " + ChessGameController.games.get(idMatch).counter);
+            ChessGameController.games.get(combinedId).counter = currentPlayer + 1;
+            System.out.println("counterrrrrrrrrr: " + ChessGameController.games.get(combinedId).counter);
 
             return ResponseEntity.ok(playSide);
         } else {

@@ -56,7 +56,7 @@ const pathVariables = getAllPathVariables();
 const idMatchTypeVal1 = pathVariables[1];
 const idMatchVal1 = pathVariables[2];
 
-fetch(`/api/chess/fen/${idMatchVal1}`, {
+fetch(`/api/chess/fen/${idMatchTypeVal1}/${idMatchVal1}`, {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'

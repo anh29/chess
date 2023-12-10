@@ -1,6 +1,7 @@
 package com.example.chessengine.chessProcessing;
 
 import com.example.chessengine.rest.ChessGameController;
+import com.example.chessengine.utility.MatchCombinedId;
 
 import java.util.*;
 
@@ -31,8 +32,8 @@ public class Searching {
 
     public static int counter = 0;
 
-    public static int negamax(int depth, int alpha, int beta, boolean isWhite, String chessGameId) {
-        updateValue(chessGameId);
+    public static int negamax(int depth, int alpha, int beta, boolean isWhite, String idMatchType, String chessGameId) {
+        updateValue(idMatchType, chessGameId);
         String moves = isWhite ? Moves.WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ)
                 : Moves.BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ);
         if (depth == 0) {
@@ -41,13 +42,13 @@ public class Searching {
 
         int value = -Integer.MAX_VALUE;
         for (int i = 0; i < moves.length(); i += 4) {
-            Moves.moveOnBoard(moves.substring(i, i + 4), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, isWhite, chessGameId);
-            updateValue(chessGameId);
+            Moves.moveOnBoard(moves.substring(i, i + 4), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, isWhite, idMatchType, chessGameId);
+            updateValue(idMatchType, chessGameId);
 
             BoardGeneration.drawArray(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
 //            valueTemp = value;
 
-            value = Math.max(value, -negamax(depth - 1, -beta, -alpha, !isWhite, chessGameId));
+            value = Math.max(value, -negamax(depth - 1, -beta, -alpha, !isWhite, idMatchType, chessGameId));
 //            if (value >= valueTemp && isWhite)
 //            {
             System.out.println(moves.substring(i, i + 4));
@@ -57,8 +58,8 @@ public class Searching {
             System.out.println("------------------");
 //            }
 //            Moves.undoMove(ChessGameController.HISTORIC_MOVES, ChessGameController.HISTORIC_PIECES);
-            Moves.undoMove2(chessGameId);
-            updateValue(chessGameId);
+            Moves.undoMove2(idMatchType, chessGameId);
+            updateValue(idMatchType, chessGameId);
             if (alpha >= value) {
                 alpha = value;
 //                System.out.println(moves.substring(i, i + 4));
@@ -88,31 +89,32 @@ public class Searching {
         return value;
     }
 
-    public static void updateValue(String chessGameId) {
-        WP = ChessGameController.games.get(chessGameId).WP;
-        WN = ChessGameController.games.get(chessGameId).WN;
-        WB = ChessGameController.games.get(chessGameId).WB;
-        WR = ChessGameController.games.get(chessGameId).WR;
-        WQ = ChessGameController.games.get(chessGameId).WQ;
-        WK = ChessGameController.games.get(chessGameId).WK;
-        BP = ChessGameController.games.get(chessGameId).BP;
-        BN = ChessGameController.games.get(chessGameId).BN;
-        BB = ChessGameController.games.get(chessGameId).BB;
-        BR = ChessGameController.games.get(chessGameId).BR;
-        BQ = ChessGameController.games.get(chessGameId).BQ;
-        BK = ChessGameController.games.get(chessGameId).BK;
-        EP = ChessGameController.games.get(chessGameId).EP;
+    public static void updateValue(String idMatchType, String chessGameId) {
+        MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idMatchType).matchId(chessGameId).build();
+        WP = ChessGameController.games.get(combinedId).WP;
+        WN = ChessGameController.games.get(combinedId).WN;
+        WB = ChessGameController.games.get(combinedId).WB;
+        WR = ChessGameController.games.get(combinedId).WR;
+        WQ = ChessGameController.games.get(combinedId).WQ;
+        WK = ChessGameController.games.get(combinedId).WK;
+        BP = ChessGameController.games.get(combinedId).BP;
+        BN = ChessGameController.games.get(combinedId).BN;
+        BB = ChessGameController.games.get(combinedId).BB;
+        BR = ChessGameController.games.get(combinedId).BR;
+        BQ = ChessGameController.games.get(combinedId).BQ;
+        BK = ChessGameController.games.get(combinedId).BK;
+        EP = ChessGameController.games.get(combinedId).EP;
 
-        CWK = ChessGameController.games.get(chessGameId).CWK;
-        CWQ = ChessGameController.games.get(chessGameId).CWQ;
-        CBK = ChessGameController.games.get(chessGameId).CBK;
-        CBQ = ChessGameController.games.get(chessGameId).CBQ;
+        CWK = ChessGameController.games.get(combinedId).CWK;
+        CWQ = ChessGameController.games.get(combinedId).CWQ;
+        CBK = ChessGameController.games.get(combinedId).CBK;
+        CBQ = ChessGameController.games.get(combinedId).CBQ;
 
-        WhiteToMove = ChessGameController.games.get(chessGameId).WhiteToMove;
+        WhiteToMove = ChessGameController.games.get(combinedId).WhiteToMove;
     }
 
-    public static int Negamax2(int depth, int alpha, int beta, String chessGameId) {
-        updateValue(chessGameId);
+    public static int Negamax2(int depth, int alpha, int beta, String idMatchType, String chessGameId) {
+        updateValue(idMatchType, chessGameId);
         String captureMoves = Moves.onlyCaptureMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, WhiteToMove);
         String moves = WhiteToMove ? Moves.WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ)
                 : Moves.BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ);
@@ -136,7 +138,7 @@ public class Searching {
         }
         if (depth == 0) {
 //            return Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WhiteToMove);
-            return Quiescence(alpha, beta, chessGameId);
+            return Quiescence(alpha, beta, idMatchType, chessGameId);
         }
 
         String bestMoveSoFar = "";
@@ -145,11 +147,11 @@ public class Searching {
 //        int value = -Integer.MAX_VALUE;
         for (int i = 0; i < moves.length(); i += 4) {
             ply++;
-            Moves.moveOnBoard(moves.substring(i, i + 4), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove, chessGameId);
-            updateValue(chessGameId);
+            Moves.moveOnBoard(moves.substring(i, i + 4), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove, idMatchType, chessGameId);
+            updateValue(idMatchType, chessGameId);
 
 //            BoardGeneration.drawArray(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
-            int value = -Negamax2(depth - 1, -beta, -alpha, chessGameId);
+            int value = -Negamax2(depth - 1, -beta, -alpha, idMatchType, chessGameId);
             ply--;
 
 //            System.out.println(moves.substring(i, i + 4));
@@ -158,8 +160,8 @@ public class Searching {
 //            System.out.println(counter++);
 //            System.out.println("------------------");
 
-            Moves.undoMove2(chessGameId);
-            updateValue(chessGameId);
+            Moves.undoMove2(idMatchType, chessGameId);
+            updateValue(idMatchType, chessGameId);
 
             if (value >= beta) {
                 if (!captureMoves.contains(moves.substring(i, i + 4))) {
@@ -188,8 +190,8 @@ public class Searching {
         return alpha;
     }
 
-    public static int Quiescence(int alpha, int beta, String chessGameId) {
-        updateValue(chessGameId);
+    public static int Quiescence(int alpha, int beta, String idMatchType, String chessGameId) {
+        updateValue(idMatchType, chessGameId);
         int eval = Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WhiteToMove, chessGameId);
         if (eval >= beta) {
             return beta;
@@ -201,13 +203,13 @@ public class Searching {
 
         for (int i = 0; i < moves.length(); i += 4) {
             ply++;
-            Moves.moveOnBoard(moves.substring(i, i + 4), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove, chessGameId);
-            updateValue(chessGameId);
+            Moves.moveOnBoard(moves.substring(i, i + 4), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove, idMatchType, chessGameId);
+            updateValue(idMatchType, chessGameId);
 
-            int score = -Quiescence(-beta, -alpha, chessGameId);
+            int score = -Quiescence(-beta, -alpha, idMatchType, chessGameId);
             ply--;
-            Moves.undoMove2(chessGameId);
-            updateValue(chessGameId);
+            Moves.undoMove2(idMatchType, chessGameId);
+            updateValue(idMatchType, chessGameId);
 
             if (score >= beta) {
                 return beta;

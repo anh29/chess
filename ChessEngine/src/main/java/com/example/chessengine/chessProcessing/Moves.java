@@ -1,6 +1,7 @@
 package com.example.chessengine.chessProcessing;
 
 import com.example.chessengine.rest.ChessGameController;
+import com.example.chessengine.utility.MatchCombinedId;
 
 import java.util.ArrayList;
 
@@ -922,7 +923,7 @@ public class Moves {
     }
 
 
-    public static void moveOnBoard(String move, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean CWK, boolean CWQ, boolean CBK, boolean CBQ, boolean WhiteToMove, String chessGameId) {
+    public static void moveOnBoard(String move, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, long EP, boolean CWK, boolean CWQ, boolean CBK, boolean CBQ, boolean WhiteToMove, String idMatchType, String chessGameId) {
         if ((WhiteToMove && WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).replace(move, "").length() < WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).length()) ||
                 (!WhiteToMove && BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).replace(move, "").length() < BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ).length())) {
             long WPt = Moves.makeMove(WP, move, 'P'), WNt = Moves.makeMove(WN, move, 'N'),
@@ -965,29 +966,30 @@ public class Moves {
 //                keepOldBoard();
 //                getHistory(move, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, WPt, WNt, WBt, WRt, WQt, WKt, BPt, BNt, BBt, BRt, BQt, BKt, EPt);
 //                ChessGameController.HISTORIC_MOVES.add(move);
-                if (ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD == null) {
-                    ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD = new ArrayList<>();
+                MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idMatchType).matchId(chessGameId).build();
+                if (ChessGameController.games.get(combinedId).HISTORIC_BITBOARD == null) {
+                    ChessGameController.games.get(combinedId).HISTORIC_BITBOARD = new ArrayList<>();
                 }
-                ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.add(new HistoricInfo(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove));
-                ChessGameController.games.get(chessGameId).WP = WPt;
-                ChessGameController.games.get(chessGameId).WN = WNt;
-                ChessGameController.games.get(chessGameId).WB = WBt;
-                ChessGameController.games.get(chessGameId).WR = WRt;
-                ChessGameController.games.get(chessGameId).WQ = WQt;
-                ChessGameController.games.get(chessGameId).WK = WKt;
-                ChessGameController.games.get(chessGameId).BP = BPt;
-                ChessGameController.games.get(chessGameId).BN = BNt;
-                ChessGameController.games.get(chessGameId).BB = BBt;
-                ChessGameController.games.get(chessGameId).BR = BRt;
-                ChessGameController.games.get(chessGameId).BQ = BQt;
-                ChessGameController.games.get(chessGameId).BK = BKt;
-                ChessGameController.games.get(chessGameId).EP = EPt;
+                ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.add(new HistoricInfo(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove));
+                ChessGameController.games.get(combinedId).WP = WPt;
+                ChessGameController.games.get(combinedId).WN = WNt;
+                ChessGameController.games.get(combinedId).WB = WBt;
+                ChessGameController.games.get(combinedId).WR = WRt;
+                ChessGameController.games.get(combinedId).WQ = WQt;
+                ChessGameController.games.get(combinedId).WK = WKt;
+                ChessGameController.games.get(combinedId).BP = BPt;
+                ChessGameController.games.get(combinedId).BN = BNt;
+                ChessGameController.games.get(combinedId).BB = BBt;
+                ChessGameController.games.get(combinedId).BR = BRt;
+                ChessGameController.games.get(combinedId).BQ = BQt;
+                ChessGameController.games.get(combinedId).BK = BKt;
+                ChessGameController.games.get(combinedId).EP = EPt;
 
-                ChessGameController.games.get(chessGameId).CWK = CWKt;
-                ChessGameController.games.get(chessGameId).CWQ = CWQt;
-                ChessGameController.games.get(chessGameId).CBK = CBKt;
-                ChessGameController.games.get(chessGameId).CBQ = CBQt;
-                ChessGameController.games.get(chessGameId).WhiteToMove = !WhiteToMove;
+                ChessGameController.games.get(combinedId).CWK = CWKt;
+                ChessGameController.games.get(combinedId).CWQ = CWQt;
+                ChessGameController.games.get(combinedId).CBK = CBKt;
+                ChessGameController.games.get(combinedId).CBQ = CBQt;
+                ChessGameController.games.get(combinedId).WhiteToMove = !WhiteToMove;
 
 //                ChessGameController.HISTORIC_BITBOARD.add(new HistoricInfo(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove));
 //                ChessGameController.WP = WPt;
@@ -1022,28 +1024,29 @@ public class Moves {
         }
     }
 
-    public static void undoMove2(String chessGameId) {
-        int size = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.size();
-        ChessGameController.games.get(chessGameId).WP = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).WP;
-        ChessGameController.games.get(chessGameId).WN = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).WN;
-        ChessGameController.games.get(chessGameId).WB = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).WB;
-        ChessGameController.games.get(chessGameId).WR = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).WR;
-        ChessGameController.games.get(chessGameId).WQ = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).WQ;
-        ChessGameController.games.get(chessGameId).WK = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).WK;
-        ChessGameController.games.get(chessGameId).BP = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).BP;
-        ChessGameController.games.get(chessGameId).BN = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).BN;
-        ChessGameController.games.get(chessGameId).BB = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).BB;
-        ChessGameController.games.get(chessGameId).BR = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).BR;
-        ChessGameController.games.get(chessGameId).BQ = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).BQ;
-        ChessGameController.games.get(chessGameId).BK = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).BK;
-        ChessGameController.games.get(chessGameId).EP = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).EP;
+    public static void undoMove2(String idMatchType, String chessGameId) {
+        MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idMatchType).matchId(chessGameId).build();
+        int size = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.size();
+        ChessGameController.games.get(combinedId).WP = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).WP;
+        ChessGameController.games.get(combinedId).WN = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).WN;
+        ChessGameController.games.get(combinedId).WB = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).WB;
+        ChessGameController.games.get(combinedId).WR = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).WR;
+        ChessGameController.games.get(combinedId).WQ = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).WQ;
+        ChessGameController.games.get(combinedId).WK = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).WK;
+        ChessGameController.games.get(combinedId).BP = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).BP;
+        ChessGameController.games.get(combinedId).BN = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).BN;
+        ChessGameController.games.get(combinedId).BB = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).BB;
+        ChessGameController.games.get(combinedId).BR = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).BR;
+        ChessGameController.games.get(combinedId).BQ = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).BQ;
+        ChessGameController.games.get(combinedId).BK = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).BK;
+        ChessGameController.games.get(combinedId).EP = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).EP;
 
-        ChessGameController.games.get(chessGameId).CWK = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).CWK;
-        ChessGameController.games.get(chessGameId).CWQ = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).CWQ;
-        ChessGameController.games.get(chessGameId).CBK = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).CBK;
-        ChessGameController.games.get(chessGameId).CBQ = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).CBQ;
-        ChessGameController.games.get(chessGameId).WhiteToMove = ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.get(size - 1).WhiteToMove;
-        ChessGameController.games.get(chessGameId).HISTORIC_BITBOARD.remove(size - 1);
+        ChessGameController.games.get(combinedId).CWK = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).CWK;
+        ChessGameController.games.get(combinedId).CWQ = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).CWQ;
+        ChessGameController.games.get(combinedId).CBK = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).CBK;
+        ChessGameController.games.get(combinedId).CBQ = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).CBQ;
+        ChessGameController.games.get(combinedId).WhiteToMove = ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.get(size - 1).WhiteToMove;
+        ChessGameController.games.get(combinedId).HISTORIC_BITBOARD.remove(size - 1);
     }
 
     public static boolean checkingSafe(String move, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, boolean isWhite) {

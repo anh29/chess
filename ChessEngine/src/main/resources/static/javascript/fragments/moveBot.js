@@ -6,6 +6,20 @@ let pieceTypeCode = null;
 let selectedType = null;
 let sendMove = null;
 let isPromoting = false;
+let flagBot = "white";
+
+function getAllPathVariables2() {
+    return window.location.pathname.split('/').filter(Boolean);
+}
+
+
+const hello2 = getAllPathVariables2();
+// const urlParams = new URLSearchParams(window.location.search);
+// const idVal = urlParams.get('id');
+const idMatchTypeVal2 = hello2[1];
+const idMatchVal2 = hello2[2];
+
+
 window.addEventListener('load', () => {
     let draggedImg = null; // This will store the dragged image
     let startSquare = null; // This will store the starting square
@@ -99,7 +113,8 @@ window.addEventListener('load', () => {
 
             console.log("send move: ", sendMove);
             const moveRequest = {
-                move: sendMove
+                move: sendMove,
+                flag: flagBot
             };
 
             // Send the move to the backend
@@ -368,7 +383,7 @@ async function selectPromotionPiece(img, square) {
 
 async function makeMove(moveRequest) {
     try {
-        const response = await fetch('/api/chess/move', {
+        const response = await fetch(`/api/chess/move/${idMatchTypeVal2}/${idMatchVal2}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -383,7 +398,7 @@ async function makeMove(moveRequest) {
 
 async function moveProcessing(moveProcessRequest) {
     try {
-        const response = await fetch('/api/chess/processBot', {
+        const response = await fetch(`/api/chess/processBot/${idMatchTypeVal2}/${idMatchVal2}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
