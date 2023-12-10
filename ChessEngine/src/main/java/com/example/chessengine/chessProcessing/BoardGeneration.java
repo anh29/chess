@@ -1,6 +1,7 @@
 package com.example.chessengine.chessProcessing;
 
 import com.example.chessengine.rest.ChessGameController;
+import com.example.chessengine.utility.MatchCombinedId;
 
 import java.util.Arrays;
 
@@ -21,7 +22,7 @@ public class BoardGeneration {
 //        ArrayToBitBoard(chessBoard, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
     }
 
-    public static void ArrayToBitBoard(String[][] chessBoard, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, boolean CWK, boolean CWQ, boolean CBK, boolean CBQ, boolean whiteToMove, String chessGameId) {
+    public static void ArrayToBitBoard(String[][] chessBoard, long WP, long WN, long WB, long WR, long WQ, long WK, long BP, long BN, long BB, long BR, long BQ, long BK, boolean CWK, boolean CWQ, boolean CBK, boolean CBQ, boolean whiteToMove, String idMatchType, String chessGameId) {
         for (int i = 0; i < 64; i++) {
             String Binary = "0000000000000000000000000000000000000000000000000000000000000000";
             Binary = Binary.substring(i + 1) + "1" + Binary.substring(0, i);
@@ -65,23 +66,24 @@ public class BoardGeneration {
             }
         }
         drawArray(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
-        ChessGameController.games.get(chessGameId).WP = WP;
-        ChessGameController.games.get(chessGameId).WN = WN;
-        ChessGameController.games.get(chessGameId).WB = WB;
-        ChessGameController.games.get(chessGameId).WR = WR;
-        ChessGameController.games.get(chessGameId).WQ = WQ;
-        ChessGameController.games.get(chessGameId).WK = WK;
-        ChessGameController.games.get(chessGameId).BP = BP;
-        ChessGameController.games.get(chessGameId).BN = BN;
-        ChessGameController.games.get(chessGameId).BB = BB;
-        ChessGameController.games.get(chessGameId).BR = BR;
-        ChessGameController.games.get(chessGameId).BQ = BQ;
-        ChessGameController.games.get(chessGameId).BK = BK;
-        ChessGameController.games.get(chessGameId).CWK = CWK;
-        ChessGameController.games.get(chessGameId).CWQ = CWQ;
-        ChessGameController.games.get(chessGameId).CBK = CBK;
-        ChessGameController.games.get(chessGameId).CBQ = CBQ;
-        ChessGameController.games.get(chessGameId).WhiteToMove = WhiteToMove;
+        MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idMatchType).matchId(chessGameId).build();
+        ChessGameController.games.get(combinedId).WP = WP;
+        ChessGameController.games.get(combinedId).WN = WN;
+        ChessGameController.games.get(combinedId).WB = WB;
+        ChessGameController.games.get(combinedId).WR = WR;
+        ChessGameController.games.get(combinedId).WQ = WQ;
+        ChessGameController.games.get(combinedId).WK = WK;
+        ChessGameController.games.get(combinedId).BP = BP;
+        ChessGameController.games.get(combinedId).BN = BN;
+        ChessGameController.games.get(combinedId).BB = BB;
+        ChessGameController.games.get(combinedId).BR = BR;
+        ChessGameController.games.get(combinedId).BQ = BQ;
+        ChessGameController.games.get(combinedId).BK = BK;
+        ChessGameController.games.get(combinedId).CWK = CWK;
+        ChessGameController.games.get(combinedId).CWQ = CWQ;
+        ChessGameController.games.get(combinedId).CBK = CBK;
+        ChessGameController.games.get(combinedId).CBQ = CBQ;
+        ChessGameController.games.get(combinedId).WhiteToMove = WhiteToMove;
 //        ChessGameController.WP = WP;
 //        ChessGameController.WN = WN;
 //        ChessGameController.WB = WB;
@@ -161,7 +163,7 @@ public class BoardGeneration {
         }
     }
 
-    public static void initFromFEN(String fen, String chessGameId) {
+    public static void initFromFEN(String fen, String idMatchType, String chessGameId) {
         String[] parts = fen.split(" ");
         String boardLayout = parts[0];
         String[][] chessBoard = new String[8][8];
@@ -210,7 +212,7 @@ public class BoardGeneration {
             }
         }
 
-        ArrayToBitBoard(chessBoard, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK , CWK, CWQ, CBK, CBQ, WhiteToMove, chessGameId);
+        ArrayToBitBoard(chessBoard, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK , CWK, CWQ, CBK, CBQ, WhiteToMove, idMatchType, chessGameId);
     }
 
 }

@@ -27,6 +27,9 @@ public class Matches {
     @Column(name = "score")
     private String score;
 
+    @Column(name = "id_match_type")
+    private String idMatchType;
+
     @Column(name = "status")
     private Integer status;
 

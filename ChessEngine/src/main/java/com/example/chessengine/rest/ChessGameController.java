@@ -3,11 +3,13 @@ package com.example.chessengine.rest;
 import com.example.chessengine.chessProcessing.BoardGeneration;
 import com.example.chessengine.chessProcessing.ChessMoveValidator;
 import com.example.chessengine.chessProcessing.Moves;
+import com.example.chessengine.chessProcessing.Searching;
 import com.example.chessengine.constant.MatchStatus;
 import com.example.chessengine.entity.Matches;
 import com.example.chessengine.service.AccountMatchService;
 import com.example.chessengine.service.MatchService;
 import com.example.chessengine.utility.ChessGame;
+import com.example.chessengine.utility.MatchCombinedId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,6 +17,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,7 +30,7 @@ public class ChessGameController {
     @Autowired
     private AccountMatchService accountMatchService;
 
-    public static ConcurrentHashMap<String, ChessGame> games = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<MatchCombinedId, ChessGame> games = new ConcurrentHashMap<>();
 
     private final ChessMoveValidator chessMoveValidator;
     private final SimpMessagingTemplate messagingTemplate;
@@ -43,33 +46,35 @@ public class ChessGameController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    @PostMapping("/move/{matchId}")
-    public ResponseEntity<MoveResponse> makeMove(@PathVariable String matchId, @RequestBody MoveRequest moveRequest)
+    @PostMapping("/move/{matchTypeId}/{matchId}")
+    public ResponseEntity<MoveResponse> makeMove(@PathVariable String matchTypeId, @PathVariable String matchId, @RequestBody MoveRequest moveRequest)
     {
-        boolean isValid = chessMoveValidator.isValidMove(moveRequest, games.get(matchId).WhiteToMove, matchId);
+        MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(matchTypeId).matchId(matchId).build();
+        boolean isValid = chessMoveValidator.isValidMove(moveRequest, games.get(combinedId).WhiteToMove, matchTypeId, matchId);
         MoveResponse moveResponse = MoveResponse.builder().validMove(isValid).matchResult("").build();
         return ResponseEntity.ok(moveResponse);
     }
 
-    @PostMapping("/fen/{matchId}")
-    public ResponseEntity<FENResponse> parseFEN(@PathVariable String matchId, @RequestBody FENRequest fenRequest) {
-        BoardGeneration.initFromFEN(fenRequest.getFenRequest(), matchId);
+    @PostMapping("/fen/{matchTypeId}/{matchId}")
+    public ResponseEntity<FENResponse> parseFEN(@PathVariable String matchTypeId, @PathVariable String matchId, @RequestBody FENRequest fenRequest) {
+        BoardGeneration.initFromFEN(fenRequest.getFenRequest(), matchTypeId, matchId);
         FENResponse fenResponse = FENResponse.builder().build();
         return ResponseEntity.ok(fenResponse);
     }
 
-    @PostMapping("/process/{matchId}")
-    public ResponseEntity<MoveResponse> moveProcessing(@PathVariable String matchId, @RequestBody MoveRequest moveRequest)
+    @PostMapping("/process/{matchTypeId}/{matchId}")
+    public ResponseEntity<MoveResponse> moveProcessing(@PathVariable String matchTypeId, @PathVariable String matchId, @RequestBody MoveRequest moveRequest)
     {
 //        System.out.println(moveRequest.getMove());
-        Moves.moveOnBoard(moveRequest.getMove(), games.get(matchId).WP, games.get(matchId).WN, games.get(matchId).WB, games.get(matchId).WR, games.get(matchId).WQ, games.get(matchId).WK, games.get(matchId).BP, games.get(matchId).BN, games.get(matchId).BB, games.get(matchId).BR, games.get(matchId).BQ, games.get(matchId).BK, games.get(matchId).EP, games.get(matchId).CWK, games.get(matchId).CWQ, games.get(matchId).CBK, games.get(matchId).CBQ, games.get(matchId).WhiteToMove, matchId);
+        MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(matchTypeId).matchId(matchId).build();
+        Moves.moveOnBoard(moveRequest.getMove(), games.get(combinedId).WP, games.get(combinedId).WN, games.get(combinedId).WB, games.get(combinedId).WR, games.get(combinedId).WQ, games.get(combinedId).WK, games.get(combinedId).BP, games.get(combinedId).BN, games.get(combinedId).BB, games.get(combinedId).BR, games.get(combinedId).BQ, games.get(combinedId).BK, games.get(combinedId).EP, games.get(combinedId).CWK, games.get(combinedId).CWQ, games.get(combinedId).CBK, games.get(combinedId).CBQ, games.get(combinedId).WhiteToMove, matchTypeId, matchId);
 //        System.out.println("WP in process: " + WP);
 //        boolean isValid = chessMoveValidator.isValidMove(moveRequest, WhiteToMove);
 //        WhiteToMove = !WhiteToMove;
         String matchScore = "";
-        if (!games.get(matchId).WhiteToMove) {
-            if (Moves.BlackPossibleMoves(games.get(matchId).WP, games.get(matchId).WN, games.get(matchId).WB, games.get(matchId).WR, games.get(matchId).WQ, games.get(matchId).WK, games.get(matchId).BP, games.get(matchId).BN, games.get(matchId).BB, games.get(matchId).BR, games.get(matchId).BQ, games.get(matchId).BK, games.get(matchId).EP, games.get(matchId).CWK, games.get(matchId).CWQ, games.get(matchId).CBK, games.get(matchId).CBQ).isEmpty()) {
-                if ((Moves.unsafeForBlack(games.get(matchId).WP, games.get(matchId).WN, games.get(matchId).WB, games.get(matchId).WR, games.get(matchId).WQ, games.get(matchId).WK, games.get(matchId).BP, games.get(matchId).BN, games.get(matchId).BB, games.get(matchId).BR, games.get(matchId).BQ, games.get(matchId).BK) & games.get(matchId).BK) != 0) {
+        if (!games.get(combinedId).WhiteToMove) {
+            if (Moves.BlackPossibleMoves(games.get(combinedId).WP, games.get(combinedId).WN, games.get(combinedId).WB, games.get(combinedId).WR, games.get(combinedId).WQ, games.get(combinedId).WK, games.get(combinedId).BP, games.get(combinedId).BN, games.get(combinedId).BB, games.get(combinedId).BR, games.get(combinedId).BQ, games.get(combinedId).BK, games.get(combinedId).EP, games.get(combinedId).CWK, games.get(combinedId).CWQ, games.get(combinedId).CBK, games.get(combinedId).CBQ).isEmpty()) {
+                if ((Moves.unsafeForBlack(games.get(combinedId).WP, games.get(combinedId).WN, games.get(combinedId).WB, games.get(combinedId).WR, games.get(combinedId).WQ, games.get(combinedId).WK, games.get(combinedId).BP, games.get(combinedId).BN, games.get(combinedId).BB, games.get(combinedId).BR, games.get(combinedId).BQ, games.get(combinedId).BK) & games.get(combinedId).BK) != 0) {
                     System.out.println("Black lose");
                     matchScore = "1-0";
                 } else {
@@ -78,8 +83,8 @@ public class ChessGameController {
                 }
             }
         } else {
-            if (Moves.WhitePossibleMoves(games.get(matchId).WP, games.get(matchId).WN, games.get(matchId).WB, games.get(matchId).WR, games.get(matchId).WQ, games.get(matchId).WK, games.get(matchId).BP, games.get(matchId).BN, games.get(matchId).BB, games.get(matchId).BR, games.get(matchId).BQ, games.get(matchId).BK, games.get(matchId).EP, games.get(matchId).CWK, games.get(matchId).CWQ, games.get(matchId).CBK, games.get(matchId).CBQ).isEmpty()) {
-                if ((Moves.unsafeForWhite(games.get(matchId).WP, games.get(matchId).WN, games.get(matchId).WB, games.get(matchId).WR, games.get(matchId).WQ, games.get(matchId).WK, games.get(matchId).BP, games.get(matchId).BN, games.get(matchId).BB, games.get(matchId).BR, games.get(matchId).BQ, games.get(matchId).BK) & games.get(matchId).WK) != 0) {
+            if (Moves.WhitePossibleMoves(games.get(combinedId).WP, games.get(combinedId).WN, games.get(combinedId).WB, games.get(combinedId).WR, games.get(combinedId).WQ, games.get(combinedId).WK, games.get(combinedId).BP, games.get(combinedId).BN, games.get(combinedId).BB, games.get(combinedId).BR, games.get(combinedId).BQ, games.get(combinedId).BK, games.get(combinedId).EP, games.get(combinedId).CWK, games.get(combinedId).CWQ, games.get(combinedId).CBK, games.get(combinedId).CBQ).isEmpty()) {
+                if ((Moves.unsafeForWhite(games.get(combinedId).WP, games.get(combinedId).WN, games.get(combinedId).WB, games.get(combinedId).WR, games.get(combinedId).WQ, games.get(combinedId).WK, games.get(combinedId).BP, games.get(combinedId).BN, games.get(combinedId).BB, games.get(combinedId).BR, games.get(combinedId).BQ, games.get(combinedId).BK) & games.get(combinedId).WK) != 0) {
                     System.out.println("White lose");
                     matchScore = "0-1";
                 } else {
@@ -102,44 +107,61 @@ public class ChessGameController {
     }
 
 
-//    @PostMapping("/processBot")
-//    public ResponseEntity<MoveBotResponse> moveBotProcessing(@RequestBody MoveRequest moveRequest)
-//    {
-//        Moves.moveOnBoard(moveRequest.getMove(), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove);
-//        Searching.Negamax2(SearchingDepth, -99999999, 99999999);
-//        String moveBot = Searching.bestMove;
-//        Moves.moveOnBoard(moveBot, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, WhiteToMove);
-//        MoveBotResponse moveBotResponse = MoveBotResponse.builder().moveBot(moveBot).isWhite(!WhiteToMove).build();
-//        return ResponseEntity.ok(moveBotResponse);
-//    }
+    @PostMapping("/processBot/{matchTypeId}/{matchId}")
+    public ResponseEntity<MoveBotResponse> moveBotProcessing(@PathVariable String matchTypeId, @PathVariable String matchId, @RequestBody MoveRequest moveRequest)
+    {
+        MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(matchTypeId).matchId(matchId).build();
+        Moves.moveOnBoard(moveRequest.getMove(), games.get(combinedId).WP, games.get(combinedId).WN, games.get(combinedId).WB, games.get(combinedId).WR, games.get(combinedId).WQ, games.get(combinedId).WK, games.get(combinedId).BP, games.get(combinedId).BN, games.get(combinedId).BB, games.get(combinedId).BR, games.get(combinedId).BQ, games.get(combinedId).BK, games.get(combinedId).EP, games.get(combinedId).CWK, games.get(combinedId).CWQ, games.get(combinedId).CBK, games.get(combinedId).CBQ, games.get(combinedId).WhiteToMove, matchTypeId, matchId);
+        while (Searching.Negamax2(SearchingDepth, -99999999, 99999999, matchTypeId, matchId) == 99999999)
+        {
+            SearchingDepth--;
+        }
+        Searching.Negamax2(SearchingDepth, -99999999, 99999999, matchTypeId, matchId);
+        String moveBot = Searching.bestMove;
+        Moves.moveOnBoard(moveBot, games.get(combinedId).WP, games.get(combinedId).WN, games.get(combinedId).WB, games.get(combinedId).WR, games.get(combinedId).WQ, games.get(combinedId).WK, games.get(combinedId).BP, games.get(combinedId).BN, games.get(combinedId).BB, games.get(combinedId).BR, games.get(combinedId).BQ, games.get(combinedId).BK, games.get(combinedId).EP, games.get(combinedId).CWK, games.get(combinedId).CWQ, games.get(combinedId).CBK, games.get(combinedId).CBQ, games.get(combinedId).WhiteToMove, matchTypeId, matchId);
+        MoveBotResponse moveBotResponse = MoveBotResponse.builder().moveBot(moveBot).isWhite(!games.get(combinedId).WhiteToMove).build();
+        return ResponseEntity.ok(moveBotResponse);
+    }
 
     @PostMapping("/idMatchType")
     public ResponseEntity<IdMatchTypeResponse> onlinePage(@RequestBody IdMatchTypeRequest idMatchTypeFromClient) {
         idMatchType = idMatchTypeFromClient.getIdMatchType();
         System.out.println("idMatchType: " + idMatchType);
-        List<Matches> matchesList = matchService.getAllMatchesByStatus(MatchStatus.PENDING);
-        if (matchesList.isEmpty()) {
+        if (!Objects.equals(idMatchType, "bot")) {
+            List<Matches> matchesList = matchService.getAllMatchesByStatusAndIdMatchType(MatchStatus.PENDING, idMatchType);
+            if (matchesList.isEmpty()) {
+                String securedId = RNG.generateSecureId();
+                idMatch = securedId;
+                System.out.println(securedId);
+                matchService.save(Matches.builder().matchId(idMatch).idMatchType(idMatchType).status(MatchStatus.PENDING).build());
+                MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idMatchType).matchId(idMatch).build();
+                ChessGame chessGame = ChessGame.builder().id(idMatch).build();
+                games.put(combinedId, chessGame);
+            } else {
+                idMatch = matchesList.get(0).getMatchId();
+                Matches match = matchService.getMatchByIdMatch(idMatch);
+                match.setStatus(MatchStatus.PLAYING);
+                matchService.save(match);
+                System.out.println("idMatchhhhhhhh: " + idMatch);
+            }
+        } else {
             String securedId = RNG.generateSecureId();
             idMatch = securedId;
             System.out.println(securedId);
-            matchService.save(Matches.builder().matchId(idMatch).status(MatchStatus.PENDING).build());
+            matchService.save(Matches.builder().matchId(idMatch).idMatchType(idMatchType).status(MatchStatus.PLAY_WITH_BOT).build());
+            MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idMatchType).matchId(idMatch).build();
             ChessGame chessGame = ChessGame.builder().id(idMatch).build();
-            games.put(idMatch, chessGame);
-        } else {
-            idMatch = matchesList.get(0).getMatchId();
-            Matches match = matchService.getMatchByIdMatch(idMatch);
-            match.setStatus(MatchStatus.PLAYING);
-            matchService.save(match);
-            System.out.println("idMatchhhhhhhh: " + idMatch);
+            games.put(combinedId, chessGame);
         }
         IdMatchTypeResponse idMatchTypeResponse = IdMatchTypeResponse.builder().idMatch(idMatch).build();
         return ResponseEntity.ok(idMatchTypeResponse);
     }
 
-    @PostMapping("/endgame/{matchId}")
-    public ResponseEntity<Void> endgameHandling(@PathVariable String matchId, @RequestBody MoveRequest moveRequest) {
+    @PostMapping("/endgame/{matchTypeId}/{matchId}")
+    public ResponseEntity<Void> endgameHandling(@PathVariable String matchTypeId, @PathVariable String matchId, @RequestBody MoveRequest moveRequest) {
         matchService.updateMatchMoves(idMatch, moveRequest.getAllMoves());
-        games.remove(matchId);
+        MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(matchTypeId).matchId(matchId).build();
+        games.remove(combinedId);
         return ResponseEntity.ok(null);
     }
 }

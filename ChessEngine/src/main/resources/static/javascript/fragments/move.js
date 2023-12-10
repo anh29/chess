@@ -21,6 +21,8 @@ const hello = getAllPathVariables1();
 // const idVal = urlParams.get('id');
 const idMatchTypeVal = hello[1];
 const idMatchVal = hello[2];
+console.log("idMatchTypeVal: ", idMatchTypeVal);
+console.log("idMatchVal: ", idMatchVal);
 // console.log("idMatchTypeVal: ", idMatchTypeVal);
 // console.log("idMatchVal: ", idMatchVal);
 // console.log("path variables: ", pathVariables);
@@ -446,7 +448,7 @@ async function selectPromotionPiece(img, square) {
 
 async function makeMove(moveRequest) {
     try {
-        const response = await fetch(`/api/chess/move/${idMatchVal}`, {
+        const response = await fetch(`/api/chess/move/${idMatchTypeVal}/${idMatchVal}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -462,7 +464,7 @@ async function makeMove(moveRequest) {
 
 async function moveProcessing(moveProcessRequest) {
     try {
-        const response = await fetch(`/api/chess/process/${idMatchVal}`, {
+        const response = await fetch(`/api/chess/process/${idMatchTypeVal}/${idMatchVal}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -478,7 +480,7 @@ async function moveProcessing(moveProcessRequest) {
 
 async function endGame(all) {
     try {
-        const response = await fetch(`/api/chess/endgame/${idMatchVal}`, {
+        const response = await fetch(`/api/chess/endgame/${idMatchTypeVal}/${idMatchVal}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

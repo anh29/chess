@@ -23,8 +23,8 @@ public class MatchServiceImpl implements MatchService{
     }
 
     @Override
-    public List<Matches> getAllMatchesByStatus(int status) {
-        return matchRepo.findAllByStatus(status);
+    public List<Matches> getAllMatchesByStatusAndIdMatchType(int status, String idMatchType) {
+        return matchRepo.findAllByStatusAndIdMatchType(status, idMatchType);
     }
 
     @Override

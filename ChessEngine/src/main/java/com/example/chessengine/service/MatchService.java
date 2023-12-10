@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MatchService {
     Matches getMatchByIdMatch(String id);
-    List<Matches> getAllMatchesByStatus(int status);
+    List<Matches> getAllMatchesByStatusAndIdMatchType(int status, String idMatchType);
     void updateMatchMoves(String matchId, String newMoves);
     void save (Matches match);
 }
