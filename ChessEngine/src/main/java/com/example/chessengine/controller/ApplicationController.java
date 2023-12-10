@@ -161,4 +161,10 @@ public class ApplicationController {
     public String showFrag3() {
         return "fragments/chessboard";
     }
+    @GetMapping("informationuser")
+    public  String ShowInformation(){
+        return "/InformationUser";
+    }
+    @GetMapping("changepassword")
+    public  String ShowPassword(){ return "/ChangePassword";}
 }
