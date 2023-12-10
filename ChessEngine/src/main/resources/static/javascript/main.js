@@ -4,13 +4,20 @@ let loadedScript  = new Set();
 async function init() {
     contain.innerHTML = await AJAX('/play');
 
-    const path = '/javascript/fragments/timeSelector.js';
-    const script = document.createElement('script');
-    const text = document.createTextNode(await AJAX(path));
-    script.appendChild(text);
-    contain.append(script);
+    const path1 = '/javascript/fragments/initBotMatch.js';
+    const path2 = '/javascript/fragments/timeSelector.js';
 
-    loadedScript.add(path);
+    const path = [path1, path2];
+
+    for (var i = 0; i < path.length; i++) {
+
+        const script = document.createElement('script');
+        const text = document.createTextNode(await AJAX(path[i]));
+        script.appendChild(text);
+        contain.append(script);
+
+        loadedScript.add(path[i]);
+    }
 }
 
 init()
