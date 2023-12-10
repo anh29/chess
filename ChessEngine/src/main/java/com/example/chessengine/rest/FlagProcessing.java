@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 @RestController
 public class FlagProcessing {
     @Autowired
@@ -27,39 +29,47 @@ public class FlagProcessing {
     @Autowired
     private MatchService matchService;
 
-    @PostMapping("online/{idType}/flagProcessing/{idMatch}")
-    public synchronized ResponseEntity<String> flagProcessing(@PathVariable String idType, @PathVariable String idMatch, HttpServletRequest request) {
-        MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idType).matchId(idMatch).build();
-        int currentPlayer = ChessGameController.games.get(combinedId).counter;
-        if (currentPlayer < ChessGameController.games.get(combinedId).MAX_PLAYERS) {
-            String playSide = (currentPlayer == 0) ? Side.WHITE : Side.BLACK;
+    private static final ReentrantLock lock = new ReentrantLock();
 
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                System.out.println("in request cookie 22222222222");
-                for (Cookie cookie : cookies) {
-                    System.out.println(cookie.getName());
-                    if (cookie.getName().equals("gmail")) {
-                        String gmail = cookie.getValue();
-                        // Use the token as needed
-                        System.out.println("in request cookie");
-                        Accounts account = accountService.getAccountByGmail(gmail);
-                        Matches match = matchService.getMatchByIdMatch(ChessGameController.idMatch);
-                        AccountsMatchesId accountsMatchesId = AccountsMatchesId.builder().accountId(account.getAccountId()).matchId(ChessGameController.idMatch).build();
-                        System.out.println(ChessGameController.idMatch);
-                        System.out.println(account.getAccountId());
-                        AccountsMatches accountMatch = AccountsMatches.builder().id(accountsMatchesId).flag(playSide).account(account).match(match).build();
-                        accountMatchService.save(accountMatch);
-                        System.out.println(accountMatch.toString());
+    @PostMapping("online/{idType}/flagProcessing/{idMatch}")
+    public ResponseEntity<String> flagProcessing(@PathVariable String idType, @PathVariable String idMatch, HttpServletRequest request) {
+        MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idType).matchId(idMatch).build();
+        int currentPlayer;
+        lock.lock();
+        try {
+            currentPlayer = ChessGameController.games.get(combinedId).counter;
+            if (currentPlayer < ChessGameController.games.get(combinedId).MAX_PLAYERS) {
+                String playSide = (currentPlayer == 0) ? Side.WHITE : Side.BLACK;
+
+                Cookie[] cookies = request.getCookies();
+                if (cookies != null) {
+                    System.out.println("in request cookie 22222222222");
+                    for (Cookie cookie : cookies) {
+                        System.out.println(cookie.getName());
+                        if (cookie.getName().equals("gmail")) {
+                            String gmail = cookie.getValue();
+                            // Use the token as needed
+                            System.out.println("in request cookie");
+                            Accounts account = accountService.getAccountByGmail(gmail);
+                            Matches match = matchService.getMatchByIdMatch(ChessGameController.idMatch);
+                            AccountsMatchesId accountsMatchesId = AccountsMatchesId.builder().accountId(account.getAccountId()).matchId(ChessGameController.idMatch).build();
+                            System.out.println(ChessGameController.idMatch);
+                            System.out.println(account.getAccountId());
+                            AccountsMatches accountMatch = AccountsMatches.builder().id(accountsMatchesId).flag(playSide).account(account).match(match).build();
+                            accountMatchService.save(accountMatch);
+                            System.out.println(accountMatch.toString());
+                        }
                     }
                 }
-            }
-            ChessGameController.games.get(combinedId).counter = currentPlayer + 1;
-            System.out.println("counterrrrrrrrrr: " + ChessGameController.games.get(combinedId).counter);
+                ChessGameController.games.get(combinedId).counter = currentPlayer + 1;
+                System.out.println("counterrrrrrrrrr: " + ChessGameController.games.get(combinedId).counter);
 
-            return ResponseEntity.ok(playSide);
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error");
+                return ResponseEntity.ok(playSide);
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error");
+            }
+        } finally {
+            lock.unlock();
         }
     }
 }
