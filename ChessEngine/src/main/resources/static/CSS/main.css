@@ -1,8 +1,8 @@
 .container {
   display: flex;
-  height: 740px;
+  height: 100vh;
   overflow-y: scroll;
-  background-color: #4b4847;
+  background: #161512 linear-gradient(to bottom, hsl(37, 12%, 16%), hsl(37, 10%, 8%) 116px) no-repeat;
 }
 
 .name {
@@ -10,7 +10,7 @@
   color: white;
 }
 .sidebar {
-  width: 175px;
+  width: 14%;
   border-style: none solid none none;
   border-width: thin;
   background-color: #262421;
@@ -18,10 +18,11 @@
 
 .contain {
   display: flex;
+  width: -webkit-fill-available;
 }
 
 .chessboard {
-  width: 55%;
+  width: 56%;
   height: 100%;
 }
 

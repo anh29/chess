@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Play Online</title>
+    <link rel="stylesheet" href="/CSS/reset.css">
+    <link rel="stylesheet" href="/CSS/main.css">
+    <link rel="stylesheet" href="/CSS/sidebar.css">
+    <link rel="stylesheet" href="/CSS/nav.css">
+    <link rel="stylesheet" href="/CSS/chessboard.css">
+    <link rel="stylesheet" href="/CSS/tool.css">
+    <link rel="stylesheet" href="/CSS/siteTool.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" th:insert="~{/fragments/sidebar}">
+    </div>
+
+    <div class="contain" >
+        <div class="top">
+            <ul class="top-list">
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/hand-white.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/bk.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/bq.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/br.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/bb.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/bn.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/bp.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/trash-white.png}" alt=""></li>
+            </ul>
+        </div>
+        <div class="contain-board" th:insert="~{/fragments/chessboard}">
+        </div>
+        <div class="bottom">
+            <ul class="top-list">
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/hand-white.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/wk.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/wq.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/wr.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/wb.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/wn.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/wp.png}" alt=""></li>
+                <li class="icon"><img class="icon-cb" th:src="@{/IMAGE/trash-white.png}" alt=""></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="site" th:insert="~{/fragments/siteTool}"></div>
+</div>
+</body>
+<script defer src="/javascript/fragments/tool.js"></script>
+</html>

@@ -1,9 +1,8 @@
 
 .square {
-  background-color: #7b7b7ba6;
+  background-color: #b58863;
   width: 74px;
   height: 74px;
-  border-style: groove;
 }
 
 .square-sm {
@@ -23,10 +22,10 @@
 }
 
 .files:nth-of-type(even) .square:nth-of-type(even) {
-  background-color: #d5d5d5a6;
+  background-color: #f0d9b5;
 }
 .files:nth-of-type(odd) .square:nth-of-type(odd) {
-  background-color: #d5d5d5a6;
+  background-color: #f0d9b5;
 }
 
 .img-cb {
