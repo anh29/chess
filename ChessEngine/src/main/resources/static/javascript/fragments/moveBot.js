@@ -1,11 +1,11 @@
-let moves = [];
-let currentEvent = null;
-let targetEvent = null;
-let draggedPieceColor = null;
-let pieceTypeCode = null;
-let selectedType = null;
-let sendMove = null;
-let isPromoting = false;
+let movesBot = [];
+let currentEventBot = null;
+let targetEventBot = null;
+let draggedPieceColorBot = null;
+let pieceTypeCodeBot = null;
+let selectedTypeBot = null;
+let sendMoveBot = null;
+let isPromotingBot = false;
 let flagBot = "white";
 
 function getAllPathVariables2() {
@@ -31,7 +31,7 @@ window.addEventListener('load', () => {
     }
 
     function onDragStart(event) {
-        if (isPromoting) {
+        if (isPromotingBot) {
             event.preventDefault();
             return;
         }
@@ -74,10 +74,10 @@ window.addEventListener('load', () => {
         if (draggedImg && event.currentTarget.classList.contains('square') && event.currentTarget !== startSquare) {
             const pieceMatch = draggedImg.src.match(/\/([wb])([prnbkq])\.png$/);
             if (pieceMatch) {
-                draggedPieceColor = pieceMatch[1] === 'w' ? 'white' : 'black';
-                pieceTypeCode = pieceMatch[2];
+                draggedPieceColorBot = pieceMatch[1] === 'w' ? 'white' : 'black';
+                pieceTypeCodeBot = pieceMatch[2];
                 let pieceType;
-                switch (pieceTypeCode) {
+                switch (pieceTypeCodeBot) {
                     case 'p': pieceType = 'pawn'; break;
                     case 'r': pieceType = 'rook'; break;
                     case 'n': pieceType = 'knight'; break;
@@ -90,30 +90,30 @@ window.addEventListener('load', () => {
             const targetCoords = getSquareCoords(event.currentTarget);
             console.log(`Move from (${sourceCoords.rankIndex}, ${sourceCoords.fileIndex}) to (${targetCoords.rankIndex}, ${targetCoords.fileIndex})`);
 
-            currentEvent = event.currentTarget;
-            targetEvent = event.target;
+            currentEventBot = event.currentTarget;
+            targetEventBot = event.target;
 
-            sendMove = `${sourceCoords.rankIndex}${sourceCoords.fileIndex}${targetCoords.rankIndex}${targetCoords.fileIndex}`;
-            if (sourceCoords.rankIndex === 1 && targetCoords.rankIndex === 0 && pieceTypeCode === 'p' && draggedPieceColor === 'white') {
-                sendMove = `${sourceCoords.fileIndex}${targetCoords.fileIndex}QP`;
+            sendMoveBot = `${sourceCoords.rankIndex}${sourceCoords.fileIndex}${targetCoords.rankIndex}${targetCoords.fileIndex}`;
+            if (sourceCoords.rankIndex === 1 && targetCoords.rankIndex === 0 && pieceTypeCodeBot === 'p' && draggedPieceColorBot === 'white') {
+                sendMoveBot = `${sourceCoords.fileIndex}${targetCoords.fileIndex}QP`;
             }
-            if (sourceCoords.rankIndex === 6 && targetCoords.rankIndex === 7 && pieceTypeCode === 'p' && draggedPieceColor === 'black') {
-                sendMove = `${sourceCoords.fileIndex}${targetCoords.fileIndex}qP`;
+            if (sourceCoords.rankIndex === 6 && targetCoords.rankIndex === 7 && pieceTypeCodeBot === 'p' && draggedPieceColorBot === 'black') {
+                sendMoveBot = `${sourceCoords.fileIndex}${targetCoords.fileIndex}qP`;
             }
-            if (sourceCoords.rankIndex === 3 && pieceTypeCode === 'p' && draggedPieceColor === 'white'
+            if (sourceCoords.rankIndex === 3 && pieceTypeCodeBot === 'p' && draggedPieceColorBot === 'white'
                 && targetCoords.rankIndex === 2 && Math.abs(sourceCoords.fileIndex - targetCoords.fileIndex) === 1
-                && !currentEvent.querySelector('img')) {
-                sendMove = `${sourceCoords.fileIndex}${targetCoords.fileIndex}WE`;
+                && !currentEventBot.querySelector('img')) {
+                sendMoveBot = `${sourceCoords.fileIndex}${targetCoords.fileIndex}WE`;
             }
-            if (sourceCoords.rankIndex === 4 && pieceTypeCode === 'p' && draggedPieceColor === 'black'
+            if (sourceCoords.rankIndex === 4 && pieceTypeCodeBot === 'p' && draggedPieceColorBot === 'black'
                 && targetCoords.rankIndex === 5 && Math.abs(sourceCoords.fileIndex - targetCoords.fileIndex) === 1
-                && !currentEvent.querySelector('img')) {
-                sendMove = `${sourceCoords.fileIndex}${targetCoords.fileIndex}BE`;
+                && !currentEventBot.querySelector('img')) {
+                sendMoveBot = `${sourceCoords.fileIndex}${targetCoords.fileIndex}BE`;
             }
 
-            console.log("send move: ", sendMove);
+            console.log("send move: ", sendMoveBot);
             const moveRequest = {
-                move: sendMove,
+                move: sendMoveBot,
                 flag: flagBot
             };
 
@@ -129,32 +129,32 @@ window.addEventListener('load', () => {
             //     .then(response => response.json())
             //     .then(data => {
             if (data && data.validMove) {
-                currentEvent.style.background = '';
-                let targetImg = currentEvent.querySelector('img');
-                if (draggedImg.classList.contains('img-cb') && draggedPieceColor === 'white' && targetCoords.rankIndex === 0 && draggedImg.src.includes('wp.png') && sourceCoords.rankIndex === 1) {
-                    showPromotionOverlay(draggedPieceColor, currentEvent);
-                } else if (draggedImg.classList.contains('img-cb') && draggedPieceColor === 'black' && targetCoords.rankIndex === 7 && draggedImg.src.includes('bp.png') && sourceCoords.rankIndex === 6) {
-                    showPromotionOverlay(draggedPieceColor, currentEvent);
+                currentEventBot.style.background = '';
+                let targetImg = currentEventBot.querySelector('img');
+                if (draggedImg.classList.contains('img-cb') && draggedPieceColorBot === 'white' && targetCoords.rankIndex === 0 && draggedImg.src.includes('wp.png') && sourceCoords.rankIndex === 1) {
+                    showPromotionOverlay(draggedPieceColorBot, currentEventBot);
+                } else if (draggedImg.classList.contains('img-cb') && draggedPieceColorBot === 'black' && targetCoords.rankIndex === 7 && draggedImg.src.includes('bp.png') && sourceCoords.rankIndex === 6) {
+                    showPromotionOverlay(draggedPieceColorBot, currentEventBot);
                 }
 
                 if (targetImg) {
                     const targetPieceColor = targetImg.src.includes('/IMAGE/w') ? 'white' : 'black';
 
-                    if (draggedPieceColor === targetPieceColor) {
+                    if (draggedPieceColorBot === targetPieceColor) {
                         draggedImg.style.opacity = '';
                         draggedImg = null;
                         startSquare = null;
                         return;
                     }
 
-                    currentEvent.removeChild(targetImg);
+                    currentEventBot.removeChild(targetImg);
                 }
-                if (pieceTypeCode === 'p') {
+                if (pieceTypeCodeBot === 'p') {
                     const rankDiff = targetCoords.rankIndex - sourceCoords.rankIndex;
                     const fileDiff = targetCoords.fileIndex - sourceCoords.fileIndex;
 
                     // En passant conditions for white pawn
-                    if (draggedPieceColor === 'white' && rankDiff === -1 && Math.abs(fileDiff) === 1 && targetCoords.rankIndex === 2) {
+                    if (draggedPieceColorBot === 'white' && rankDiff === -1 && Math.abs(fileDiff) === 1 && targetCoords.rankIndex === 2) {
                         const captureSquare = document.querySelector(`.square[data-rank="${targetCoords.rankIndex + 1}"][data-file="${targetCoords.fileIndex}"]`);
                         const capturedPawnImg = captureSquare ? captureSquare.querySelector('img') : null;
                         if (capturedPawnImg && capturedPawnImg.src.includes('bp.png')) {
@@ -163,7 +163,7 @@ window.addEventListener('load', () => {
                     }
 
                     // En passant conditions for black pawn
-                    if (draggedPieceColor === 'black' && rankDiff === 1 && Math.abs(fileDiff) === 1 && targetCoords.rankIndex === 5) {
+                    if (draggedPieceColorBot === 'black' && rankDiff === 1 && Math.abs(fileDiff) === 1 && targetCoords.rankIndex === 5) {
                         const captureSquare = document.querySelector(`.square[data-rank="${targetCoords.rankIndex - 1}"][data-file="${targetCoords.fileIndex}"]`);
                         const capturedPawnImg = captureSquare ? captureSquare.querySelector('img') : null;
                         if (capturedPawnImg && capturedPawnImg.src.includes('wp.png')) {
@@ -172,8 +172,8 @@ window.addEventListener('load', () => {
                     }
                 }
 
-                if (pieceTypeCode === 'k') {
-                    if (draggedPieceColor === 'white' && sourceCoords.rankIndex === 7 && sourceCoords.fileIndex === 4) {
+                if (pieceTypeCodeBot === 'k') {
+                    if (draggedPieceColorBot === 'white' && sourceCoords.rankIndex === 7 && sourceCoords.fileIndex === 4) {
                         if (targetCoords.rankIndex === 7 && targetCoords.fileIndex === 6) {
                             const rookSquare = document.querySelector(`.square[data-rank="7"][data-file="7"]`);
                             const checkImg = rookSquare ? rookSquare.querySelector('img') : null;
@@ -195,7 +195,7 @@ window.addEventListener('load', () => {
                                 addRookSquare.appendChild(checkImg);
                             }
                         }
-                    } else if (draggedPieceColor === 'black' && sourceCoords.rankIndex === 0 && sourceCoords.fileIndex === 4) {
+                    } else if (draggedPieceColorBot === 'black' && sourceCoords.rankIndex === 0 && sourceCoords.fileIndex === 4) {
                         if (targetCoords.rankIndex === 0 && targetCoords.fileIndex === 6) {
                             const rookSquare = document.querySelector(`.square[data-rank="0"][data-file="7"]`);
                             const checkImg = rookSquare ? rookSquare.querySelector('img') : null;
@@ -220,20 +220,21 @@ window.addEventListener('load', () => {
                     }
                 }
 
-                currentEvent.appendChild(draggedImg);
+                currentEventBot.appendChild(draggedImg);
                 draggedImg.style.opacity = '';
                 draggedImg = null;
                 startSquare = null;
-                if (sendMove[3] !== 'P') {
-                    moves.push(sendMove);
-                    console.log("moves: ", moves);
+                if (sendMoveBot[3] !== 'P') {
+                    movesBot.push(sendMoveBot);
+                    console.log("movesBot: ", movesBot);
                     const moveResponse = await moveProcessing({
-                        move: sendMove
+                        move: sendMoveBot
                     });
+                    flagBot = "white";
                     console.log("Move response: ", moveResponse.moveBot);
                     if (moveResponse.moveBot) {
-                        moves.push(moveResponse.moveBot);
-                        console.log("moves: ", moves);
+                        movesBot.push(moveResponse.moveBot);
+                        console.log("movesBot: ", movesBot);
                         if (moveResponse.moveBot[3] === 'E') {
                             if (moveResponse.isWhite) {
                                 const source = document.querySelector(`.square[data-rank="3"][data-file="${moveResponse.moveBot[0]}"]`);
@@ -316,8 +317,8 @@ window.addEventListener('load', () => {
                     }
                 }
             } else {
-                targetEvent.style.background = '';
-                targetEvent.style.opacity = '';
+                targetEventBot.style.background = '';
+                targetEventBot.style.opacity = '';
             }
             // })
             // .catch(error => {
@@ -343,7 +344,7 @@ window.addEventListener('load', () => {
 });
 
 function showPromotionOverlay(color, square) {
-    isPromoting = true;
+    isPromotingBot = true;
     // Update promotion piece images based on color
     const promotionOverlay = document.getElementById('promotion-overlay');
     const promotionPieces = promotionOverlay.querySelectorAll('.promotion-piece');
@@ -366,19 +367,20 @@ async function selectPromotionPiece(img, square) {
     const srcImg = square.querySelector('img');
     const firstPartPng = srcImg.src.includes('wp.png') ? 'wp' : 'bp';
     square.querySelector('img').src = srcImg.src.replace(`${firstPartPng}.png`, `${firstPartPng[0]}` + promotionType + '.png');
-    selectedType = promotionType;
+    selectedTypeBot = promotionType;
     if (firstPartPng[0] === 'w') {
-        sendMove = sendMove.replace(`Q`, selectedType.toUpperCase());
+        sendMoveBot = sendMoveBot.replace(`Q`, selectedTypeBot.toUpperCase());
     } else {
-        sendMove = sendMove.replace(`q`, selectedType.toLowerCase());
+        sendMoveBot = sendMoveBot.replace(`q`, selectedTypeBot.toLowerCase());
     }
-    moves.push(sendMove);
-    console.log("moves: ", moves);
+    movesBot.push(sendMoveBot);
+    console.log("movesBot: ", movesBot);
     const moveResponse = await moveProcessing({
-        move: sendMove
+        move: sendMoveBot
     });
+    flagBot = "white";
     console.log("Move response: ", moveResponse.moveBot);
-    isPromoting = false;
+    isPromotingBot = false;
 }
 
 async function makeMove(moveRequest) {
@@ -405,6 +407,7 @@ async function moveProcessing(moveProcessRequest) {
             },
             body: JSON.stringify(moveProcessRequest)
         });
+        flagBot = "black";
         return await response.json();
     } catch (error) {
         console.error('Error:', error);
