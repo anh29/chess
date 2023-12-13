@@ -25,69 +25,9 @@ public class Searching {
     static String[][] killerMoves = new String[100][100];
 
     static long WP = 0L, WN = 0L, WB = 0L, WR = 0L, WQ = 0L, WK = 0L, BP = 0L, BN = 0L, BB = 0L, BR = 0L, BQ = 0L, BK = 0L, EP = 0L;
-    static int ply;
+    public static int ply;
     public static String bestMove = "";
     static boolean CWK = true, CWQ = true, CBK = true, CBQ = true, WhiteToMove = true;
-    static int valueTemp = 0;
-
-    public static int counter = 0;
-
-    public static int negamax(int depth, int alpha, int beta, boolean isWhite, String idMatchType, String chessGameId) {
-        updateValue(idMatchType, chessGameId);
-        String moves = isWhite ? Moves.WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ)
-                : Moves.BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ);
-        if (depth == 0) {
-            return Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, isWhite, chessGameId);
-        }
-
-        int value = -Integer.MAX_VALUE;
-        for (int i = 0; i < moves.length(); i += 4) {
-            Moves.moveOnBoard(moves.substring(i, i + 4), WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, CWK, CWQ, CBK, CBQ, isWhite, idMatchType, chessGameId);
-            updateValue(idMatchType, chessGameId);
-
-            BoardGeneration.drawArray(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
-//            valueTemp = value;
-
-            value = Math.max(value, -negamax(depth - 1, -beta, -alpha, !isWhite, idMatchType, chessGameId));
-//            if (value >= valueTemp && isWhite)
-//            {
-            System.out.println(moves.substring(i, i + 4));
-            System.out.println(Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, isWhite, chessGameId));
-            System.out.println(Evaluation.Evaluate(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, !isWhite, chessGameId));
-            System.out.println(counter++);
-            System.out.println("------------------");
-//            }
-//            Moves.undoMove(ChessGameController.HISTORIC_MOVES, ChessGameController.HISTORIC_PIECES);
-            Moves.undoMove2(idMatchType, chessGameId);
-            updateValue(idMatchType, chessGameId);
-            if (alpha >= value) {
-                alpha = value;
-//                System.out.println(moves.substring(i, i + 4));
-            }
-//            alpha = Math.max(alpha, value);
-            if (alpha >= beta) {
-                break;
-            }
-            if (isWhite) {
-                if (Moves.BlackPossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, false, false, false, false).isEmpty()) {
-                    if ((Moves.unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK) & BK) != 0) {
-                        return -50000;
-                    } else {
-                        return 0;
-                    }
-                }
-            } else {
-                if (Moves.WhitePossibleMoves(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK, EP, false, false, false, false).isEmpty()) {
-                    if ((Moves.unsafeForWhite(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK) & WK) != 0) {
-                        return -50000;
-                    } else {
-                        return 0;
-                    }
-                }
-            }
-        }
-        return value;
-    }
 
     public static void updateValue(String idMatchType, String chessGameId) {
         MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idMatchType).matchId(chessGameId).build();

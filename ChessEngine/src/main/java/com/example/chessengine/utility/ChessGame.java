@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChessGame {
-    public String id;
+    private String id;
 //    public List<String> players;
     public long WP = 0L, WN = 0L, WB = 0L, WR = 0L, WQ = 0L, WK = 0L, BP = 0L, BN = 0L, BB = 0L, BR = 0L, BQ = 0L, BK = 0L, EP = 0L;
     public ArrayList<HistoricInfo> HISTORIC_BITBOARD = new ArrayList<>();
@@ -23,4 +23,33 @@ public class ChessGame {
 
     public final int MAX_PLAYERS = 2;
     public int counter = 0;
+
+    public int SEARCHING_DEPTH = 4;
+    private boolean isSuccess;
+
+
+    public void copyFromBackupChessGame(BackUpChessGame backupGame) {
+        if (backupGame != null) {
+            this.id = backupGame.getId();
+            this.WP = backupGame.getWP();
+            this.WN = backupGame.getWN();
+            this.WB = backupGame.getWB();
+            this.WR = backupGame.getWR();
+            this.WQ = backupGame.getWQ();
+            this.WK = backupGame.getWK();
+            this.BP = backupGame.getBP();
+            this.BN = backupGame.getBN();
+            this.BB = backupGame.getBB();
+            this.BR = backupGame.getBR();
+            this.BQ = backupGame.getBQ();
+            this.BK = backupGame.getBK();
+            this.EP = backupGame.getEP();
+            this.HISTORIC_BITBOARD = new ArrayList<>(backupGame.getHISTORIC_BITBOARD());
+            this.CWK = backupGame.isCWK();
+            this.CWQ = backupGame.isCWQ();
+            this.CBK = backupGame.isCBK();
+            this.CBQ = backupGame.isCBQ();
+            this.WhiteToMove = backupGame.isWhiteToMove();
+        }
+    }
 }

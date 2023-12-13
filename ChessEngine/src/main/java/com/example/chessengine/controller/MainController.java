@@ -95,15 +95,16 @@ public class MainController {
         }
     }
 
-    @GetMapping("/computer")
+    @GetMapping("/computer/{idMatchType}/{idMatch}")
     public String playComputer(
             Model model,
             Principal principal,
-            @RequestParam(name = "id", required = false) String idTime,
+            @PathVariable String idMatchType,
+            @PathVariable String idMatch,
             @RequestHeader(value = "request-source", required = false) String requestSource
     ) {
-        if (idTime != null) {
-            model.addAttribute("idTime", idTime);
+        if (idMatchType != null) {
+            model.addAttribute("idTime", idMatchType);
 
             // Retrieve username from Principal
             String username = principal.getName();
