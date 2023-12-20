@@ -2,7 +2,9 @@ const buyBtns = document.querySelectorAll(".js-time-selector");
 const modal = document.querySelector(".js-modal");
 const modalClose = document.querySelector(".js-modal-btn-close");
 const modalContainer = document.querySelector(".js-modal-container");
+const loading = document.querySelector(".loading-modal");
 
+console.log(loading)
 function showTime() {
     modal.classList.add("open");
     // window.location.href = "/online";
@@ -29,10 +31,20 @@ modalContainer.addEventListener("click", function (event) {
 // Select all elements with the class "pro"
 const listPro = document.querySelectorAll(".pro");
 
-// Loop through each element and add a click event listener
 for (const pro of listPro) {
-    pro.addEventListener("click", getTime);
+    pro.addEventListener("click", function(event) { // Add the 'event' parameter
+        // Show the loading modal
+        loading.style.display = 'flex';
+
+        // Simulate some asynchronous task (e.g., fetching data)
+        setTimeout(function() {
+            loading.style.display = 'none';
+        }, 3000); // Replace 3000 with the actual time your task takes
+
+        getTime(event); // Pass the 'event' object to getTime
+    });
 }
+
 
 async function getTime(event) {
     // Lấy ID của thẻ được click
@@ -62,21 +74,4 @@ async function getTime(event) {
     } else {
         console.error('No data received');
     }
-
-    // fetch('/api/chess/idMatchType', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({
-    //             idMatchType: clickedId,
-    //         })
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if (data) {
-    //                 idMatchGetTime = data.idMatch;
-    //             }
-    //         })
-    //         .catch(error => console.error(`${error}`));
 }
