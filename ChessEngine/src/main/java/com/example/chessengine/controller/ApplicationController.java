@@ -16,10 +16,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+
 
 @Controller
 @RequestMapping("/public")
@@ -161,10 +173,79 @@ public class ApplicationController {
     public String showFrag3() {
         return "fragments/chessboard";
     }
-    @GetMapping("informationuser")
-    public  String ShowInformation(){
-        return "/InformationUser";
-    }
+
     @GetMapping("changepassword")
     public  String ShowPassword(){ return "/ChangePassword";}
+    @GetMapping("/inforuser")
+    public String showInformation(Model model, Principal principal) {
+
+        Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
+
+        model.addAttribute("email", authenticatedUser.getGmail());
+        model.addAttribute("name", authenticatedUser.getUsername12());
+        model.addAttribute("birth", authenticatedUser.getDateOfBirth());
+        model.addAttribute("gender", authenticatedUser.getGender());
+        model.addAttribute("elo", authenticatedUser.getElo());
+        model.addAttribute("role", authenticatedUser.getRole());
+        model.addAttribute("image", authenticatedUser.getImage());
+
+
+        return "InformationUser";
+    }
+    @PostMapping("/update-user")
+    public String updateUser(@RequestParam("email") String email,
+                             @RequestParam("name") String name,
+                             @RequestParam("dateBirth") String dateBirth,
+                             @RequestParam("gender") String gender,
+                             Principal principal, Model model) throws ParseException {
+
+            Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
+            authenticatedUser.setGmail(email);
+            authenticatedUser.setUsername12(name);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date parsedDate = dateFormat.parse(dateBirth);
+            authenticatedUser.setDateOfBirth(parsedDate);
+            authenticatedUser.setGender(Boolean.valueOf(gender));
+
+        System.out.println("Email: " + email);
+        System.out.println("Name: " + name);
+        System.out.println("Date of Birth: " + dateBirth);
+        System.out.println("Gender: " + gender);
+
+            accountService.save(authenticatedUser);
+            return "redirect:/inforuser";
+    }
+    @PostMapping("/save-image")
+    @ResponseBody
+    public String saveImagePathToDatabase(@RequestBody Map<String, String> imageData, Principal principal) {
+        try {
+            String imagePath = imageData.get("imagePath");
+            accountService.saveImage(principal.getName(), imagePath);
+            return "{\"message\": \"Image path saved successfully\"}";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{\"error\": \"Failed to save image path\"}";
+        }
+    }
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("newPassword") String newPassword,
+                                 @RequestParam("confirmPassword") String confirmPassword,
+                                 Principal principal, Model model) {
+        try {
+            if (!newPassword.equals(confirmPassword)) {
+                model.addAttribute("error_message", "Passwords do not match");
+                return "ChangePassword";
+            }
+
+            Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
+            authenticatedUser.setPassword(bcryptEncoder.encode(newPassword));
+            accountService.save(authenticatedUser);
+
+            return "redirect:/inforuser";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "ChangePassword";
+    }
+
 }

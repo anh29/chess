@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 //import org.springframework.security.core.GrantedAuthority;
 //import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +49,9 @@ public class Accounts implements UserDetails {
     @Column(name = "gender")
     private Boolean gender;
 
+    @Column(name = "images")
+    private String image;
+
     @Column(name = "status")
     private Integer status;
 
@@ -80,6 +84,62 @@ public class Accounts implements UserDetails {
     @ManyToOne()
     @JoinColumn(name = "role_id")
     private Roles role;
+
+    public String getGmail() {
+        return gmail;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Integer getElo() {
+        return elo;
+    }
+
+    public String getUsername12() {
+        return username12;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public Boolean getGender() {
+        return gender;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setUsername12(String username12) {
+        this.username12 = username12;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setGender(Boolean gender) {
+        this.gender = gender;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setGmail(String gmail) {
+        this.gmail = gmail;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

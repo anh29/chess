@@ -6,50 +6,59 @@
     <link rel="stylesheet" href="/CSS/InformationUser.css">
 </head>
 <body>
-    <form class="formInformation" action="" name="formInformation" method="">
-        <div class="left-content">
-            <img src="/IMAGE/computer.f36f0d84.svg" id="img-user" alt="selectedImage">
-            <button id="btnChange" name="btnChange">Change</button>
-            <input type="file" hidden="">
-            <button id="btnChangePassword"><a href="/public/changepassword">Change Password</a></button>
-        </div>
-        <div class="right-content">
+<div class="formInformation">
+    <div class="left-content">
+        <img id="img-user" alt="selectedImage" th:src="${image}">
+        <button id="btnChange" name="btnChange">Change</button>
+        <input type="file" id="fileInput" style="display: none;" onchange="loadImage()">
+        <button id="btnChangePassword">Change Password</button>
+    </div>
+    <div class="right-content" id="right-content">
+        <form action="/public/update-user" method="post">
             <table>
                 <tr>
                     <div class="error" id="error_message"></div>
                 </tr>
                 <tr>
                     <td><label>Email</label></td>
-                    <td><input type="text" name="txtEmail" id="txtEmail" readonly></td>
+                    <td><input type="email" name="txtEmail" id="txtEmail" th:value="${email}"></td>
                 </tr>
                 <tr>
                     <td><label>Name</label></td>
-                    <td><input type="text" name="txtName" id="txtName"></td>
+                    <td><input type="text" name="txtName" id="txtName" th:value="${name}"></td>
                 </tr>
                 <tr>
                     <td><label>Birth</label></td>
-                    <td><input type="date" name="dateBirth" id="dateBirth"></td>
+                    <td><input type="date" name="dateBirth" id="dateBirth" th:value="${#dates.format(birth, 'yyyy-MM-dd')}"></td>
                 </tr>
                 <tr>
                     <td><label>Gender</label></td>
                     <td>
-                        <input type="radio" name="rdoMale" id="rdoMale"> <label>Male</label>
-                        <input type="radio" name="rdoMale" id="rdoFemale"> <label>Female</label>
+                        <input type="radio" name="rdoMale" id="rdoMale" th:checked="${gender}"> <label>Male</label>
+                        <input type="radio" name="rdoMale" id="rdoFemale" th:checked="${!gender}"> <label>Female</label>
                     </td>
                 </tr>
                 <tr>
                     <td> <label>Elo</label></td>
-                    <td><input type="text" name="txtElo" id="txtElo" readonly></td>
+                    <td><input type="text" name="txtElo" id="txtElo" readonly th:value="${elo}"></td>
 
                 </tr>
                 <tr>
                     <td> <label>Role</label></td>
-                    <td><input type="text" name="txtRole" id="txtRole" readonly></td>
+                    <td><input type="text" name="txtRole" id="txtRole" readonly th:value="${role.getRoleName()}"></td>
 
                 </tr>
             </table>
-            <input type="submit" value="Save" name="btnSave" id="btnSave">
-        </div>
-    </form>
+            <div class="button-group">
+                <input type="submit" value="Save" name="btnSave" id="btnSave">
+                <input type="submit" value="Back" name="btnBack" id="btnBack">
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script defer th:src="@{/javascript/fragments/inforuser.js}"></script>
+
 </body>
 </html>

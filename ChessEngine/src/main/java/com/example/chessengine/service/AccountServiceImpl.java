@@ -40,4 +40,12 @@ public class AccountServiceImpl implements AccountService{
     public int getAccountIdByGmail(String gmail) {
         return accountRepo.findAccountsByGmail(gmail).get().getAccountId();
     }
+
+    @Override
+    public void saveImage(String gmail, String imageUrl) {
+        Accounts account = accountRepo.findByGmail(gmail);
+        account.setImage(imageUrl);
+        accountRepo.save(account);
+    }
+
 }
