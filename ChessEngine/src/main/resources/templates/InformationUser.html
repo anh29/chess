@@ -11,7 +11,7 @@
         <img id="img-user" alt="selectedImage" th:src="${image}">
         <button id="btnChange" name="btnChange">Change</button>
         <input type="file" id="fileInput" style="display: none;" onchange="loadImage()">
-        <button id="btnChangePassword">Change Password</button>
+        <button id="btnChangePassword"><a href="/public/changepassword"> Change Password </a></button>
     </div>
     <div class="right-content" id="right-content">
         <form action="/public/update-user" method="post">
@@ -34,8 +34,10 @@
                 <tr>
                     <td><label>Gender</label></td>
                     <td>
-                        <input type="radio" name="rdoMale" id="rdoMale" th:checked="${gender}"> <label>Male</label>
-                        <input type="radio" name="rdoMale" id="rdoFemale" th:checked="${!gender}"> <label>Female</label>
+                        <input type="radio" name="rdoGender" id="rdoMale" value="Male" th:checked="${gender}">
+                        <label for="rdoMale">Male</label>
+                        <input type="radio" name="rdoGender" id="rdoFemale" value="Female" th:checked="${!gender}">
+                        <label for="rdoFemale">Female</label>
                     </td>
                 </tr>
                 <tr>

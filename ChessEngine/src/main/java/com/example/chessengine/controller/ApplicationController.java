@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
@@ -193,27 +195,20 @@ public class ApplicationController {
         return "InformationUser";
     }
     @PostMapping("/update-user")
-    public String updateUser(@RequestParam("email") String email,
-                             @RequestParam("name") String name,
-                             @RequestParam("dateBirth") String dateBirth,
-                             @RequestParam("gender") String gender,
-                             Principal principal, Model model) throws ParseException {
-
+    public String updateUser(@RequestBody Map<String, Object> userData, Principal principal) throws ParseException {
             Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
-            authenticatedUser.setGmail(email);
-            authenticatedUser.setUsername12(name);
+            String email = (String) userData.get("email");
+            String name = (String) userData.get("name");
+            String dateBirth = (String) userData.get("dateBirth");
+            Boolean gender = (Boolean) userData.get("gender");
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date parsedDate = dateFormat.parse(dateBirth);
+            authenticatedUser.setGmail(email);
+            authenticatedUser.setUsername12(name);
             authenticatedUser.setDateOfBirth(parsedDate);
-            authenticatedUser.setGender(Boolean.valueOf(gender));
-
-        System.out.println("Email: " + email);
-        System.out.println("Name: " + name);
-        System.out.println("Date of Birth: " + dateBirth);
-        System.out.println("Gender: " + gender);
-
+            authenticatedUser.setGender(gender);
             accountService.save(authenticatedUser);
-            return "redirect:/inforuser";
+            return "redict:inforuser";
     }
     @PostMapping("/save-image")
     @ResponseBody
@@ -232,15 +227,9 @@ public class ApplicationController {
                                  @RequestParam("confirmPassword") String confirmPassword,
                                  Principal principal, Model model) {
         try {
-            if (!newPassword.equals(confirmPassword)) {
-                model.addAttribute("error_message", "Passwords do not match");
-                return "ChangePassword";
-            }
-
             Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
             authenticatedUser.setPassword(bcryptEncoder.encode(newPassword));
             accountService.save(authenticatedUser);
-
             return "redirect:/inforuser";
         } catch (Exception e) {
             e.printStackTrace();
