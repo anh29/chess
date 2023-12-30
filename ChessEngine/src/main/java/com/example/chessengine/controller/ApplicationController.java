@@ -194,22 +194,23 @@ public class ApplicationController {
 
         return "InformationUser";
     }
-    @PostMapping("/update-user")
-    public String updateUser(@RequestBody Map<String, Object> userData, Principal principal) throws ParseException {
-            Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
-            String email = (String) userData.get("email");
-            String name = (String) userData.get("name");
-            String dateBirth = (String) userData.get("dateBirth");
-            Boolean gender = (Boolean) userData.get("gender");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date parsedDate = dateFormat.parse(dateBirth);
-            authenticatedUser.setGmail(email);
-            authenticatedUser.setUsername12(name);
-            authenticatedUser.setDateOfBirth(parsedDate);
-            authenticatedUser.setGender(gender);
-            accountService.save(authenticatedUser);
-            return "redict:inforuser";
-    }
+@PostMapping(path = "/update-user", consumes = "application/json")
+public ResponseEntity<?> updateUser(@RequestBody Map<String, Object> userData, Principal principal) throws ParseException {
+    Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
+    String email = (String) userData.get("email");
+    String name = (String) userData.get("name");
+    String dateBirth = (String) userData.get("dateBirth");
+    Boolean gender = (Boolean) userData.get("gender");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    Date parsedDate = dateFormat.parse(dateBirth);
+    authenticatedUser.setGmail(email);
+    authenticatedUser.setUsername12(name);
+    authenticatedUser.setDateOfBirth(parsedDate);
+    authenticatedUser.setGender(gender);
+    accountService.save(authenticatedUser);
+    return ResponseEntity.ok().build();
+}
+
     @PostMapping("/save-image")
     @ResponseBody
     public String saveImagePathToDatabase(@RequestBody Map<String, String> imageData, Principal principal) {
@@ -222,19 +223,23 @@ public class ApplicationController {
             return "{\"error\": \"Failed to save image path\"}";
         }
     }
-    @PostMapping("/change-password")
-    public String changePassword(@RequestParam("newPassword") String newPassword,
-                                 @RequestParam("confirmPassword") String confirmPassword,
-                                 Principal principal, Model model) {
+    @PostMapping(path = "/change-password", consumes = "application/json")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> passwordData,
+                                            Principal principal) {
+        String newPassword = passwordData.get("newPassword");
+        String confirmPassword = passwordData.get("confirmPassword");
+        if (!newPassword.equals(confirmPassword)) {
+            return ResponseEntity.badRequest().body("New Password and Confirm Password do not match.");
+        }
         try {
             Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
             authenticatedUser.setPassword(bcryptEncoder.encode(newPassword));
             accountService.save(authenticatedUser);
-            return "redirect:/inforuser";
+            return ResponseEntity.ok("Password changed successfully");
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to change password.");
         }
-        return "ChangePassword";
     }
 
 }

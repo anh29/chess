@@ -33,42 +33,43 @@ document.addEventListener("DOMContentLoaded", function () {
         };
         xhr.send(JSON.stringify(imageData));
     }
-
     // Save Information
-    btnSave.addEventListener("click", function (event) {
-        event.preventDefault(); // Prevent the default form submission
+    btnSave.addEventListener("click", async function (event) {
+        event.preventDefault();
+        var error_message = document.getElementById("error_message");
         var genderInputs = document.querySelectorAll('input[name="rdoGender"]');
-        var genderValue;
-        for (var i = 0; i < genderInputs.length; i++) {
-            if (genderInputs[i].checked) {
-                genderValue = genderInputs[i].value;
-                break;
-            }
-        }
+        var genderValue = genderInputs[0].checked;
         var userData = {
             email: document.getElementById("txtEmail").value,
             name: document.getElementById("txtName").value,
             dateBirth: document.getElementById("dateBirth").value,
             gender: genderValue,
         };
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/public/update-user", true);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhr.onload = function () {
-            if (xhr.status == 200) {
+        try {
+            const response = await fetch('/public/update-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+                body: JSON.stringify(userData),
+            });
+            if (response.status === 200) {
+                error_message.textContent = "User updated successfully";
                 console.log("User updated successfully");
             } else {
-                console.error("Failed to update user");
+                response.text().then(function (text) {
+                    error_message.textContent = "Failed to update user: " + text;
+                });
             }
-        };
-        xhr.send(JSON.stringify(userData));
+        } catch (error) {
+            error_message.textContent = "Error: " + error;
+        }
     });
-
     // Back
     var btnback = document.getElementById("btnBack");
     btnBack.addEventListener("click", function (event) {
         event.preventDefault();
-        history.back();
+        window.location.href = "http://localhost:8080/play";
     });
 
 

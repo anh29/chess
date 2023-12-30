@@ -16,10 +16,10 @@ document.addEventListener("DOMContentLoaded", function () {
         xhr.onload = function () {
             if (xhr.status === 200) {
                 console.log("Password changed successfully");
-                window.location.href = '/public/inforuser';
+                window.location.href = '/public/inforuser'; // Redirect on success
             } else {
                 console.error("Failed to change password");
-                error_message.textContent = "Failed to change password. Please try again.";
+                error_message.textContent = xhr.responseText; // Display error message from server
             }
         };
         var passwordData = {
@@ -32,6 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var btnBack = document.getElementById("btnBack");
     btnBack.addEventListener("click", function (event) {
         event.preventDefault();
-        window.location.href = '/public/inforuser';
+        window.location.href = '/public/inforuser'; // Correct redirect
     });
 });
