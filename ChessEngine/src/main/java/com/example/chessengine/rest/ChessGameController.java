@@ -140,6 +140,7 @@ public class ChessGameController {
                 }
                 Searching.ply = 0;
                 Searching.Negamax2(games.get(combinedId).SEARCHING_DEPTH, -99999999, 99999999, matchTypeId, matchId);
+                games.get(combinedId).setSuccess(false);
             }
         }
         String moveBot = Searching.bestMove;

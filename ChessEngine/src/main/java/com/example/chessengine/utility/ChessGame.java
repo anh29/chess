@@ -25,7 +25,7 @@ public class ChessGame {
     public int counter = 0;
 
     public int SEARCHING_DEPTH = 4;
-    private boolean isSuccess;
+    private boolean isSuccess = false;
 
 
     public void copyFromBackupChessGame(BackUpChessGame backupGame) {
