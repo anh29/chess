@@ -10,7 +10,6 @@ function selectIcon(event) {
     const selectedIcon = event.target.src;
     // Store the selected icon for later use
     // console.log(selectedIcon);
-    console.log("event target: ", event.target);
     localStorage.setItem('selectedIcon', selectedIcon);
     if (!selectedIcon.includes('hand')) {
         const cursorSrc = selectedIcon.replace('/IMAGE/', '/IMAGE/cursors/').replace('.png', '.cur');
@@ -25,7 +24,6 @@ for (let i = 0; i < squares.length; i++) {
 }
 function addIconToChessboard(event) {
     const selectedIcon = localStorage.getItem('selectedIcon');
-    console.log("Selected icon: ", selectedIcon);
     const square = event.target;
     if (selectedIcon.includes('trash')) {
         if (square.src) {
@@ -108,7 +106,6 @@ function addIconToChessboard(event) {
         });
     } else {
         // Check if the square already has an image
-        console.log(square);
 
         if (square.src) {
             square.src = selectedIcon; // Replace the src attribute of the existing image
@@ -187,7 +184,6 @@ function updateFEN() {
     fenString += ' ' + (castlingOptions || '-');
 
     document.querySelector('.copyable.positions').value = fenString;
-    console.log("fenString: ", fenString);
 }
 
 const colorSelect = document.querySelector('.color select');
@@ -197,3 +193,49 @@ const castlingCheckboxes = document.querySelectorAll('.castling input[type="chec
 castlingCheckboxes.forEach(function(checkbox) {
     checkbox.addEventListener('change', updateFEN);
 });
+
+function clearBoard() {
+    document.querySelectorAll('.files .square img').forEach(img => img.remove());
+    updateFEN();
+}
+// Function to reset the board to its starting position
+function startingPosition() {
+    const startingPositionMap = {
+        "00": "br", "01": "bn", "02": "bb", "03": "bq",
+        "04": "bk", "05": "bb", "06": "bn", "07": "br",
+        "10": "bp", "11": "bp", "12": "bp", "13": "bp",
+        "14": "bp", "15": "bp", "16": "bp", "17": "bp",
+        // Rows 20 to 50 should be empty in a standard chess setup
+        "60": "wp", "61": "wp", "62": "wp", "63": "wp",
+        "64": "wp", "65": "wp", "66": "wp", "67": "wp",
+        "70": "wr", "71": "wn", "72": "wb", "73": "wq",
+        "74": "wk", "75": "wb", "76": "wn", "77": "wr"
+    };
+    document.querySelectorAll('.files .square').forEach(square => {
+        const rank = square.dataset.rank;
+        const file = square.dataset.file;
+        const positionKey = `${rank}${file}`;
+        const piece = startingPositionMap[positionKey];
+        if (piece) {
+            let img = square.querySelector('img');
+            if (!img) {
+                img = document.createElement('img');
+                img.className = 'img-cb';
+                square.appendChild(img);
+            }
+            img.setAttribute('src', `/IMAGE/${piece}.png`); // Set the correct path to your image
+        } else {
+            const img = square.querySelector('img');
+            if (img) {
+                img.remove();
+            }
+        }
+    });
+    updateFEN();
+}
+
+document.getElementById('clear-board').addEventListener('click', clearBoard);
+document.getElementById('starting-position').addEventListener('click', startingPosition);
+
+let f =
+    s=>[...s].map(c=>++n%9?+c?n+=--c:a[i='pP/KkQqRrBbNn'.search(c),i&=i>4&a[i]>(i>6)||i]=-~a[i]:x+=c=='/',a=[x=n=0])&&!([p,P,s,k,K]=a,n-71|x-7|s|k*K-1|p>8|P>8)
