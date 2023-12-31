@@ -7,4 +7,5 @@ public interface AccountService {
     void save(Accounts accounts);
     void changePassword(Accounts account, String newPassword);
     int getAccountIdByGmail(String gmail);
+     void saveImage(String gmail, String imageUrl);
 }

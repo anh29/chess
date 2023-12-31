@@ -15,11 +15,25 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+
 
 @Controller
 @RequestMapping("/public")
@@ -161,4 +175,71 @@ public class ApplicationController {
     public String showFrag3() {
         return "fragments/chessboard";
     }
+
+    @GetMapping("changepassword")
+    public  String ShowPassword(){ return "/ChangePassword";}
+    @GetMapping("/inforuser")
+    public String showInformation(Model model, Principal principal) {
+
+        Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
+
+        model.addAttribute("email", authenticatedUser.getGmail());
+        model.addAttribute("name", authenticatedUser.getUsername12());
+        model.addAttribute("birth", authenticatedUser.getDateOfBirth());
+        model.addAttribute("gender", authenticatedUser.getGender());
+        model.addAttribute("elo", authenticatedUser.getElo());
+        model.addAttribute("role", authenticatedUser.getRole());
+        model.addAttribute("image", authenticatedUser.getImage());
+
+
+        return "InformationUser";
+    }
+@PostMapping(path = "/update-user", consumes = "application/json")
+public ResponseEntity<?> updateUser(@RequestBody Map<String, Object> userData, Principal principal) throws ParseException {
+    Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
+    String email = (String) userData.get("email");
+    String name = (String) userData.get("name");
+    String dateBirth = (String) userData.get("dateBirth");
+    Boolean gender = (Boolean) userData.get("gender");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    Date parsedDate = dateFormat.parse(dateBirth);
+    authenticatedUser.setGmail(email);
+    authenticatedUser.setUsername12(name);
+    authenticatedUser.setDateOfBirth(parsedDate);
+    authenticatedUser.setGender(gender);
+    accountService.save(authenticatedUser);
+    return ResponseEntity.ok().build();
+}
+
+    @PostMapping("/save-image")
+    @ResponseBody
+    public String saveImagePathToDatabase(@RequestBody Map<String, String> imageData, Principal principal) {
+        try {
+            String imagePath = imageData.get("imagePath");
+            accountService.saveImage(principal.getName(), imagePath);
+            return "{\"message\": \"Image path saved successfully\"}";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{\"error\": \"Failed to save image path\"}";
+        }
+    }
+    @PostMapping(path = "/change-password", consumes = "application/json")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> passwordData,
+                                            Principal principal) {
+        String newPassword = passwordData.get("newPassword");
+        String confirmPassword = passwordData.get("confirmPassword");
+        if (!newPassword.equals(confirmPassword)) {
+            return ResponseEntity.badRequest().body("New Password and Confirm Password do not match.");
+        }
+        try {
+            Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
+            authenticatedUser.setPassword(bcryptEncoder.encode(newPassword));
+            accountService.save(authenticatedUser);
+            return ResponseEntity.ok("Password changed successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to change password.");
+        }
+    }
+
 }
