@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService{
@@ -46,6 +47,10 @@ public class AccountServiceImpl implements AccountService{
         Accounts account = accountRepo.findByGmail(gmail);
         account.setImage(imageUrl);
         accountRepo.save(account);
+    }
+    @Override
+    public  List<Accounts> findByRole_Id(Integer role_id,Integer status){
+       return accountRepo.findByRole_RoleIdAndStatus(role_id,status);
     }
 
 }

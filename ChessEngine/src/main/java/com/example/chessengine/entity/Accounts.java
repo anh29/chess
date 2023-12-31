@@ -113,6 +113,14 @@ public class Accounts implements UserDetails {
         return image;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public void setImage(String image) {
         this.image = image;
     }

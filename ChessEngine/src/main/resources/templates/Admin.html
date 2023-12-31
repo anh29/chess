@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/CSS/Admin.css">
+
+</head>
+<body>
+    <div class="container">
+        <input type="button" value="Back" name="btnBack" id="btnBack">
+        <button id="btnInfo" onclick="window.location.href='/public/inforadmin'">Admin Info</button>
+        <div class="active-user">
+            <form action="/public/block-user" method="post">
+                <table>
+                    <h2>Danh sách tài khoản hoạt động</h2>
+                    <tr>
+                        <th>account_id</th>
+                        <th>gmail</th>
+                        <th>name</th>
+                        <th>date_of_birth</th>
+                        <th>gender</th>
+                        <th>elo</th>
+                        <th>roles_name</th>
+                        <th>status</th>
+                        <th>Block</th>
+                    </tr>
+                    <tr th:each="player : ${players}">
+                        <td th:text="${player.accountId}"></td>
+                        <td th:text="${player.gmail}"></td>
+                        <td th:text="${player.username12}"></td>
+                        <td th:text="${#dates.format(player.dateOfBirth, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${player.gender ? 'Male' : 'Female'}"></td>
+                        <td th:text="${player.elo}"></td>
+                        <td th:text="${player.role.roleName}"></td>
+                        <td th:text="${player.status}"></td>
+                       <td><button type="button" class="btnBlock" id="btnBlock" name="btnBlock" th:data-gmail1="${player.gmail}">Block</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="invalid-user">
+            <form action="/public/unblock-user" method="post">
+                <table>
+                    <h2>Danh sách tài khoản bị chặn</h2>
+                    <tr>
+                        <th>account_id</th>
+                        <th>gmail</th>
+                        <th>name</th>
+                        <th>date_of_birth</th>
+                        <th>gender</th>
+                        <th>elo</th>
+                        <th>roles_name</th>
+                        <th>status</th>
+                        <th>Block</th>
+                    </tr>
+                    <tr th:each="displayer : ${displayers}">
+                        <td th:text="${displayer.accountId}"></td>
+                        <td th:text="${displayer.gmail}"></td>
+                        <td th:text="${displayer.username12}"></td>
+                        <td th:text="${#dates.format(displayer.dateOfBirth, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${displayer.gender ? 'Male' : 'Female'}"></td>
+                        <td th:text="${displayer.elo}"></td>
+                        <td th:text="${displayer.role.roleName}"></td>
+                        <td th:text="${displayer.status}"></td>
+                        <td><button type="button"  class="btnUnblock" id="btnUnblock" name="btnUnblock"  th:data-gmail2="${displayer.gmail}">Unblock</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <script defer th:src="@{/javascript/fragments/Admin.js}"></script>
+</body>
+</html>
