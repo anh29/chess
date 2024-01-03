@@ -57,7 +57,7 @@ function showMove(move) {
     const showMoveElement = document.getElementById('show-move');
     const alpha = "ABCDEFGH";
     const x = alpha[move[3]]
-    const y = parseInt(move[2]) + 1;
+    const y = 8 - parseInt(move[2]);
     const moveText = `Move: ${x}${y}`;
     const paragraph = document.createElement('p');
     paragraph.textContent = moveText;
