@@ -296,8 +296,39 @@ window.addEventListener('load', () => {
                                 }
                             }
 
+                        } else if (moveResponse.moveBot === "0402" || moveResponse.moveBot === "0406") {
+                            const sourceKing = document.querySelector(`.square[data-rank="0"][data-file="${moveResponse.moveBot[1]}"]`);
+                            const targetKing = document.querySelector(`.square[data-rank="0"][data-file="${moveResponse.moveBot[3]}"]`);
+
+                            let sourceRook = document.querySelector(`.square[data-rank="0"][data-file="0"]`);
+                            let targetRook = document.querySelector(`.square[data-rank="0"][data-file="3"]`);
+                            if (moveResponse.moveBot === "0406") {
+                                sourceRook = document.querySelector(`.square[data-rank="0"][data-file="7"]`);
+                                targetRook = document.querySelector(`.square[data-rank="0"][data-file="5"]`);
+                            }
+
+                            const sourceKingImg = sourceKing.querySelector('img');
+                            const targetKingImg = targetKing.querySelector('img');
+
+                            const sourceRookImg = sourceRook.querySelector('img');
+                            const targetRookImg = targetRook.querySelector('img');
+
+                            if (sourceKingImg) {
+                                sourceKing.removeChild(sourceKingImg);
+                                if (targetKingImg) {
+                                    targetKing.removeChild(targetKingImg);
+                                }
+                                targetKing.appendChild(sourceKingImg);
+                            }
+                            if (sourceRookImg) {
+                                sourceRook.removeChild(sourceRookImg);
+                                if (targetRookImg) {
+                                    targetRook.removeChild(targetRookImg);
+                                }
+                                targetRook.appendChild(sourceRookImg);
+                            }
                         } else {
-                            console.log(moveResponse.moveBot);
+                            // console.log(moveResponse.moveBot);
                             const source = document.querySelector(`.square[data-rank="${moveResponse.moveBot[0]}"][data-file="${moveResponse.moveBot[1]}"]`);
                             const target = document.querySelector(`.square[data-rank="${moveResponse.moveBot[2]}"][data-file="${moveResponse.moveBot[3]}"]`);
 

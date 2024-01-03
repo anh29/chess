@@ -119,13 +119,17 @@ public class ChessGameController {
         backup(matchTypeId, matchId);
         try
         {
-            if (games.get(combinedId).SEARCHING_DEPTH != 4) {
-                games.get(combinedId).SEARCHING_DEPTH = 4;
+            if (games.get(combinedId).SEARCHING_DEPTH != 1) {
+                games.get(combinedId).SEARCHING_DEPTH = 1;
             }
             while (Searching.Negamax2(games.get(combinedId).SEARCHING_DEPTH, -99999999, 99999999, matchTypeId, matchId) == 99999999)
             {
+                games.get(combinedId).copyFromBackupChessGame(backupGames.get(matchId));
                 games.get(combinedId).SEARCHING_DEPTH = games.get(combinedId).SEARCHING_DEPTH - 1;
+                Searching.ply = 0;
             }
+            games.get(combinedId).copyFromBackupChessGame(backupGames.get(matchId));
+            Searching.ply = 0;
             Searching.Negamax2(games.get(combinedId).SEARCHING_DEPTH, -99999999, 99999999, matchTypeId, matchId);
             games.get(combinedId).setSuccess(true);
         } catch (NullPointerException e) {
@@ -141,6 +145,10 @@ public class ChessGameController {
                 Searching.ply = 0;
                 Searching.Negamax2(games.get(combinedId).SEARCHING_DEPTH, -99999999, 99999999, matchTypeId, matchId);
                 games.get(combinedId).setSuccess(false);
+                String moveBot = Searching.bestMove;
+                Moves.moveOnBoard(moveBot, games.get(combinedId).WP, games.get(combinedId).WN, games.get(combinedId).WB, games.get(combinedId).WR, games.get(combinedId).WQ, games.get(combinedId).WK, games.get(combinedId).BP, games.get(combinedId).BN, games.get(combinedId).BB, games.get(combinedId).BR, games.get(combinedId).BQ, games.get(combinedId).BK, games.get(combinedId).EP, games.get(combinedId).CWK, games.get(combinedId).CWQ, games.get(combinedId).CBK, games.get(combinedId).CBQ, games.get(combinedId).WhiteToMove, matchTypeId, matchId);
+                MoveBotResponse moveBotResponse = MoveBotResponse.builder().moveBot(moveBot).isWhite(!games.get(combinedId).WhiteToMove).build();
+                return ResponseEntity.ok(moveBotResponse);
             }
         }
         String moveBot = Searching.bestMove;
