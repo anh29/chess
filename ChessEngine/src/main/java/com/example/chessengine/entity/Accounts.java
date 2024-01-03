@@ -1,10 +1,7 @@
 package com.example.chessengine.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,10 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 //import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "accounts")
@@ -30,31 +24,39 @@ public class Accounts implements UserDetails {
     @Column(name = "account_id")
     private Integer accountId;
 
+    @Getter
     @Column(name = "gmail")
     private String gmail;
 
+    @Getter
     @Column(name = "password")
     private String password;
 
+    @Getter
     @Column(name = "elo")
     private Integer elo;
 
+    @Getter
     @Column(name = "username12")
     private String username12;
 
+    @Getter
     @Column(name = "date_of_birth")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
 
+    @Getter
     @Column(name = "gender")
     private Boolean gender;
 
+    @Getter
     @Column(name = "images")
     private String image;
 
     @Column(name = "status")
     private Integer status;
 
+    @Getter
     @Column(name = "description")
     private String description;
 
@@ -85,40 +87,18 @@ public class Accounts implements UserDetails {
     @JoinColumn(name = "role_id")
     private Roles role;
 
-    public String getGmail() {
-        return gmail;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Integer getElo() {
-        return elo;
-    }
-
-    public String getUsername12() {
-        return username12;
-    }
-
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public Boolean getGender() {
-        return gender;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
     public void setImage(String image) {
         this.image = image;
     }
 
     public void setUsername12(String username12) {
-        this.username12 = username12;
+        if (Objects.equals(username12, "")) {
+            String[] parts = this.gmail.split("@");
+
+            this.username12 = parts[0];
+        } else {
+            this.username12 = username12;
+        }
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
@@ -135,10 +115,6 @@ public class Accounts implements UserDetails {
 
     public void setGmail(String gmail) {
         this.gmail = gmail;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     @Override
@@ -177,6 +153,7 @@ public class Accounts implements UserDetails {
         this.role = role;
         this.elo = elo;
         this.status = status;
+        setUsername12("");
     }
 
 }

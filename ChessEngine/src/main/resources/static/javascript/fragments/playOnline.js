@@ -2,7 +2,7 @@ const container = document.querySelector(".container")
 const countStart = document.querySelector("#countStart");
 
 document.addEventListener("DOMContentLoaded", function () {
-    let seconds = 5;
+    let seconds = 2;
 
     function updateCountdown() {
         countStart.innerHTML = "Start clock in " + seconds + " seconds";
@@ -39,16 +39,6 @@ async function init() {
 }
 
 async function AJAX(fragment, json = false) {
-    // var token = sessionStorage.getItem('jwtToken');
-    // if (token) {
-    //     $.ajaxSetup({
-    //         headers: {
-    //             Authorization: 'Bearer ' + token,
-    //         },
-    //     });
-    // }
-    // console.log('Token: ', token);
-
     try {
         const response = await fetch(fragment, {
             method: 'GET',

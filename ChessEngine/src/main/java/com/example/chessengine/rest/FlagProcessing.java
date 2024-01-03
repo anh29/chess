@@ -14,6 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,11 +32,18 @@ public class FlagProcessing {
     private AccountService accountService;
     @Autowired
     private MatchService matchService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    private String accFlags = null;
 
     private static final ReentrantLock lock = new ReentrantLock();
 
     @PostMapping("online/{idType}/flagProcessing/{idMatch}")
-    public ResponseEntity<String> flagProcessing(@PathVariable String idType, @PathVariable String idMatch, HttpServletRequest request) {
+    public ResponseEntity<String> flagProcessing(
+            @PathVariable String idType,
+            @PathVariable String idMatch,
+            HttpServletRequest request) {
         MatchCombinedId combinedId = MatchCombinedId.builder().matchTypeId(idType).matchId(idMatch).build();
         int currentPlayer;
         lock.lock();
@@ -40,6 +51,7 @@ public class FlagProcessing {
             currentPlayer = ChessGameController.games.get(combinedId).counter;
             if (currentPlayer < ChessGameController.games.get(combinedId).MAX_PLAYERS) {
                 String playSide = (currentPlayer == 0) ? Side.WHITE : Side.BLACK;
+                String username = "";
 
                 Cookie[] cookies = request.getCookies();
                 if (cookies != null) {
@@ -51,6 +63,9 @@ public class FlagProcessing {
                             // Use the token as needed
                             System.out.println("in request cookie");
                             Accounts account = accountService.getAccountByGmail(gmail);
+
+                            username = account.getUsername12();
+
                             Matches match = matchService.getMatchByIdMatch(ChessGameController.idMatch);
                             AccountsMatchesId accountsMatchesId = AccountsMatchesId.builder().accountId(account.getAccountId()).matchId(ChessGameController.idMatch).build();
                             System.out.println(ChessGameController.idMatch);
@@ -64,12 +79,28 @@ public class FlagProcessing {
                 ChessGameController.games.get(combinedId).counter = currentPlayer + 1;
                 System.out.println("counterrrrrrrrrr: " + ChessGameController.games.get(combinedId).counter);
 
-                return ResponseEntity.ok(playSide);
+                String accFlag = username + "#" + playSide;
+
+                messagingTemplate.convertAndSend("/topic/allClients", accFlag);
+                return ResponseEntity.ok(accFlag);
             } else {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error");
             }
         } finally {
             lock.unlock();
         }
+    }
+
+
+    @MessageMapping("/sendFlag/{idMatch}")
+    @SendTo("/topic/allClients")
+    public String handleFlag(String accFlag, @PathVariable String idMatch) {
+        if (accFlags == null) {
+            accFlags = accFlag;
+        } else {
+            accFlags += "&" + accFlag;
+        }
+
+        return accFlags;
     }
 }

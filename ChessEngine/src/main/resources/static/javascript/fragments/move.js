@@ -7,7 +7,9 @@ let selectedType = null;
 let sendMove = null;
 let isPromoting = false;
 let flag = null;
+let accFlag = null;
 const token = getCookie('jwtToken');
+var i = 0;
 
 console.log("token:::::: ", token);
 
@@ -15,34 +17,67 @@ function getAllPathVariables1() {
     return window.location.pathname.split('/').filter(Boolean);
 }
 
-
 const hello = getAllPathVariables1();
-// const urlParams = new URLSearchParams(window.location.search);
-// const idVal = urlParams.get('id');
 const idMatchTypeVal = hello[1];
 const idMatchVal = hello[2];
 console.log("idMatchTypeVal: ", idMatchTypeVal);
 console.log("idMatchVal: ", idMatchVal);
-// console.log("idMatchTypeVal: ", idMatchTypeVal);
-// console.log("idMatchVal: ", idMatchVal);
-// console.log("path variables: ", pathVariables);
-// console.log("urlParams: ", urlParams);
-// console.log("idVal: ", idVal);
 const socket = new SockJS(`/online/ws`);
 const stompClient = Stomp.over(socket);
+
+const blackName = document.getElementById("blackName");
+const whiteName = document.getElementById("whiteName");
 
 stompClient.connect({}, async (frame) => {
     console.log("Socket: ", socket);
     console.log("Stomp client: ", stompClient);
     console.log("Connected to WebSocket");
-    flag = await flagProcessing();
-    console.log("Flag: ", flag);
+    accFlag = await flagProcessing();
+    accFlag = splitAccountFlag(accFlag);
+    flag = accFlag[1];
+
+    console.log("accFl: " + accFlag);
+    stompClient.subscribe('/topic/allClients', handleAllClients);
     stompClient.subscribe(`/topic/move/${idMatchVal}`, handleMove);
+
 }, () => {
     console.log("Socket: ", socket);
     console.log("Stomp client: ", stompClient);
     console.error("wtf is happening")
 });
+async function handleAllClients(message) {
+    // Xử lý thông điệp từ tất cả các client
+    const receivedFlag = message.body;
+    console.log('Received flag from another client:', receivedFlag);
+
+    getAccountFlags(receivedFlag);
+}
+
+function showMove(move) {
+    const showMoveElement = document.getElementById('show-move');
+    const alpha = "ABCDEFGH";
+    const x = alpha[move[3]]
+    const y = parseInt(move[2]) + 1;
+    const moveText = `Move: ${x}${y}`;
+    const paragraph = document.createElement('p');
+    paragraph.textContent = moveText;
+
+    // Add a class based on whether the index is even or odd
+    if (i % 2 === 0) {
+        paragraph.classList.add('even');
+        start('black', timeBlack, document.getElementById('clock-black'));
+        stop('white');
+    } else {
+        paragraph.classList.add('odd');
+        start('white', timeWhite, document.getElementById('clock-white'));
+        stop('black');
+    }
+    i++;
+
+    // Append the paragraph to the show-move element
+    showMoveElement.appendChild(paragraph);
+}
+
 async function handleMove(response) {
     const move = JSON.parse(response.body).move;
     const matchRes = JSON.parse(response.body).matchResult;
@@ -77,7 +112,8 @@ async function handleMove(response) {
                 captureWhitePawn.removeChild(captureWhitePawnImg);
             }
         }
-    } else if (move[3] === 'P') {
+    } else if (move[3] === 'P')
+    {
         if (isUpperCase(move[2])) {
             const source = document.querySelector(`.square[data-rank="1"][data-file="${move[0]}"]`);
             const target = document.querySelector(`.square[data-rank="0"][data-file="${move[1]}"]`);
@@ -109,7 +145,8 @@ async function handleMove(response) {
                 target.querySelector('img').src = target.querySelector('img').src.replace('bp.png', 'b' + move[2].toLowerCase() + '.png');
             }
         }
-    } else {
+    } else
+    {
         const source = document.querySelector(`.square[data-rank="${move[0]}"][data-file="${move[1]}"]`);
         const target = document.querySelector(`.square[data-rank="${move[2]}"][data-file="${move[3]}"]`);
 
@@ -124,6 +161,9 @@ async function handleMove(response) {
         }
     }
     console.log('Received move:', move);
+
+    showMove(move);
+
     if (matchRes === "1-0") {
         console.log("White wins!!!!!!!!!!!!!!!!")
         showMatchResult('White wins!');
@@ -131,7 +171,8 @@ async function handleMove(response) {
             allMoves: moves.join(", "),
             flag: flag
         });
-    } else if (matchRes === "0.5-0.5") {
+    } else if (matchRes === "0.5-0.5")
+    {
         console.log("Draw!!!!!!!!!!!!!!!!")
         showMatchResult('It\'s a draw!');
         await endGame({
@@ -269,6 +310,7 @@ window.addEventListener('load', () => {
             //     .then(data => {
             if (data && data.validMove) {
                 currentEvent.style.background = '';
+
                 let targetImg = currentEvent.querySelector('img');
                 if (draggedImg.classList.contains('img-cb') && draggedPieceColor === 'white' && targetCoords.rankIndex === 0 && draggedImg.src.includes('wp.png') && sourceCoords.rankIndex === 1) {
                     showPromotionOverlay(draggedPieceColor, currentEvent);
@@ -509,13 +551,17 @@ async function endGame(all) {
     }
 }
 
-
 async function flagProcessing() {
     try {
         const response = await fetch(`flagProcessing/${idMatchVal}`, {
             method: 'POST',
         });
-        return await response.text();
+        const accFlag = await response.text();
+
+        // Gửi accFlag lên WebSocket
+        stompClient.send(`/app/sendFlag/${idMatchVal}`, {}, accFlag);
+
+        return accFlag;
     } catch (error) {
         console.error('Error: ', error);
     }
@@ -544,4 +590,27 @@ function getCookie(name) {
         }
     }
     return '';
+}
+
+function splitAccountFlag(accountFlag) {
+    return accountFlag.split("#");
+}
+
+function getAccountFlags(receivedFlag) {
+    const pairs = receivedFlag.split("&");
+
+// Duyệt qua từng cặp khóa và giá trị
+    pairs.forEach(pair => {
+        // Tách cặp khóa và giá trị
+        const [key, value] = pair.split("#");
+
+        console.log("jjjj:")
+        console.log([key, value]);
+        // Kiểm tra khóa và gán giá trị cho phần tử HTML tương ứng
+        if (value === "white") {
+            whiteName.textContent = key;
+        } else if (value === "black") {
+            blackName.textContent = key;
+        }
+    });
 }

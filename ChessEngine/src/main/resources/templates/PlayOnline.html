@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/CSS/chessboard.css">
     <link rel="stylesheet" href="/CSS/nav.css">
     <link rel="stylesheet" href="/CSS/chat.css">
+    <link rel="stylesheet" href="/CSS/showMove.css">
     <link rel="stylesheet" href="/CSS/ContainPlay.css">
     <link rel="stylesheet" href="/CSS/matchResult.css">
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
@@ -35,7 +36,7 @@
             <div class="user-top">
                 <img class="img-user"th:src="@{/IMAGE/br.png}" alt="">
                 <div id="user1" class="contain-user">
-                    <p class="username">ANNNNNNA</p>
+                    <p id="blackName" class="username">Waiting...</p>
                     <div class="count-clock">
                         <div id="clock-black"></div>
                     </div>
@@ -47,7 +48,7 @@
             <div class="user-top">
                 <img class="img-user" th:src="@{/IMAGE/br.png}" alt="">
                 <div id="user2" class="contain-user">
-                    <span  th:text="${username}" class="username"></span>
+                    <p id="whiteName" class="username">Waiting...</p>
                     <div class="count-clock">
                         <div id="clock-white"></div>
                     </div>
@@ -61,8 +62,13 @@
                         <p>Game clock: <span id="idTime" th:text="${idTime}"></span></p>
                     </div>
                     <div class="txtTime">
-                        <p id="countStart">Start clock in 5 seconds</p>
+                        <p id="countStart">Start clock in 2 seconds</p>
                     </div>
+                </div>
+
+                <div class="move-table-container">
+                    <p class="txt-move">Move</p>
+                    <div id="show-move"></div>
                 </div>
 
                 <div id="chat-page">
@@ -81,6 +87,7 @@
                         </form>
                     </div>
                 </div>
+
              </div>
 
            </div>
@@ -92,6 +99,7 @@
 <script
         src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script defer src="/javascript/fragments/FEN.js"></script>
 <script defer th:src="@{/javascript/fragments/playOnline.js}"></script>
 <script defer th:src="@{/javascript/fragments/move.js}"></script>
