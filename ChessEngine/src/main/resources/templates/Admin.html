@@ -29,10 +29,10 @@
                         <td th:text="${player.accountId}"></td>
                         <td th:text="${player.gmail}"></td>
                         <td th:text="${player.username12}"></td>
-                        <td th:text="${#dates.format(player.dateOfBirth, 'yyyy-MM-dd')}"></td>
-                        <td th:text="${player.gender ? 'Male' : 'Female'}"></td>
+                        <td th:text="${player.dateOfBirth != null ? #dates.format(player.dateOfBirth, 'yyyy-MM-dd') : ''}"></td>
+                        <td th:text="${player.gender != null ? (player.gender ? 'Male' : 'Female') : ''}"></td>
                         <td th:text="${player.elo}"></td>
-                        <td th:text="${player.role.roleName}"></td>
+                        <td th:text="${player.role != null ? player.role.roleName : ''}"></td>
                         <td th:text="${player.status}"></td>
                        <td><button type="button" class="btnBlock" id="btnBlock" name="btnBlock" th:data-gmail1="${player.gmail}">Block</button></td>
                     </tr>
@@ -58,10 +58,10 @@
                         <td th:text="${displayer.accountId}"></td>
                         <td th:text="${displayer.gmail}"></td>
                         <td th:text="${displayer.username12}"></td>
-                        <td th:text="${#dates.format(displayer.dateOfBirth, 'yyyy-MM-dd')}"></td>
-                        <td th:text="${displayer.gender ? 'Male' : 'Female'}"></td>
+                        <td th:text="${displayer.dateOfBirth != null ? #dates.format(displayer.dateOfBirth, 'yyyy-MM-dd') : ''}"></td>
+                        <td th:text="${displayer.gender != null ? (displayer.gender ? 'Male' : 'Female') : ''}"></td>
                         <td th:text="${displayer.elo}"></td>
-                        <td th:text="${displayer.role.roleName}"></td>
+                        <td th:text="${displayer.role != null ? displayer.role.roleName : ''}"></td>
                         <td th:text="${displayer.status}"></td>
                         <td><button type="button"  class="btnUnblock" id="btnUnblock" name="btnUnblock"  th:data-gmail2="${displayer.gmail}">Unblock</button>
                         </td>

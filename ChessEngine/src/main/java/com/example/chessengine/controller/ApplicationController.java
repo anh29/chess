@@ -159,7 +159,7 @@ public class ApplicationController {
             model.addAttribute("players", players);
             List<Accounts> displayers = accountService.findByRole_Id(1,0);
             model.addAttribute("displayers", displayers);
-            return "admin";
+            return "Admin";
         } else {
             return "redirect:/public/login";
         }
