@@ -78,16 +78,15 @@ public class ApplicationController {
 
     @PostMapping("/forgotPassword")
     public String handleForgotPassword(@ModelAttribute("account") Accounts account, Model model, HttpServletResponse response) {
-//        Accounts accountGet = accountService.getAccountByGmail(account.getGmail());
-//        boolean res = mailService.sendOTP(account.getGmail(), response);
-//        if (res) {
-//            currentAccount = accountGet;
-//            return "redirect:/public/confirmForgotPassword";
-//        } else {
-//            model.addAttribute("msg", "Account not found!");
-//            return "ForgotPassword";
-//        }
-        return "redirect:/public/confirmForgotPassword";
+        Accounts accountGet = accountService.getAccountByGmail(account.getGmail());
+        boolean res = mailService.sendOTP(account.getGmail(), response);
+        if (res) {
+            currentAccount = accountGet;
+            return "redirect:/public/confirmForgotPassword";
+        } else {
+            model.addAttribute("msg", "Account not found!");
+            return "ForgotPassword";
+        }
     }
 
     @GetMapping("/confirmForgotPassword")
@@ -97,13 +96,13 @@ public class ApplicationController {
 
     @PostMapping("/confirmForgotPassword")
     public String handleOTP(@RequestParam("txt_otp") String otp, Model model, HttpServletRequest request) {
-//        boolean check = mailService.verifyOtp(currentAccount.getGmail(), otp, request);
-//        if (!check) {
-//            model.addAttribute("msg", "Wrong otp");
-//            return "ConfirmForgotPassword";
-//        }
+        boolean check = mailService.verifyOtp(currentAccount.getGmail(), otp, request);
+        if (!check) {
+            model.addAttribute("msg", "Wrong otp");
+            return "ConfirmForgotPassword";
+        }
         System.out.println("ajweiojf;oj;ilsj;zncnzsld;vn");
-        return "redirect:/public/signup";
+        return "redirect:/public/resetPassword";
     }
 
     @GetMapping("/resetPassword")
@@ -177,7 +176,10 @@ public class ApplicationController {
     }
 
     @GetMapping("changepassword")
-    public  String ShowPassword(){ return "/ChangePassword";}
+    public String ShowPassword() {
+        return "/ChangePassword";
+    }
+
     @GetMapping("/inforuser")
     public String showInformation(Model model, Principal principal) {
 
@@ -194,22 +196,23 @@ public class ApplicationController {
 
         return "InformationUser";
     }
-@PostMapping(path = "/update-user", consumes = "application/json")
-public ResponseEntity<?> updateUser(@RequestBody Map<String, Object> userData, Principal principal) throws ParseException {
-    Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
-    String email = (String) userData.get("email");
-    String name = (String) userData.get("name");
-    String dateBirth = (String) userData.get("dateBirth");
-    Boolean gender = (Boolean) userData.get("gender");
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    Date parsedDate = dateFormat.parse(dateBirth);
-    authenticatedUser.setGmail(email);
-    authenticatedUser.setUsername12(name);
-    authenticatedUser.setDateOfBirth(parsedDate);
-    authenticatedUser.setGender(gender);
-    accountService.save(authenticatedUser);
-    return ResponseEntity.ok().build();
-}
+
+    @PostMapping(path = "/update-user", consumes = "application/json")
+    public ResponseEntity<?> updateUser(@RequestBody Map<String, Object> userData, Principal principal) throws ParseException {
+        Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
+        String email = (String) userData.get("email");
+        String name = (String) userData.get("name");
+        String dateBirth = (String) userData.get("dateBirth");
+        Boolean gender = (Boolean) userData.get("gender");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsedDate = dateFormat.parse(dateBirth);
+        authenticatedUser.setGmail(email);
+        authenticatedUser.setUsername12(name);
+        authenticatedUser.setDateOfBirth(parsedDate);
+        authenticatedUser.setGender(gender);
+        accountService.save(authenticatedUser);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/save-image")
     @ResponseBody
@@ -223,6 +226,7 @@ public ResponseEntity<?> updateUser(@RequestBody Map<String, Object> userData, P
             return "{\"error\": \"Failed to save image path\"}";
         }
     }
+
     @PostMapping(path = "/change-password", consumes = "application/json")
     public ResponseEntity<?> changePassword(@RequestBody Map<String, String> passwordData,
                                             Principal principal) {

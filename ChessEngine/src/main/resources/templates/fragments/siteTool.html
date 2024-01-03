@@ -20,14 +20,23 @@
             <div class="actions">
                 <a class="button button-empty text" id="starting-position">Starting position</a>
                 <a class="button button-empty text" id="clear-board">Clear board</a>
-                <button class="button button-empty text">
+                <button id="continueButton" class="button button-empty text">
                     <span>Continue from here</span>
                 </button>
             </div>
         </div>
+        <div id="choiceBox" class="hidden">
+            <button class="close-button">X</button>
+            <button id="playWithComputer" class="button">
+                <span>Play with computer</span>
+            </button>
+            <button id="playWithFriend" class="button">
+                <span>Play with friend</span>
+            </button>
+        </div>
         <div class="copyables">
             <label for="fen"><strong>FEN</strong></label>
-            <input id="fen" class="copyable positions" spellcheck="false" enterkeyhint="done">
+            <input id="fen" class="copyable positions" spellcheck="false" enterkeyhint="done" value="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w -">
         </div>
     </div>
 </main>

@@ -1,5 +1,6 @@
 let currentEvent1 = null;
 let targetEvent1 = null;
+let fenStringTool = null;
 
 const listIcon = document.querySelectorAll(".icon");
 
@@ -184,6 +185,7 @@ function updateFEN() {
     fenString += ' ' + (castlingOptions || '-');
 
     document.querySelector('.copyable.positions').value = fenString;
+    fenStringTool = fenString.split(' ')[0];
 }
 
 const colorSelect = document.querySelector('.color select');
@@ -236,6 +238,46 @@ function startingPosition() {
 
 document.getElementById('clear-board').addEventListener('click', clearBoard);
 document.getElementById('starting-position').addEventListener('click', startingPosition);
+
+const closeButton = document.querySelector('.close-button');
+closeButton.addEventListener('click', function () {
+    choiceBox.classList.toggle('visible');
+});
+
+const continueButton = document.getElementById('continueButton');
+const choiceBox = document.getElementById('choiceBox');
+continueButton.addEventListener('click', function() {
+    choiceBox.classList.toggle('visible');
+});
+const playWithComputerButton = document.getElementById('playWithComputer');
+playWithComputerButton.addEventListener('click', function() {
+
+});
+const playWithFriendButton = document.getElementById('playWithFriend');
+playWithFriendButton.addEventListener('click', async function () {
+    let idMatchType = "10_0";
+    let matchId = null;
+    const response = await fetch('/api/chess/idMatchType', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            idMatchType: idMatchType,
+        })
+    });
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    if (data) {
+        matchId = data.idMatch;
+        window.location.href = "/online/" + idMatchType + "/" + matchId;
+    } else {
+        console.error('No data received');
+    }
+});
 
 let f =
     s=>[...s].map(c=>++n%9?+c?n+=--c:a[i='pP/KkQqRrBbNn'.search(c),i&=i>4&a[i]>(i>6)||i]=-~a[i]:x+=c=='/',a=[x=n=0])&&!([p,P,s,k,K]=a,n-71|x-7|s|k*K-1|p>8|P>8)
