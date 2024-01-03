@@ -32,6 +32,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
@@ -152,8 +153,17 @@ public class ApplicationController {
         // Add the username12 to the model
         model.addAttribute("username", authenticatedUser.getUsername12());
         System.out.println("username" + authenticatedUser.getUsername12());
-
-        return "redirect:/play";
+        if ("player".equals(authenticatedUser.getRole().getRoleName()) && authenticatedUser.getStatus() == 1) {
+            return "redirect:/play";
+        }else if("admin".equals(authenticatedUser.getRole().getRoleName())){
+            List<Accounts> players = accountService.findByRole_Id(1,1);
+            model.addAttribute("players", players);
+            List<Accounts> displayers = accountService.findByRole_Id(1,0);
+            model.addAttribute("displayers", displayers);
+            return "admin";
+        } else {
+            return "redirect:/public/login";
+        }
     }
 
     @GetMapping("/learn")
@@ -185,7 +195,6 @@ public class ApplicationController {
     public String showInformation(Model model, Principal principal) {
 
         Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
-
         model.addAttribute("email", authenticatedUser.getGmail());
         model.addAttribute("name", authenticatedUser.getUsername12());
         model.addAttribute("birth", authenticatedUser.getDateOfBirth());
@@ -197,23 +206,34 @@ public class ApplicationController {
 
         return "InformationUser";
     }
-
-    @PostMapping(path = "/update-user", consumes = "application/json")
-    public ResponseEntity<?> updateUser(@RequestBody Map<String, Object> userData, Principal principal) throws ParseException {
+    @GetMapping("/inforadmin")
+    public String showInformationadmin(Model model, Principal principal) {
         Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
-        String email = (String) userData.get("email");
-        String name = (String) userData.get("name");
-        String dateBirth = (String) userData.get("dateBirth");
-        Boolean gender = (Boolean) userData.get("gender");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date parsedDate = dateFormat.parse(dateBirth);
-        authenticatedUser.setGmail(email);
-        authenticatedUser.setUsername12(name);
-        authenticatedUser.setDateOfBirth(parsedDate);
-        authenticatedUser.setGender(gender);
-        accountService.save(authenticatedUser);
-        return ResponseEntity.ok().build();
+        model.addAttribute("email", authenticatedUser.getGmail());
+        model.addAttribute("name", authenticatedUser.getUsername12());
+        model.addAttribute("birth", authenticatedUser.getDateOfBirth());
+        model.addAttribute("gender", authenticatedUser.getGender());
+        model.addAttribute("role", authenticatedUser.getRole());
+        model.addAttribute("image", authenticatedUser.getImage());
+
+        return "InformationAdmin";
     }
+@PostMapping(path = "/update-user", consumes = "application/json")
+public ResponseEntity<?> updateUser(@RequestBody Map<String, Object> userData, Principal principal) throws ParseException {
+    Accounts authenticatedUser = accountService.getAccountByGmail(principal.getName());
+    String email = (String) userData.get("email");
+    String name = (String) userData.get("name");
+    String dateBirth = (String) userData.get("dateBirth");
+    Boolean gender = (Boolean) userData.get("gender");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    Date parsedDate = dateFormat.parse(dateBirth);
+    authenticatedUser.setGmail(email);
+    authenticatedUser.setUsername12(name);
+    authenticatedUser.setDateOfBirth(parsedDate);
+    authenticatedUser.setGender(gender);
+    accountService.save(authenticatedUser);
+    return ResponseEntity.ok().build();
+}
 
     @PostMapping("/save-image")
     @ResponseBody
@@ -244,6 +264,35 @@ public class ApplicationController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to change password.");
+        }
+    }
+    @PostMapping(path = "/block-user", consumes = "application/json")
+    public ResponseEntity<String> blockUser(@RequestBody Map<String, String> payload1) {
+        try {
+            String email = payload1.get("email");
+            int status = Integer.parseInt(payload1.get("status"));
+            Accounts user = accountService.getAccountByGmail(email);
+            user.setStatus(status);
+            accountService.save(user);
+            return ResponseEntity.ok("User blocked successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to block user.");
+        }
+    }
+
+    @PostMapping(path = "/unblock-user", consumes = "application/json")
+    public ResponseEntity<String> unblockUser(@RequestBody Map<String, String> payload2) {
+        try {
+            String email = payload2.get("email");
+            int status = Integer.parseInt(payload2.get("status"));
+            Accounts user = accountService.getAccountByGmail(email);
+            user.setStatus(status);
+            accountService.save(user);
+            return ResponseEntity.ok("User unblocked successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to unblock user.");
         }
     }
 

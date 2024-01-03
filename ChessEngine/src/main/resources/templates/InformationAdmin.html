@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="/CSS/InformationUser.css">
+    <link rel="stylesheet" href="/CSS/InformationAdmin.css">
 </head>
 <body>
 <div class="formInformation">
@@ -43,11 +43,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <td> <label>Elo</label></td>
-                    <td><input type="text" name="txtElo" id="txtElo" readonly th:value="${elo}"></td>
-
-                </tr>
-                <tr>
                     <td> <label>Role</label></td>
                     <td><input type="text" name="txtRole" id="txtRole" readonly th:value="${role.getRoleName()}"></td>
 
@@ -62,7 +57,7 @@
     </div>
 </div>
 
-<script defer th:src="@{/javascript/fragments/inforuser.js}"></script>
+<script defer th:src="@{/javascript/fragments/inforadmin.js}"></script>
 
 </body>
 </html>
