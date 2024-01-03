@@ -65,7 +65,9 @@ public class ApplicationController {
     public String handleSignup(@Valid @ModelAttribute("account") Accounts account) {
 //        System.out.println(bcryptEncoder.matches("12345", "$2a$10$HCZFusNAainHMLatJnrSUuHGUowuYA19ViCba9bQFFBUNUiF7VH12"));
         authenticationService.register(RegisterRequest.builder()
-                .gmail(account.getUsername()).password(account.getPassword()).build());
+                .gmail(account.getUsername())
+                .password(account.getPassword())
+                .build());
 //        System.out.println();
         return "redirect:/public/login";
     }
@@ -154,7 +156,6 @@ public class ApplicationController {
 
         return "redirect:/play";
     }
-
 
     @GetMapping("/learn")
     public String showLearn(Model model, Principal principal, @RequestHeader(value = "request-source", required = false) String requestSource) {

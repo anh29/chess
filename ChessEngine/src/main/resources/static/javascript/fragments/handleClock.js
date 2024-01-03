@@ -2,53 +2,19 @@ const idTime = document.querySelector("#idTime").innerHTML;
 
 let timeControls = parseTimeControls(idTime);
 
-let timeWhite = timeControls.initialTime * 60; // Chuyển đổi phút thành giây
+let timeWhite = timeControls.initialTime * 60; // Convert minutes to seconds
 let timeBlack = timeControls.initialTime * 60;
+
+let isWhitePaused = false; // Track pause state for white clock
+let isBlackPaused = false; // Track pause state for black clock
+let clockWhiteInterval; // Timer for white clock
+let clockBlackInterval; // Timer for black clock
 
 const interval = 1000;
 
-function updateClock() {
-    const clockWhite = document.getElementById('clock-white');
-    const clockBlack = document.getElementById('clock-black');
-
-    displayCountdown(timeWhite, clockWhite);
-    displayCountdown(timeBlack, clockBlack);
-
-    if (timeWhite <= 0 || timeBlack <= 0) {
-        clearInterval(clockInterval);
-        alert("Game Over!");
-    }
-}
-
-const clockInterval = setInterval(function () {
-    timeWhite--;
-    timeBlack--;
-    updateClock();
-}, interval);
-
-function startCountdown(secondsTime, clockElement) {
-    countdownValue = parseInt(secondsTime);
-
-    // Display initial countdown value
-    displayCountdown(countdownValue, clockElement);
-
-    // Update countdown every second
-    countdownInterval = setInterval(function () {
-        countdownValue--;
-
-        if (countdownValue >= 0) {
-            displayCountdown(countdownValue, clockElement);
-        } else {
-            clearInterval(countdownInterval);
-
-            alert("Game over")
-        }
-    }, 1000);
-}
-
-function displayCountdown(countdownValue, clockElement) {
-    var minutes = Math.floor(countdownValue / 60);
-    var seconds = countdownValue % 60;
+function updateClock(time, clockElement) {
+    var minutes = Math.floor(time / 60);
+    var seconds = time % 60;
 
     clockElement.innerHTML =
         minutes.toString().padStart(2, "0") +
@@ -56,7 +22,51 @@ function displayCountdown(countdownValue, clockElement) {
         seconds.toString().padStart(2, "0");
 }
 
+function stop(clock) {
+    if (clock === 'white') {
+        isWhitePaused = true;
+        clearInterval(clockWhiteInterval);
+    } else if (clock === 'black') {
+        isBlackPaused = true;
+        clearInterval(clockBlackInterval);
+    }
+}
+
+function start(clock, time, clockElement) {
+    if (clock === 'white') {
+        isWhitePaused = false;
+        clockWhiteInterval = setInterval(function () {
+            if (!isWhitePaused) {
+                time--;
+                updateClock(time, clockElement);
+
+                if (time <= 0) {
+                    clearInterval(clockWhiteInterval);
+                    alert("Black win!");
+                }
+            }
+        }, interval);
+    } else if (clock === 'black') {
+        isBlackPaused = false;
+        clockBlackInterval = setInterval(function () {
+            if (!isBlackPaused) {
+                time--;
+                updateClock(time, clockElement);
+
+                if (time <= 0) {
+                    clearInterval(clockBlackInterval);
+                    alert("White win!");
+                }
+            }
+        }, interval);
+    }
+}
+
 function parseTimeControls(timeControlString) {
     const [initialTime, increment] = timeControlString.split('_').map(Number);
     return { initialTime, increment };
 }
+
+// Initial display
+updateClock(timeWhite, document.getElementById('clock-white'));
+updateClock(timeBlack, document.getElementById('clock-black'));

@@ -1,7 +1,11 @@
 package com.example.chessengine.controller;
 
 import com.example.chessengine.entity.Accounts;
+import com.example.chessengine.entity.AccountsMatches;
 import com.example.chessengine.entity.Matches;
+import com.example.chessengine.entity.embeddable.AccountsMatchesId;
+import com.example.chessengine.rest.ChessGameController;
+import com.example.chessengine.service.AccountMatchService;
 import com.example.chessengine.service.AccountService;
 import com.example.chessengine.service.MatchService;
 import jakarta.websocket.server.PathParam;
@@ -11,8 +15,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class MainController {
@@ -21,6 +27,9 @@ public class MainController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private AccountMatchService accountMatchService;
 
     private Map<String, String> playersInMatches = new HashMap<>();
 
@@ -34,9 +43,10 @@ public class MainController {
     public String showLearn(Model model, Principal principal,
                             @RequestHeader(value = "request-source", required = false) String requestSource) {
         if (requestSource == null && principal != null) {
-            String username = principal.getName();
-            model.addAttribute("username", extractNameFromEmail(username));
+            String gmail = principal.getName();
+            String username = accountService.getAccountByGmail(gmail).getUsername12();
 
+            model.addAttribute("username", username);
             return "index";
         } else {
             return "fragments/containHome";
@@ -64,26 +74,15 @@ public class MainController {
         if (idTime != null) {
             model.addAttribute("idTime", idTime);
 
-            // Retrieve username from Principal
-            String username = extractNameFromEmail(principal.getName());
+            String gmail = principal.getName();
+            String username = accountService.getAccountByGmail(gmail).getUsername12();
+
             model.addAttribute("username", username);
 
-            playersInMatches.put(username, idMatch);
-
-//            System.out.println("App: " + ApplicationController.gmail);
-//            Accounts account = accountService.getAccountByGmail(ApplicationController.gmail);
-//            Matches match = matchService.getMatchByIdMatch(idMatch);
-//            if (match == null) {
-//                System.out.println("not info please: " + idMatch);
-//                match = Matches.builder().matchId(idMatch).status(0).build();
-//            } else {
-//                match.setStatus(1);
-//            }
-//            matchService.save(match);
             return "PlayOnline";
         } else if (requestSource == null && principal != null) {
-            // Retrieve the match ID for the current player
-            String username = extractNameFromEmail(principal.getName());
+            String gmail = principal.getName();
+            String username = accountService.getAccountByGmail(gmail).getUsername12();
             String matchId = playersInMatches.get(username);
 
             // Add the match ID and player's username to the model
@@ -108,12 +107,13 @@ public class MainController {
 
             // Retrieve username from Principal
             String username = principal.getName();
-            model.addAttribute("username", extractNameFromEmail(username));
+//            model.addAttribute("username", extractNameFromEmail(username));
 
             return "PlayComputer";
         } else if (requestSource == null && principal != null) {
             // Retrieve username from Principal
-            String username = principal.getName();
+            String gmail = principal.getName();
+            String username = accountService.getAccountByGmail(gmail).getUsername12();
             model.addAttribute("username", username);
 
             return "PlayComputer";
@@ -126,32 +126,13 @@ public class MainController {
     public String showTool(Model model, Principal principal,
                             @RequestHeader(value = "request-source", required = false) String requestSource) {
         if (requestSource == null && principal != null) {
-            String username = principal.getName();
-            model.addAttribute("username", extractNameFromEmail(username));
+            String gmail = principal.getName();
+            String username = accountService.getAccountByGmail(gmail).getUsername12();
+            model.addAttribute("username", username);
 
             return "Tool";
         } else {
             return "fragments/chessboard";
         }
     }
-
-
-
-    public static String extractNameFromEmail(String email) {
-        if (email == null || email.isEmpty()) {
-            return null;
-        }
-
-        // Tách phần tên từ địa chỉ email
-        String[] parts = email.split("@");
-
-        // Kiểm tra xem có ít nhất một phần tử sau khi tách không
-        if (parts.length >= 2) {
-            return parts[0]; // Trả về phần tử đầu tiên sau khi tách
-        } else {
-            return null; // Trả về null nếu không thể tách được địa chỉ email
-        }
-    }
-
-
 }

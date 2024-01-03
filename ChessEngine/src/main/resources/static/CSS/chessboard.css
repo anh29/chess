@@ -32,3 +32,36 @@
   width: 94%;
   height: 94%;
 }
+
+.rank-numbers {
+  display: flex;
+  flex-direction: column;
+  height: calc(68px * 8);
+  width: 20px;
+}
+
+.rank-number {
+  flex: 1;
+  border: 1px solid #c5c5c5;
+  text-align: center;
+  color: black;
+  background-color: #d3c9b9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.r-numbers {
+  display: flex;
+  justify-content: center;
+  padding-left: 20px;
+}
+
+.r-number {
+  border: 1px solid #c5c5c5;
+  text-align: center;
+  color: black;
+  background-color: #d3c9b9;
+  height: 20px;
+  width: 66px;
+}
